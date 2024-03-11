@@ -1,10 +1,9 @@
 <script lang="ts">
-
+  import LoginForm from "./lib/LoginForm.svelte";
 </script>
 
 <main>
-  <img src="./logo.svg">
-  <h2>In progress</h2>
+  <LoginForm></LoginForm>
 </main>
 
 <style>
