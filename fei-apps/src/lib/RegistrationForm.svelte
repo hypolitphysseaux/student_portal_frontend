@@ -51,25 +51,15 @@
 </div>
 
 <div class="container">
-    <h1>Prihlásiť sa do účtu</h1>
-    <div class="social-login">
-        <button class="google">
-            <i class='bx bxl-google'></i>
-            Google
-        </button>
-        <button class="apple">
-            <i class='bx bxl-apple'></i>
-            Apple
-        </button>
-    </div>
-
-    <div class="divider">
-        <div class="line"></div>
-        <p>Alebo</p>
-        <div class="line"></div>
-    </div>
+    <h1>Vytvorte si účet</h1>
 
     <form>
+        <label for="name">AIS ID:</label>
+        <div class="custom-input">
+            <input  name="ais-id" placeholder="Zadajte AIS ID" autocomplete="off">
+            <i class='bx bx-at'></i>
+        </div>
+
         <label for="email">Email:</label>
         <div class="custom-input">
             <input type="email" name="email" placeholder="Zadajte email" autocomplete="off">
@@ -82,11 +72,17 @@
             <i class='bx bx-lock-alt'></i>
         </div>
 
-        <button class="login">Prihlásiť sa</button>
+        <label for="password">Potvrďte heslo:</label>
+        <div class="custom-input">
+            <input type="password" name="password" placeholder="Zadajte heslo">
+            <i class='bx bx-lock-alt'></i>
+        </div>
+
+        <button class="login">Registrovať sa</button>
 
         <div class="links">
-            <a href="#">Resetovať heslo</a>
-            <a href="#">Nemáte účet?</a>
+            <a href="#">Napíšte nám</a>
+            <a href="#">Už máte účet?</a>
         </div>
     </form>
 </div>
@@ -120,8 +116,8 @@
         padding: 40px 32px;
         margin-top: 100px;
         border-radius: 8px;
-        box-shadow: rgba(100, 100, 111, 0.2) 2px 7px 25px 10px;
-        background: transparent;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        background-color: #fff;
     }
 
     .container h1 {

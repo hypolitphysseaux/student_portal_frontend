@@ -4,13 +4,23 @@
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%
+  -webkit-text-size-adjust: 100%;
+}
+
+* { /* Toto je kvoli LoginForm komponentu */
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: 'Mulish', sans-serif;
+
+  /*
+  background: radial-gradient(circle, rgba(237, 237, 237, 0.7) 2px, #fafafa 0px);
+  background-size: 10px 10px;
+  */
 }
 
 
-
 body { /* Toto je kvoli LoginForm komponentu */
-  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
