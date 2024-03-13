@@ -1,5 +1,11 @@
 <script lang="ts">
+    export let loggedIn = false;
 
+    function logIn(){
+        //TODO request
+
+        loggedIn = true;
+    }
 </script>
 
 <div class="logo">
@@ -82,7 +88,7 @@
             <i class='bx bx-lock-alt'></i>
         </div>
 
-        <button class="login">Prihlásiť sa</button>
+        <button on:click={logIn} class="login">Prihlásiť sa</button>
 
         <div class="links">
             <a href="#">Resetovať heslo</a>
@@ -93,6 +99,7 @@
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
+
 
     .logo {
         position: absolute;

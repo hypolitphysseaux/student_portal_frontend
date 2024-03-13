@@ -57,7 +57,7 @@
         <label for="name">AIS ID:</label>
         <div class="custom-input">
             <input  name="ais-id" placeholder="Zadajte AIS ID" autocomplete="off">
-            <i class='bx bx-at'></i>
+            <i class='bx bxs-id-card'></i>
         </div>
 
         <label for="email">Email:</label>

@@ -7,10 +7,10 @@
   -webkit-text-size-adjust: 100%;
 }
 
-* { /* Toto je kvoli LoginForm komponentu */
+* {
   padding: 0;
   margin: 0;
-  box-sizing: border-box;
+  box-sizing: border-box;  /* Kvoli LoginForm */
   font-family: 'Mulish', sans-serif;
 
   /*
@@ -20,8 +20,9 @@
 }
 
 
-body { /* Toto je kvoli LoginForm komponentu */
+body{  /* Pre LoginForm */
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
