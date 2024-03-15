@@ -23,16 +23,16 @@
         </div>
 
         <div class="box">
-            <i class='bx bxs-chess'></i>
-            <h3>CHESS</h3>
-            <p>Chceš si zahrať šach so spolužiakmi alebo prednášajúcimi? Na tomto mieste, iba proti FEIkárom. </p>
+            <i class='bx bxs-building-house' ></i>
+            <h3>ACCOMMODATION</h3>
+            <p>Odkaz na nový ubytovací systém STU. Platby za internát, poradovníky, rezervácie a prenechanie izieb.</p>
             <a href="#" class="btn">SPUSTIŤ</a>
         </div>
 
         <div class="box">
-            <i class='bx bxs-building-house' ></i>
-            <h3>ACCOMMODATION</h3>
-            <p>Odkaz na nový ubytovací systém STU. Platby za internát, poradovníky, rezervácie a prenechanie izieb.</p>
+            <i class='bx bxs-chess'></i>
+            <h3>CHESS</h3>
+            <p>Chceš si zahrať šach so spolužiakmi alebo prednášajúcimi? Na tomto mieste, iba proti FEIkárom. </p>
             <a href="#" class="btn">SPUSTIŤ</a>
         </div>
     </div>
@@ -51,9 +51,11 @@
     }
 
     .widgets-container {
-        background: white;
+        background: radial-gradient(circle, rgba(210, 210, 210, .5) 2px, #fafafa 0px);
+        background-size: 10px 10px;
         padding: 15px 9%;
-        padding-bottom: 100px;
+        padding-bottom: 50px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
     }
 
     .widgets-container .heading {
@@ -71,6 +73,7 @@
     }
 
     .widgets-container .box-container .box {
+        position: relative;
         box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
         border-radius: 8px;
         background: #fff;
@@ -98,18 +101,20 @@
     .widgets-container .box-container .box .btn {
         margin-top: 10px;
         display: inline-block;
+        position: absolute;
+        right: 15px;
+        top: 25px;
         background: #0039A6;
         color: #fff;
         font-size: 17px;
         border-radius: 8px;
-        padding: 8px 25px;
+        padding: 8px 15px;
     }
 
 
     .widgets-container .box-container .box:hover {
         box-shadow: 0 10px 15px rgba(0, 0, 0, .3);
         transform: scale(1.05);
-        background: rgba(0,0,0,0.08);
         /*background: radial-gradient(circle, rgba(237, 237, 237, 0.7) 2px, #fafafa 0px);
         background-size: 10px 10px;*/
     }
