@@ -3,6 +3,7 @@
   import LoginForm from "./lib/LoginForm.svelte";
   import RegistrationForm from "./lib/RegistrationForm.svelte";
   import Navbar from "./lib/Navbar.svelte";
+  import AppWidgets from "./lib/AppWidgets.svelte";
   //----------------------------
 
   //Routing
@@ -54,11 +55,20 @@
   <!-- Hlavny distribucny uzol , zoznam aplikacii -->
 
   {#if loggedIn}
-      <Navbar
-              bind:loggedIn={loggedIn}
-      ></Navbar>
+    <!-- Navbar -->
+    <Navbar
+            bind:loggedIn={loggedIn}
+    ></Navbar>
+
+    <!-- Welcome section -->
+
+    <!-- Info section -->
+
+    <!-- App section -->
+    <AppWidgets></AppWidgets>
   {/if}
 </main>
 
 <style>
+
 </style>

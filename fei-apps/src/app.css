@@ -10,19 +10,13 @@
 * {
   padding: 0;
   margin: 0;
-  box-sizing: border-box;  /* Kvoli LoginForm */
+  box-sizing: border-box; /* Pre LoginForm, RegistrationForm */
   font-family: 'Mulish', sans-serif;
 
-  /*
+  /*  FEI dotted background
   background: radial-gradient(circle, rgba(237, 237, 237, 0.7) 2px, #fafafa 0px);
   background-size: 10px 10px;
   */
 }
 
-
-body{  /* Pre LoginForm */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
