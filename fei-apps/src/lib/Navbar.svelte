@@ -122,8 +122,8 @@
     .search {
         margin: 0 auto;
         position: relative;
-        color: #888989;
-        border: 1px solid #0000005b;
+        color: #555;
+        border: 1px solid #555;
         border-radius: 8px;
     }
 

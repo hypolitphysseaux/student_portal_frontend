@@ -28,6 +28,13 @@
             <p>Chceš si zahrať šach so spolužiakmi alebo prednášajúcimi? Na tomto mieste, iba proti FEIkárom. </p>
             <a href="#" class="btn">SPUSTIŤ</a>
         </div>
+
+        <div class="box">
+            <i class='bx bxs-building-house' ></i>
+            <h3>ACCOMMODATION</h3>
+            <p>Odkaz na nový ubytovací systém STU. Platby za internát, poradovníky, rezervácie a prenechanie izieb.</p>
+            <a href="#" class="btn">SPUSTIŤ</a>
+        </div>
     </div>
 </div>
 
@@ -82,9 +89,10 @@
     }
 
     .widgets-container .box-container .box p {
-        color: #777;
+        color: #555;
         font-size: 15px;
-        line-height: 1.8;
+        font-weight: 600;
+        line-height: 2;
     }
 
     .widgets-container .box-container .box .btn {
@@ -101,8 +109,9 @@
     .widgets-container .box-container .box:hover {
         box-shadow: 0 10px 15px rgba(0, 0, 0, .3);
         transform: scale(1.05);
-        background: radial-gradient(circle, rgba(237, 237, 237, 0.7) 2px, #fafafa 0px);
-        background-size: 10px 10px;
+        background: rgba(0,0,0,0.08);
+        /*background: radial-gradient(circle, rgba(237, 237, 237, 0.7) 2px, #fafafa 0px);
+        background-size: 10px 10px;*/
     }
 
     .widgets-container .box-container .box .btn:hover {
