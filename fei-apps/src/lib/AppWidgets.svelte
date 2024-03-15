@@ -9,21 +9,21 @@
 
     <div class="box-container">
         <div class="box">
-            <img src="icon-1.png" alt="ikonka1">
+            <i class='bx bxs-school'></i>
             <h3>STUDENT PORTAL</h3>
             <p>Prehľad známok, účasť na cvičeniach, miesta odovzdania, termíny skúšok. Všetko dôležité na jednom mieste.</p>
             <a href="#" class="btn">SPUSTIŤ</a>
         </div>
 
         <div class="box">
-            <img src="icon-2.png" alt="ikonka2">
+            <i class='bx bxs-network-chart'></i>
             <h3>CONNECTIONS</h3>
             <p>Vyhľadajte kohokoľvek na FEIke. Súkromné správy, hromadné informácie v skupinových chatoch.</p>
             <a href="#" class="btn">SPUSTIŤ</a>
         </div>
 
         <div class="box">
-            <img src="icon-3.png" alt="ikonka3">
+            <i class='bx bxs-chess'></i>
             <h3>CHESS</h3>
             <p>Chceš si zahrať šach so spolužiakmi alebo prednášajúcimi? Na tomto mieste, iba proti FEIkárom. </p>
             <a href="#" class="btn">SPUSTIŤ</a>
@@ -71,8 +71,8 @@
         padding: 30px 20px;
     }
 
-    .widgets-container .box-container .box img {
-        height: 80px;
+    .widgets-container .box-container .box i{
+        font-size: 50px;
     }
 
     .widgets-container .box-container .box h3 {
