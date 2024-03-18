@@ -1,13 +1,18 @@
 <script lang="ts">
     export let loggedIn = true;
+    export let isDarkModeEnabled = false;
 
-    let isNavbarOpen;
+    let isNavbarOpen = false;
     const logOut = () => {
         loggedIn = false;
     }
 
     const toggleMenu = () => {
         isNavbarOpen = !isNavbarOpen;
+    }
+
+    const darkModeToggle = () => {
+        isDarkModeEnabled = !isDarkModeEnabled;
     }
 </script>
 
@@ -16,7 +21,10 @@
 </button>
 
 
-    <nav id="my-navbar" class="navbar" class:open={isNavbarOpen}>
+    <nav id="my-navbar" class="navbar"
+         class:open={isNavbarOpen}
+         class:isDarkModeEnabled={isDarkModeEnabled}
+    >
         <div class="logo">
             <img src="logo.svg" alt="">
             <span>APPS</span>
@@ -28,7 +36,14 @@
         </div>
 
         <nav>
-            <button><i class='bx bx-help-circle' ></i></button>
+            <!-- Tlacidlo na prepinanie darkmode -->
+            {#if !isDarkModeEnabled}
+                <button on:click={darkModeToggle}><i class='bx bx-moon'></i></button>
+            {:else}
+                <button on:click={darkModeToggle}><i class='bx bxs-sun'></i></button>
+            {/if}
+
+
             <button><i class='bx bx-cog' ></i></button>
 
             <!-- Odhlasenie  -->

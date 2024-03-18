@@ -17,6 +17,13 @@
   let isResetingPassword = false;
   //----------------------------
 
+  // State control
+  let isDarkModeEnabled = false;
+  //----------------------------
+
+  // Functions
+
+  //----------------------------
 </script>
 
 <main>
@@ -58,6 +65,7 @@
     <!-- Navbar -->
     <Navbar
             bind:loggedIn={loggedIn}
+            bind:isDarkModeEnabled={isDarkModeEnabled}
     ></Navbar>
 
     <!-- Welcome section -->

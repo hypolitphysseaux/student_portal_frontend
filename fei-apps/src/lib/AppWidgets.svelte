@@ -35,6 +35,20 @@
             <p>Chceš si zahrať šach so spolužiakmi alebo prednášajúcimi? Na tomto mieste, iba proti FEIkárom. </p>
             <a href="#" class="btn">SPUSTIŤ</a>
         </div>
+
+        <div class="box">
+            <i>I</i>
+            <h3>QUIZZES</h3>
+            <p>TODO</p>
+            <a href="#" class="btn">SPUSTIŤ</a>
+        </div>
+
+        <div class="box">
+
+            <h3>TODO</h3>
+            <p>TODO</p>
+            <a href="#" class="btn">SPUSTIŤ</a>
+        </div>
     </div>
 </div>
 
@@ -74,7 +88,8 @@
 
     .widgets-container .box-container .box {
         position: relative;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+        /*box-shadow: 0 5px 10px rgba(0, 0, 0, .2);*/
+        box-shadow: var(--box-shadow);
         border-radius: 8px;
         background: #fff;
         text-align: center;
@@ -92,7 +107,7 @@
     }
 
     .widgets-container .box-container .box p {
-        color: #555;
+        color: var(--color-info);
         font-size: 15px;
         font-weight: 600;
         line-height: 2;
@@ -114,7 +129,8 @@
 
     .widgets-container .box-container .box:hover {
         box-shadow: 0 10px 15px rgba(0, 0, 0, .3);
-        transform: scale(1.05);
+        transform: scale(1.03);
+        background: #eaeaea;
         /*background: radial-gradient(circle, rgba(237, 237, 237, 0.7) 2px, #fafafa 0px);
         background-size: 10px 10px;*/
     }
