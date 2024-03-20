@@ -4,29 +4,39 @@
 
     let isNavbarOpen = false;
     const logOut = () => {
+        //TODO logic
+
         loggedIn = false;
     }
 
-    const toggleMenu = () => {
+    const toggleNavbarOpen = () => {
         isNavbarOpen = !isNavbarOpen;
     }
 
-    const darkModeToggle = () => {
+    const toggleDarkMode = () => {
         isDarkModeEnabled = !isDarkModeEnabled;
     }
 </script>
 
-<button on:click={toggleMenu} class="burger">
+<button on:click={toggleNavbarOpen}
+        class="burger"
+        class:dark-mode={isDarkModeEnabled}
+>
     <i class='bx bx-menu'></i>
 </button>
 
 
     <nav id="my-navbar" class="navbar"
          class:open={isNavbarOpen}
-         class:isDarkModeEnabled={isDarkModeEnabled}
+         class:dark-mode={isDarkModeEnabled}
     >
         <div class="logo">
-            <img src="logo.svg" alt="">
+            {#if !isDarkModeEnabled}
+                <img src="logo.svg">
+            {:else}
+                <img src="logo-dark-mode.svg">
+            {/if}
+
             <span>APPS</span>
         </div>
 
@@ -38,9 +48,9 @@
         <nav>
             <!-- Tlacidlo na prepinanie darkmode -->
             {#if !isDarkModeEnabled}
-                <button on:click={darkModeToggle}><i class='bx bx-moon'></i></button>
+                <button on:click={toggleDarkMode}><i class='bx bx-moon'></i></button>
             {:else}
-                <button on:click={darkModeToggle}><i class='bx bxs-sun'></i></button>
+                <button on:click={toggleDarkMode}><i class='bx bxs-sun'></i></button>
             {/if}
 
 
@@ -85,6 +95,7 @@
 
     .burger i{
         font-size: 25px;
+        color: var(--navbar-icon-color);
     }
 
     .navbar {
@@ -99,8 +110,8 @@
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
-        background: #fff;
-        box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
+        background: var(--color-background);
+        box-shadow: var(--box-shadow) ; /*0 10px 50px rgba(0, 0, 0, 0.1)*/
         transition-property: translate, opacity, visibility;
         transition-duration: 0.5s;
         translate: -100% 0;
@@ -131,14 +142,14 @@
         font-size: 24px;
         font-weight: bold;
         text-decoration: none;
-        color: #0039A6;
+        color: var(--primary-button);
     }
 
     .search {
         margin: 0 auto;
         position: relative;
-        color: #555;
-        border: 1px solid #555;
+        color: var(--search-text-color);
+        border: 1px solid var(--search-text-color);
         border-radius: 8px;
     }
 
@@ -149,7 +160,7 @@
         translate: 0 -50%;
         z-index: 1;
         font-size: 20px;
-        color: inherit;
+        color: var(--navbar-icon-color);
     }
 
     .search input {
@@ -159,7 +170,7 @@
         font-size: 16px;
         border: 0;
         border-radius: 8px;
-        background: #eff1f2;
+        background: var(--search-background);
         color: inherit;
         font-family: inherit;
         outline: none;
@@ -173,6 +184,7 @@
 
     .navbar nav i{
         font-size: 25px;
+        color: var(--navbar-icon-color);
     }
 
     .navbar nav img {

@@ -1,7 +1,7 @@
 <script lang="ts">
   // Import komponentov
   import LoginForm from "./lib/LoginForm.svelte";
-  import RegistrationForm from "./lib/RegistrationForm.svelte";
+  import RegistrationForm from "./lib/RegistrationForm.svelte"; //TODO Dynamic import
   import Navbar from "./lib/Navbar.svelte";
   import AppWidgets from "./lib/AppWidgets.svelte";
   //----------------------------

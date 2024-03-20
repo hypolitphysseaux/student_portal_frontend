@@ -42,13 +42,6 @@
             <p>TODO</p>
             <a href="#" class="btn">SPUSTIŤ</a>
         </div>
-
-        <div class="box">
-
-            <h3>TODO</h3>
-            <p>TODO</p>
-            <a href="#" class="btn">SPUSTIŤ</a>
-        </div>
     </div>
 </div>
 
