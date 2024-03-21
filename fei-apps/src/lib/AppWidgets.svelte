@@ -1,8 +1,12 @@
 <script lang="ts">
+    export let isDarkModeEnabled = false;
 
 </script>
 
-<div class="widgets-container">
+<div
+        class="widgets-container"
+        class:dark-mode={isDarkModeEnabled}
+>
     <!--
     <h1 class="heading">Zoznam aplikácií</h1>
     -->
@@ -58,13 +62,14 @@
     }
 
     .widgets-container {
-        background: radial-gradient(circle, rgba(210, 210, 210, .5) 2px, #fafafa 0px);
+        background: var(--dotted-background);
         background-size: 10px 10px;
         padding: 15px 9%;
         padding-bottom: 50px;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
+        box-shadow: var(--box-shadow) ; /* 0 5px 10px rgba(0, 0, 0, .1) */
     }
 
+    /* Zoznam aplikacii */
     .widgets-container .heading {
         text-align: center;
         padding-bottom: 15px;
@@ -84,17 +89,18 @@
         /*box-shadow: 0 5px 10px rgba(0, 0, 0, .2);*/
         box-shadow: var(--box-shadow);
         border-radius: 8px;
-        background: #fff;
+        background: var(--color-card-background);
         text-align: center;
         padding: 30px 20px;
     }
 
     .widgets-container .box-container .box i{
         font-size: 50px;
+        color: var(--navbar-icon-color);;
     }
 
     .widgets-container .box-container .box h3 {
-        color: #0039A6;
+        color: var(--primary-color-heading);
         font-size: 22px;
         padding: 10px 0;
     }
@@ -112,7 +118,7 @@
         position: absolute;
         right: 15px;
         top: 25px;
-        background: #0039A6;
+        background: var(--primary-button);
         color: #fff;
         font-size: 17px;
         border-radius: 8px;
@@ -121,15 +127,14 @@
 
 
     .widgets-container .box-container .box:hover {
-        box-shadow: 0 10px 15px rgba(0, 0, 0, .3);
+        box-shadow: var(--box-shadow--hover);
         transform: scale(1.03);
-        background: #eaeaea;
+        background: var(--color-card-background--hover);
         /*background: radial-gradient(circle, rgba(237, 237, 237, 0.7) 2px, #fafafa 0px);
         background-size: 10px 10px;*/
     }
 
     .widgets-container .box-container .box .btn:hover {
-        letter-spacing: 1px;
-        background: #3160b8;
+        background: var(--primary-button--hover);
     }
 </style>

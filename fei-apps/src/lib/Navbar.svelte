@@ -142,7 +142,7 @@
         font-size: 24px;
         font-weight: bold;
         text-decoration: none;
-        color: var(--primary-button);
+        color: var(--primary-color-heading);
     }
 
     .search {

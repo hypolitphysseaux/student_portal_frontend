@@ -15,7 +15,6 @@
   let loggedIn = false;
   let isSigningUp = false;
   let isResetingPassword = false;
-  //----------------------------
 
   // State control
   let isDarkModeEnabled = false;
@@ -73,7 +72,9 @@
     <!-- Info section -->
 
     <!-- App section -->
-    <AppWidgets></AppWidgets>
+    <AppWidgets
+            bind:isDarkModeEnabled={isDarkModeEnabled}
+    ></AppWidgets>
   {/if}
 </main>
 

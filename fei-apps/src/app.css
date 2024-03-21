@@ -9,34 +9,45 @@
 
   /* Css variables */
   --primary-button: #0039A6;
+  --primary-button--hover: #3160b8;
+  --primary-color-heading: #0039A6;
   --navbar-icon-color: #000;
   --search-background: #eff1f2;
   --search-text-color: #555;
   --color-background: #fff;
-
-  --color-gradient: linear-gradient(90deg, #eee, #f9f9f9, #eee);
-  --color-card-background: #fff;
-  --color-header: #000;
-  --color-info: #363949;
+  --dotted-background: radial-gradient(circle, rgba(210, 210, 210, .5) 2px, #fafafa 0px); /* with background-size: 10px 10px;*/
   --box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 5px;
+  --box-shadow--hover: 0 10px 15px rgba(0, 0, 0, .3);
+  --color-info: #363949;
+  --color-card-background: #fff;
+  --color-card-background--hover: #eaeaea;
+
+
+  /* Not used */
+  --color-gradient: linear-gradient(90deg, #eee, #f9f9f9, #eee);
+
   /*-------------------------------------*/
 }
 
-
 /* Dark mode variables */
 .dark-mode {
-  --primary-button: #64bfe3;
+  --primary-button: #0039A6;
+  --primary-button--hover: #3160b8;
+  --primary-color-heading: #64bfe3;
   --navbar-icon-color: #fff;
   --search-background: #414247;
   --search-text-color: #fff;
   --color-background: #252525;
-
-
-  --color-gradient: linear-gradient(to right, #656871 0%, #888b94 20%, #656871 40%, #656871 100%);
-  --color-card-background: #252525;
-  --color-header: #fff;
+  --dotted-background: radial-gradient(circle, rgb(0, 0, 0, .85) 2px, #414247 0px); /* with background-size: 10px 10px;*/
+  --box-shadow: rgba(200, 200, 200, .1) 0px 7px 29px 5px;
+  --box-shadow--hover: 0 10px 15px rgba(0, 57, 166, 0.2);
   --color-info: #ccc;
-  --box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  --color-card-background: #1f1f1f;
+  --color-card-background--hover: #0a1323;
+
+  /* Not used */
+  --color-gradient: linear-gradient(to right, #656871 0%, #888b94 20%, #414247, #656871 100%);
+  --color-header: #fff;
 }
 /*---------------------------*/
 
@@ -46,7 +57,7 @@
   box-sizing: border-box; /* Pre LoginForm, RegistrationForm */
   font-family: 'Mulish', sans-serif;
 
-  /*  FEI dotted background
+  /* FEI dotted background
   background: radial-gradient(circle, rgba(237, 237, 237, 0.7) 2px, #fafafa 0px);
   background-size: 10px 10px;
   */
