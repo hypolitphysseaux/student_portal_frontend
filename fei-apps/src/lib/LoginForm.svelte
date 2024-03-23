@@ -1,11 +1,74 @@
 <script lang="ts">
-    export let loggedIn = false;
+    import firebaseApp from "../firebase";
+
+    import {getAuth,
+        GoogleAuthProvider,
+        FacebookAuthProvider,
+        signInWithPopup,
+    } from "firebase/auth";
+
+
+    const auth = getAuth(firebaseApp);
+    const googleProvider = new GoogleAuthProvider();
+    const facebookProvider = new FacebookAuthProvider();
+
+    async function facebookPopUpSignIn(){
+        try {
+            // Step 1: User tries to sign in using Google.
+            let result = await signInWithPopup(auth, new FacebookAuthProvider());
+            console.log(result);
+        } catch (error) {
+            // Step 2: User's email already exists.
+            if (error.code === "auth/account-exists-with-different-credential") {
+                // The pending Google credential.
+                let pendingCred = error.credential;
+
+                // Step 3: Save the pending credential in temporary storage,
+
+                // Step 4: Let the user know that they already have an account
+                // but with a different provider, and let them choose another
+                // sign-in method.
+            }
+        }
+    }
+
+    async function googlePopUpSignIn(){
+        try {
+            let result = await signInWithPopup(auth, googleProvider);
+
+            // This gives you a Google Access Token. You can use it to access the Google API
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential?.accessToken;
+
+            //The signed-in user info
+            const user = result.user;
+            //console.log(user);
+
+            loggedIn = true;
+        } catch (error) {
+
+            // Step 2: User's email already exists.
+            if (error.code === "auth/account-exists-with-different-credential") {
+                // The pending Google credential.
+                let pendingCred = error.credential;
+
+                // Step 3: Save the pending credential in temporary storage,
+
+                // Step 4: Let the user know that they already have an account
+                // but with a different provider, and let them choose another
+                // sign-in method.
+            }
+        }
+    }
+
+
 
     function logIn(){
         //TODO request
-
         loggedIn = true;
     }
+
+    export let loggedIn = false;
 </script>
 
 <main>
@@ -60,13 +123,13 @@
     <div class="container">
         <h1>Prihlásiť sa do účtu</h1>
         <div class="social-login">
-            <button class="google">
+            <button on:click={googlePopUpSignIn} class="google">
                 <i class='bx bxl-google'></i>
                 Google
             </button>
-            <button class="apple">
-                <i class='bx bxl-apple'></i>
-                Apple
+            <button on:click={facebookPopUpSignIn} class="apple">
+                <i class='bx bxl-facebook-circle'></i>
+                Facebook
             </button>
         </div>
 

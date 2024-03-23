@@ -19,6 +19,8 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
+    "firebase": "^10.9.0",
+    "firebaseui": "^6.1.0",
     "svelte-routing": "^2.12.0"
   }
 }
