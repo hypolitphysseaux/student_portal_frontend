@@ -30,7 +30,7 @@
             <i class='bx bxs-building-house' ></i>
             <h3>ACCOMMODATION</h3>
             <p>Odkaz na nový ubytovací systém STU. Platby za internát, poradovníky, rezervácie a prenechanie izieb.</p>
-            <a href="#" class="btn">SPUSTIŤ</a>
+            <a href="https://ubytovanie.stuba.sk/new/sk/informacie/" target="_blank" class="btn">SPUSTIŤ</a>
         </div>
 
         <div class="box">
@@ -41,7 +41,7 @@
         </div>
 
         <div class="box">
-            <i>I</i>
+            <i class='bx bx-chalkboard'></i>
             <h3>QUIZZES</h3>
             <p>TODO</p>
             <a href="#" class="btn">SPUSTIŤ</a>
