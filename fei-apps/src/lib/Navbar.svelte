@@ -1,11 +1,13 @@
 <script lang="ts">
     export let loggedIn = true;
     export let isDarkModeEnabled = false;
+    export let loggedUser;
 
     let isNavbarOpen = false;
     const logOut = () => {
-        //TODO logic
+        //TODO firebase logic
 
+        loggedUser = "";
         loggedIn = false;
     }
 
@@ -60,7 +62,7 @@
             <button on:click={logOut}><i class='bx bx-log-out'></i></button>
 
             <!-- Profilovka  -->
-            <img src="logo.png" alt="">
+            <img src="{loggedUser.photoURL}" alt="">
         </nav>
     </nav>
 
@@ -192,6 +194,7 @@
         width: 32px;
         height: 32px;
         margin-left: 8px;
+        border-radius: 50%;
     }
 
     @media (width >=500px) {

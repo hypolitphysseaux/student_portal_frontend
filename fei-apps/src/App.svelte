@@ -40,6 +40,7 @@
   let isResetingPassword = false;
 
   // State control
+  let loggedUser;
   let isDarkModeEnabled = false;
   //----------------------------
 
@@ -56,7 +57,10 @@
           !isSigningUp &&
           !isResetingPassword
   }
-    <LoginForm bind:loggedIn={loggedIn}></LoginForm>
+    <LoginForm
+            bind:loggedIn={loggedIn}
+            bind:loggedUser={loggedUser}
+    ></LoginForm>
   {/if}
 
 
@@ -87,6 +91,7 @@
     <!-- Navbar -->
     <Navbar
             bind:loggedIn={loggedIn}
+            bind:loggedUser={loggedUser}
             bind:isDarkModeEnabled={isDarkModeEnabled}
     ></Navbar>
 
@@ -98,6 +103,12 @@
     <AppWidgets
             bind:isDarkModeEnabled={isDarkModeEnabled}
     ></AppWidgets>
+
+    <div style="text-align: center">
+      <h5>logged user:</h5>
+      <p>{loggedUser.email} {loggedUser.displayName}</p>
+      <p>Tieto informacie su od Google, spolu s profilovkou vpravo hore</p>
+    </div>
   {/if}
 </main>
 

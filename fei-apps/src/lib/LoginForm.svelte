@@ -15,7 +15,7 @@
     async function facebookPopUpSignIn(){
         try {
             // Step 1: User tries to sign in using Google.
-            let result = await signInWithPopup(auth, new FacebookAuthProvider());
+            let result = await signInWithPopup(auth, facebookProvider);
             console.log(result);
         } catch (error) {
             // Step 2: User's email already exists.
@@ -42,8 +42,9 @@
 
             //The signed-in user info
             const user = result.user;
-            //console.log(user);
 
+            loggedUser = user.toJSON();
+            console.log(loggedUser);
             loggedIn = true;
         } catch (error) {
 
@@ -69,6 +70,7 @@
     }
 
     export let loggedIn = false;
+    export let loggedUser;
 </script>
 
 <main>
