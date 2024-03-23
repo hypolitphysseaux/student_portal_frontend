@@ -19,6 +19,10 @@
   const firebaseApp = initializeApp(firebaseConfig);
   //---------------------------------
 
+  //Routing
+  import { Router, Link, Route } from "svelte-routing";
+  //export let url = "";
+  //----------------------------
 
   // Import komponentov
   import LoginForm from "./lib/LoginForm.svelte";
@@ -26,11 +30,6 @@
 
   import Navbar from "./lib/Navbar.svelte";  //TODO Dynamic import po prihlaseni
   import AppWidgets from "./lib/AppWidgets.svelte";
-  //----------------------------
-
-  //Routing
-  import { Router, Link, Route } from "svelte-routing";
-  //export let url = "";
   //----------------------------
 
 
@@ -104,11 +103,15 @@
             bind:isDarkModeEnabled={isDarkModeEnabled}
     ></AppWidgets>
 
-    <div style="text-align: center">
-      <h5>logged user:</h5>
-      <p>{loggedUser.email} {loggedUser.displayName}</p>
-      <p>Tieto informacie su od Google, spolu s profilovkou vpravo hore</p>
-    </div>
+    {#if loggedUser}
+      <div style="text-align: center">
+        <h5>logged user:</h5>
+        <p>{loggedUser.email} {loggedUser.displayName}</p>
+        <p>Tieto informacie su od Google, spolu s profilovkou vpravo hore</p>
+      </div>
+    {/if}
+
+
   {/if}
 </main>
 

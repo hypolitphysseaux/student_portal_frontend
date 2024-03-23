@@ -50,16 +50,25 @@
         <nav>
             <!-- Tlacidlo na prepinanie darkmode -->
             {#if !isDarkModeEnabled}
-                <button on:click={toggleDarkMode}><i class='bx bx-moon'></i></button>
+                <button
+                        on:click={toggleDarkMode}
+                        data-tooltip="Tmavý režim"
+                ><i class='bx bx-moon'></i></button>
             {:else}
-                <button on:click={toggleDarkMode}><i class='bx bxs-sun'></i></button>
+                <button
+                        on:click={toggleDarkMode}
+                        data-tooltip="Svetlý režim"
+                ><i class='bx bxs-sun'></i></button>
             {/if}
 
 
-            <button><i class='bx bx-cog' ></i></button>
+            <button data-tooltip="Nastavenia"><i class='bx bx-cog'></i></button>
 
             <!-- Odhlasenie  -->
-            <button on:click={logOut}><i class='bx bx-log-out'></i></button>
+            <button
+                    on:click={logOut}
+                    data-tooltip="Odhlásiť sa"
+            ><i class='bx bx-log-out'></i></button>
 
             <!-- Profilovka  -->
             <img src="{loggedUser.photoURL}" alt="">
@@ -187,6 +196,35 @@
     .navbar nav i{
         font-size: 25px;
         color: var(--navbar-icon-color);
+    }
+
+    .navbar nav button{
+        position: relative;
+    }
+
+    .navbar nav button::before {
+        --scale: 0;
+
+        --translate-y: 60%;
+
+        position: absolute;
+        bottom: -.25rem;
+        left: 50%;
+        transform: translateX(-50%) translateY(var(--translate-y, 0)) scale(var(--scale));
+        transition: 300ms transform;
+        transform-origin: top center;
+
+        content: attr(data-tooltip);
+        color: white;
+        padding: .5rem;
+        border-radius: 8px;
+        text-align: center;
+        width: max-content;
+        background: var(--tooltip-color);
+    }
+
+    .navbar nav button:hover::before {
+        --scale: 1;
     }
 
     .navbar nav img {

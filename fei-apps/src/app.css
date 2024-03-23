@@ -21,6 +21,7 @@
   --color-info: #363949;
   --color-card-background: #fff;
   --color-card-background--hover: #eaeaea;
+  --tooltip-color: #333;
 
 
   /* Not used */
@@ -44,6 +45,7 @@
   --color-info: #ccc;
   --color-card-background: #1f1f1f;
   --color-card-background--hover: #0a1323;
+  --tooltip-color: #656871;
 
   /* Not used */
   --color-gradient: linear-gradient(to right, #656871 0%, #888b94 20%, #414247, #656871 100%);

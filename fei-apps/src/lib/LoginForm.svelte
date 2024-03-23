@@ -12,12 +12,13 @@
     const googleProvider = new GoogleAuthProvider();
     const facebookProvider = new FacebookAuthProvider();
 
-    async function facebookPopUpSignIn(){
+    async function facebookPopUpSignIn(){ //TODO
         try {
             // Step 1: User tries to sign in using Google.
             let result = await signInWithPopup(auth, facebookProvider);
             console.log(result);
         } catch (error) {
+            console.log(error);
             // Step 2: User's email already exists.
             if (error.code === "auth/account-exists-with-different-credential") {
                 // The pending Google credential.
@@ -66,6 +67,8 @@
 
     function logIn(){
         //TODO request
+
+        loggedUser = '';
         loggedIn = true;
     }
 
