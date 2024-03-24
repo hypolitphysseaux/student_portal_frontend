@@ -1,11 +1,22 @@
 <script lang="ts">
+    import firebaseApp from "../firebase";
+    import {getAuth, signOut} from "firebase/auth";
+    const auth = getAuth(firebaseApp);
+
     export let loggedIn = true;
     export let isDarkModeEnabled = false;
     export let loggedUser;
 
     let isNavbarOpen = false;
-    const logOut = () => {
+    async function logOut(){
         //TODO firebase logic
+        signOut(auth)
+            .then(() =>{
+                console.log("Successfully signed out.");
+            })
+            .catch((error) => {
+                console.log("Error when signing out.", error);
+            });
 
         loggedUser = "";
         loggedIn = false;

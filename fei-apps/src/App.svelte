@@ -2,6 +2,8 @@
 
   // Initialize Firebase
   import { initializeApp } from "firebase/app";
+  import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
+
 
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
@@ -17,6 +19,7 @@
   };
 
   const firebaseApp = initializeApp(firebaseConfig);
+  const db = getFirestore(firebaseApp);
   //---------------------------------
 
   //Routing
@@ -30,6 +33,7 @@
 
   import Navbar from "./lib/Navbar.svelte";  //TODO Dynamic import po prihlaseni
   import AppWidgets from "./lib/AppWidgets.svelte";
+  //import firestore = firebase.firestore;
   //----------------------------
 
 
@@ -44,6 +48,27 @@
   //----------------------------
 
   // Functions
+
+  async function testRead(){ //WORKING
+    const querySnapshot = await getDocs(collection(db, 'users'));
+
+    querySnapshot.forEach((doc) => {
+      console.log(`${doc.id} => ${doc.data().meno} , ${doc.data().ais_id}`)
+    });
+  }
+
+  async function testWrite(){ //WORKING
+    const testName = document.getElementById("testInput") || HTMLInputElement;
+
+    try {
+      const docRef = await addDoc(collection(db, "users"), {
+        name: testName.value
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  }
 
   //----------------------------
 </script>
@@ -103,15 +128,18 @@
             bind:isDarkModeEnabled={isDarkModeEnabled}
     ></AppWidgets>
 
-    {#if loggedUser}
-      <div style="text-align: center">
-        <h5>logged user:</h5>
-        <p>{loggedUser.email} {loggedUser.displayName}</p>
-        <p>Tieto informacie su od Google, spolu s profilovkou vpravo hore</p>
-      </div>
-    {/if}
 
+    <!-- Docasne testy  ALL WORKING-->
+    <div style="display: flex; justify-content: center; flex-direction: column;">
+      <h3>Test na citanie z firestore</h3>
+      <button style="width: 200px" on:click={testRead}>Read</button>
+    </div>
 
+    <div style="display: flex; justify-content: center; flex-direction: column;">
+      <h3>Test na zapis do firestore</h3>
+      <input type="text" id="testInput">
+      <button style="width: 200px" on:click={testWrite}>Write</button>
+    </div>
   {/if}
 </main>
 

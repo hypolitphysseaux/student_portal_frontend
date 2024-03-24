@@ -66,7 +66,7 @@
 
 
     function logIn(){
-        //TODO request
+        //TODO request email, password
 
         loggedUser = '';
         loggedIn = true;
@@ -144,20 +144,31 @@
             <div class="line"></div>
         </div>
 
-        <form>
+        <form on:submit={logIn}>
             <label for="email">Email:</label>
             <div class="custom-input">
-                <input type="email" name="email" placeholder="Zadajte email" autocomplete="off">
+                <input
+                        type="email"
+                        name="email"
+                        placeholder="Zadajte email"
+                        required
+                        autocomplete="off">
                 <i class='bx bx-at'></i>
             </div>
 
             <label for="password">Heslo:</label>
             <div class="custom-input">
-                <input type="password" name="password" placeholder="Zadajte heslo">
+                <input
+                        type="password"
+                        name="password"
+                        required
+                        placeholder="Zadajte heslo">
                 <i class='bx bx-lock-alt'></i>
             </div>
 
-            <button on:click={logIn} class="login">Prihlásiť sa</button>
+            <button
+                    type="submit"
+                    class="login">Prihlásiť sa</button>
 
             <div class="links">
                 <a href="#">Resetovať heslo</a>
