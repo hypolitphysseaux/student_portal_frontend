@@ -33,6 +33,7 @@
 
   import Navbar from "./lib/Navbar.svelte";  //TODO Dynamic import po prihlaseni
   import AppWidgets from "./lib/AppWidgets.svelte";
+  import AppFooter from "./lib/AppFooter.svelte";
   //import firestore = firebase.firestore;
   //----------------------------
 
@@ -129,7 +130,7 @@
     ></AppWidgets>
 
 
-    <!-- Docasne testy  ALL WORKING-->
+    <!-- Docasne testy  ALL WORKING
     <div style="display: flex; justify-content: center; flex-direction: column;">
       <h3>Test na citanie z firestore</h3>
       <button style="width: 200px" on:click={testRead}>Read</button>
@@ -140,6 +141,9 @@
       <input type="text" id="testInput">
       <button style="width: 200px" on:click={testWrite}>Write</button>
     </div>
+    -->
+    <!-- App Footer -->
+    <AppFooter bind:isDarkModeEnabled={isDarkModeEnabled}></AppFooter>
   {/if}
 </main>
 

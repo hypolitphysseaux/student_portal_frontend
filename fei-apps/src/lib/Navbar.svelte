@@ -88,12 +88,6 @@
 
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap');
-
-    * {
-        box-sizing: border-box;
-    }
-
     button {
         display: grid;
         place-items: center;
