@@ -51,10 +51,10 @@
   // Functions
 
   async function testRead(){ //WORKING
-    const querySnapshot = await getDocs(collection(db, 'users'));
+    const querySnapshot = await getDocs(collection(db, 'userDetails'));
 
     querySnapshot.forEach((doc) => {
-      console.log(`${doc.id} => ${doc.data().meno} , ${doc.data().ais_id}`)
+      console.log(`${doc.id} => ${doc.data().aisId}`)
     });
   }
 
@@ -62,8 +62,8 @@
     const testName = document.getElementById("testInput") || HTMLInputElement;
 
     try {
-      const docRef = await addDoc(collection(db, "users"), {
-        name: testName.value
+      const docRef = await addDoc(collection(db, "usersDetailasds"), {
+        status: testName.value
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -74,78 +74,86 @@
   //----------------------------
 </script>
 
-<main>
+<div class="app-wrapper">
+  <div class="app-content">
 
-  <!-- Prihlasovanie -->
-  {#if
-          !loggedIn &&
-          !isSigningUp &&
-          !isResetingPassword
-  }
-    <LoginForm
-            bind:loggedIn={loggedIn}
-            bind:loggedUser={loggedUser}
-    ></LoginForm>
-  {/if}
-
-
-  <!-- Registracia -->
-  {#if
-          !loggedIn &&
-          !isResetingPassword &&
-          isSigningUp
-  }
-    <RegistrationForm></RegistrationForm>
-  {/if}
-
-  <!-- Resetovanie hesla -->
-  {#if
-          !loggedIn &&
-          !isSigningUp &&
-          isResetingPassword
-  }
-    <div>
-      Reset password TODO
-    </div>
-  {/if}
+    <!-- Prihlasovanie -->
+    {#if
+            !loggedIn &&
+            !isSigningUp &&
+            !isResetingPassword
+    }
+      <LoginForm
+              bind:loggedIn={loggedIn}
+              bind:loggedUser={loggedUser}
+      ></LoginForm>
+    {/if}
 
 
-  <!-- Hlavny distribucny uzol , zoznam aplikacii -->
+    <!-- Registracia -->
+    {#if
+            !loggedIn &&
+            !isResetingPassword &&
+            isSigningUp
+    }
+      <RegistrationForm></RegistrationForm>
+    {/if}
 
-  {#if loggedIn}
-    <!-- Navbar -->
-    <Navbar
-            bind:loggedIn={loggedIn}
-            bind:loggedUser={loggedUser}
-            bind:isDarkModeEnabled={isDarkModeEnabled}
-    ></Navbar>
-
-    <!-- Welcome section -->
-
-    <!-- Info section -->
-
-    <!-- App section -->
-    <AppWidgets
-            bind:isDarkModeEnabled={isDarkModeEnabled}
-    ></AppWidgets>
+    <!-- Resetovanie hesla -->
+    {#if
+            !loggedIn &&
+            !isSigningUp &&
+            isResetingPassword
+    }
+      <div>
+        Reset password TODO
+      </div>
+    {/if}
 
 
-    <!-- Docasne testy  ALL WORKING
-    <div style="display: flex; justify-content: center; flex-direction: column;">
-      <h3>Test na citanie z firestore</h3>
-      <button style="width: 200px" on:click={testRead}>Read</button>
-    </div>
+    <!-- Hlavny distribucny uzol , zoznam aplikacii -->
 
-    <div style="display: flex; justify-content: center; flex-direction: column;">
-      <h3>Test na zapis do firestore</h3>
-      <input type="text" id="testInput">
-      <button style="width: 200px" on:click={testWrite}>Write</button>
-    </div>
-    -->
+    {#if loggedIn}
+      <!-- Navbar -->
+      <Navbar
+              bind:loggedIn={loggedIn}
+              bind:loggedUser={loggedUser}
+              bind:isDarkModeEnabled={isDarkModeEnabled}
+      ></Navbar>
+
+      <!-- Welcome section -->
+
+      <!-- Info section -->
+
+      <!-- App section -->
+      <AppWidgets
+              bind:isDarkModeEnabled={isDarkModeEnabled}
+      ></AppWidgets>
+
+
+
+      <div style="display: flex; justify-content: center; flex-direction: column;">
+        <h3>Test na citanie z firestore</h3>
+        <button style="width: 200px" on:click={testRead}>Read</button>
+      </div>
+
+      <div style="display: flex; justify-content: center; flex-direction: column;">
+        <h3>Test na zapis do firestore</h3>
+        <input type="text" id="testInput">
+        <button style="width: 200px" on:click={testWrite}>Write</button>
+      </div>
+
+    {/if}
+  </div>
+
+
+  <div class="app-footer">
     <!-- App Footer -->
     <AppFooter bind:isDarkModeEnabled={isDarkModeEnabled}></AppFooter>
-  {/if}
-</main>
+  </div>
+</div>
+
+
 
 <style>
 

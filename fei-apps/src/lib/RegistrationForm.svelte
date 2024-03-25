@@ -2,7 +2,7 @@
 
 </script>
 
-<main>
+<div class="form-wrapper">
     <div class="logo">
         <svg width="91" height="31" viewBox="0 0 91 31" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -87,7 +87,7 @@
             </div>
         </form>
     </div>
-</main>
+</div>
 
 
 
@@ -115,11 +115,12 @@
         color: #0039A6;
     }
 
-    main{
+    .form-wrapper{
         /* Pre LoginForm, RegistrationForm , povodne v body */
         display: flex;
         align-items: center;
         justify-content: center;
+        margin-bottom: 100px;
     }
 
     .container {
