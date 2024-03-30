@@ -32,6 +32,7 @@
   import RegistrationForm from "./lib/RegistrationForm.svelte";
 
   import Navbar from "./lib/Navbar.svelte";  //TODO Dynamic import po prihlaseni
+  import WelcomeSection from "./lib/WelcomeSection.svelte";
   import AppWidgets from "./lib/AppWidgets.svelte";
   import AppFooter from "./lib/AppFooter.svelte";
   //import firestore = firebase.firestore;
@@ -122,8 +123,14 @@
       ></Navbar>
 
       <!-- Welcome section -->
+      <WelcomeSection
+              bind:isDarkModeEnabled={isDarkModeEnabled}
+              bind:loggedUser={loggedUser}
+      ></WelcomeSection>
 
       <!-- Info section -->
+
+      <!-- Notes section -->
 
       <!-- App section -->
       <AppWidgets

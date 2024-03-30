@@ -7,10 +7,6 @@
         class="widgets-container"
         class:dark-mode={isDarkModeEnabled}
 >
-    <!--
-    <h1 class="heading">Zoznam aplikácií</h1>
-    -->
-
     <div class="box-container">
         <div class="box">
             <i class='bx bxs-school'></i>
@@ -56,7 +52,6 @@
 
     *{
         outline: none;
-        border: none;
         text-decoration: none;
         transition: .2s linear;
     }

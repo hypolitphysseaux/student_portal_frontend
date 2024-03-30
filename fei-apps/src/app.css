@@ -23,6 +23,8 @@
   --color-card-background--hover: #eaeaea;
   --tooltip-color: #333;
   --footer-background: #222;
+  --md-icon-button-hover-state-layer-color: blue;
+  --welcome-section-background: linear-gradient(90deg, #999,whitesmoke, #999) ;
 
   /* Not used */
   --color-gradient: linear-gradient(90deg, #eee, #f9f9f9, #eee);
@@ -48,7 +50,9 @@
   --tooltip-color: #656871;
   --footer-background: #000;
   --footer-headers: #ffffff;
-
+  --md-icon-button-hover-state-layer-color: white;
+  --welcome-section-background: linear-gradient(90deg, #000,#0a1323, #000) ;
+;
   /* Not used */
   --color-gradient: linear-gradient(to right, #656871 0%, #888b94 20%, #414247, #656871 100%);
   --color-header: #fff;

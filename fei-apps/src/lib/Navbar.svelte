@@ -113,7 +113,7 @@
 
 
             <!-- Profilovka  -->
-            <img src="{loggedUser.photoURL}" alt="Profilova fotka">
+            <img src="{loggedUser.photoURL}">
         </nav>
     </nav>
 
