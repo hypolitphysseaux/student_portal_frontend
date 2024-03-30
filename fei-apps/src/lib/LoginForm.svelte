@@ -5,6 +5,7 @@
         GoogleAuthProvider,
         FacebookAuthProvider,
         signInWithPopup,
+        signInWithEmailAndPassword
     } from "firebase/auth";
 
 
@@ -66,10 +67,23 @@
 
 
     function logIn(){
-        //TODO request email, password
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
-        loggedUser = '';
-        loggedIn = true;
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in
+                const user = userCredential.user;
+                console.log(user);
+
+                loggedUser = user;
+                loggedIn = true;
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode, errorMessage);
+            });
     }
 
     export let loggedIn = false;
@@ -144,12 +158,13 @@
             <div class="line"></div>
         </div>
 
-        <form on:submit={logIn}>
+        <div class="form">
             <label for="email">Email:</label>
             <div class="custom-input">
                 <input
                         type="email"
                         name="email"
+                        id="email"
                         placeholder="Zadajte email"
                         required
                         autocomplete="off">
@@ -161,12 +176,14 @@
                 <input
                         type="password"
                         name="password"
+                        id="password"
                         required
                         placeholder="Zadajte heslo">
                 <i class='bx bx-lock-alt'></i>
             </div>
 
             <button
+                    on:click={logIn}
                     type="submit"
                     class="login">Prihlásiť sa</button>
 
@@ -174,7 +191,7 @@
                 <a href="#">Resetovať heslo</a>
                 <a href="#">Nemáte účet?</a>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -276,7 +293,7 @@
         font-size: 15px;
     }
 
-    .container form label {
+    .container .form label {
         color: #1d1d1d;
         font-size: 14px;
         font-weight: bold;
@@ -285,11 +302,11 @@
         margin-top: 12px;
     }
 
-    .container form .custom-input {
+    .container .form .custom-input {
         position: relative;
     }
 
-    .container form .custom-input input {
+    .container .form .custom-input input {
         color: #1d1d1d;
         font-size: 16px;
         font-weight: 500;
@@ -305,7 +322,7 @@
         transition: all 0.3s ease;
     }
 
-    .container form .custom-input i {
+    .container .form .custom-input i {
         position: absolute;
         font-size: 28px;
         right: 10px;
@@ -313,15 +330,15 @@
         transition: all 0.3s ease;
     }
 
-    .container form .custom-input input:focus {
+    .container .form .custom-input input:focus {
         border-color: #0039A6;
     }
 
-    .container form .custom-input input:focus+i {
+    .container .form .custom-input input:focus+i {
         color: #0039A6;
     }
 
-    .container form .login {
+    .container .form .login {
         width: 100%;
         margin-top: 30px;
         background: #0039A6;
@@ -337,7 +354,7 @@
         transition: all 0.3s ease;
     }
 
-    .container form .login:hover {
+    .container .form .login:hover {
         background: #3160b8;
     }
 

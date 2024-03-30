@@ -131,7 +131,7 @@
       ></AppWidgets>
 
 
-
+      <!--
       <div style="display: flex; justify-content: center; flex-direction: column;">
         <h3>Test na citanie z firestore</h3>
         <button style="width: 200px" on:click={testRead}>Read</button>
@@ -142,7 +142,7 @@
         <input type="text" id="testInput">
         <button style="width: 200px" on:click={testWrite}>Write</button>
       </div>
-
+      -->
     {/if}
   </div>
 

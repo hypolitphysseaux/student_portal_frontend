@@ -1,5 +1,25 @@
 <script lang="ts">
+    import firebaseApp from "../firebase";
+    import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+    const auth = getAuth(firebaseApp);
 
+    function register(){
+        const email = document.getElementById('email-reg').value;
+        const password = document.getElementById('password-reg').value;
+        const confirmPassword = document.getElementById('confirm-password');
+
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed up
+                const user = userCredential.user;
+                console.log(user);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode, errorMessage);
+            });
+    }
 </script>
 
 <div class="form-wrapper">
@@ -54,7 +74,7 @@
     <div class="container">
         <h1>Vytvorte si účet</h1>
 
-        <form>
+        <div class="form">
             <label for="name">AIS ID:</label>
             <div class="custom-input">
                 <input  name="ais-id" placeholder="Zadajte AIS ID" autocomplete="off">
@@ -63,29 +83,47 @@
 
             <label for="email">Email:</label>
             <div class="custom-input">
-                <input type="email" name="email" placeholder="Zadajte email" autocomplete="off">
+                <input type="email"
+                       id="email-reg"
+                       name="email"
+                       placeholder="Zadajte email"
+                       autocomplete="off"
+                       required
+                >
                 <i class='bx bx-at'></i>
             </div>
 
             <label for="password">Heslo:</label>
             <div class="custom-input">
-                <input type="password" name="password" placeholder="Zadajte heslo">
+                <input
+                        type="password"
+                        id="password-reg"
+                        name="password"
+                        placeholder="Zadajte heslo"
+                        required
+                >
                 <i class='bx bx-lock-alt'></i>
             </div>
 
             <label for="password">Potvrďte heslo:</label>
             <div class="custom-input">
-                <input type="password" name="password" placeholder="Zadajte heslo">
+                <input
+                        type="password"
+                        id="confirm-password"
+                        name="password"
+                        placeholder="Zadajte heslo"
+                        required
+                >
                 <i class='bx bx-lock-alt'></i>
             </div>
 
-            <button class="login">Registrovať sa</button>
+            <button on:click={register} class="login">Registrovať sa</button>
 
             <div class="links">
                 <a href="#">Napíšte nám</a>
                 <a href="#">Už máte účet?</a>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -187,7 +225,7 @@
         font-size: 15px;
     }
 
-    .container form label {
+    .container .form label {
         color: #1d1d1d;
         font-size: 14px;
         font-weight: bold;
@@ -196,11 +234,11 @@
         margin-top: 12px;
     }
 
-    .container form .custom-input {
+    .container .form .custom-input {
         position: relative;
     }
 
-    .container form .custom-input input {
+    .container .form .custom-input input {
         color: #1d1d1d;
         font-size: 16px;
         font-weight: 500;
@@ -216,7 +254,7 @@
         transition: all 0.3s ease;
     }
 
-    .container form .custom-input i {
+    .container .form .custom-input i {
         position: absolute;
         font-size: 28px;
         right: 10px;
@@ -224,15 +262,15 @@
         transition: all 0.3s ease;
     }
 
-    .container form .custom-input input:focus {
+    .container .form .custom-input input:focus {
         border-color: #0039A6;
     }
 
-    .container form .custom-input input:focus+i {
+    .container .form .custom-input input:focus+i {
         color: #0039A6;
     }
 
-    .container form .login {
+    .container .form .login {
         width: 100%;
         margin-top: 30px;
         background: #0039A6;
@@ -248,7 +286,7 @@
         transition: all 0.3s ease;
     }
 
-    .container form .login:hover {
+    .container .form .login:hover {
         background: #3160b8;
     }
 
