@@ -22,18 +22,18 @@
             <div class="footer-col">
                 <h4>O fakulte</h4>
                 <ul>
-                    <li><a href="#">Základné informácie</a></li>
-                    <li><a href="#">Kontakt</a></li>
-                    <li><a href="#">Ústavy a inštitúty</a></li>
+                    <li><a target="_blank" href="https://www.fei.stuba.sk/sk/o-nas/kto-sme.html?page_id=421">Základné informácie</a></li>
+                    <li><a target="_blank" href="https://www.fei.stuba.sk/sk/o-nas/kontakt.html?page_id=1739">Kontakt</a></li>
+                    <li><a target="_blank" href="https://www.fei.stuba.sk/sk/organizacne-jednotky-fei-stu/pracoviska.html?page_id=6502">Ústavy a inštitúty</a></li>
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>Štúdium</h4>
                 <ul>
-                    <li><a href="#">Študijné programy</a></li>
-                    <li><a href="#">Harmonogram štúdia</a></li>
-                    <li><a href="#">Podmienky prijatia</a></li>
-                    <li><a href="#">E-prihláška na štúdium</a></li>
+                    <li><a target="_blank" href="https://www.fei.stuba.sk/sk/studijne-programy.html?page_id=295">Študijné programy</a></li>
+                    <li><a target="_blank" href="https://www.fei.stuba.sk/sk/studium/informacie-o-studiu/harmonogram-akademickeho-roka.html?page_id=3692">Harmonogram štúdia</a></li>
+                    <li><a target="_blank" href="https://www.fei.stuba.sk/ako-zacat-studovat/podmienky-prijatia.html?page_id=6194">Podmienky prijatia</a></li>
+                    <li><a target="_blank" href="https://www.fei.stuba.sk/sk/dekanat-fei-stu/pedagogicke-oddelenie.html?page_id=1669">Pedagogické oddelenie</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -85,9 +85,9 @@
                     </div>
 
                 <div class="social-links">
-                    <a href="#"><i class='bx bxl-facebook-circle'></i></a>
-                    <a href="#"><i class='bx bxl-instagram'></i></a>
-                    <a href="#"><i class='bx bxl-linkedin' ></i></a>
+                    <a target="_blank" href="https://www.facebook.com/FEI.STUBA"><i class='bx bxl-facebook-circle'></i></a>
+                    <a target="_blank" href="https://www.instagram.com/fei.stuba/"><i class='bx bxl-instagram'></i></a>
+                    <a target="_blank" href="https://www.linkedin.com/school/fei-stu/"><i class='bx bxl-linkedin' ></i></a>
                 </div>
             </div>
         </div>
