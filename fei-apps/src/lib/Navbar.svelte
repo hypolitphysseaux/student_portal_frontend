@@ -1,8 +1,10 @@
 <script lang="ts">
+    import '@material/web/iconbutton/icon-button.js'
+    import '@material/web/fab/fab.js'
+
     import firebaseApp from "../firebase";
     import {getAuth, signOut} from "firebase/auth";
     const auth = getAuth(firebaseApp);
-
     export let loggedIn = true;
     export let isDarkModeEnabled = false;
     export let loggedUser;
@@ -31,12 +33,19 @@
     }
 </script>
 
-<button on:click={toggleNavbarOpen}
-        class="burger"
+<div
+        class="my-button burger"
         class:dark-mode={isDarkModeEnabled}
 >
-    <i class='bx bx-menu'></i>
-</button>
+    <md-icon-button on:click={toggleNavbarOpen}>
+        {#if !isNavbarOpen}
+            <i class='bx bx-menu'></i>
+        {:else}
+            <i class='bx bx-x'></i>
+        {/if}
+
+    </md-icon-button>
+</div>
 
 
     <nav id="my-navbar" class="navbar"
@@ -61,28 +70,50 @@
         <nav>
             <!-- Tlacidlo na prepinanie darkmode -->
             {#if !isDarkModeEnabled}
-                <button
-                        on:click={toggleDarkMode}
+                <div
+                        class="my-button"
                         data-tooltip="Tmavý režim"
-                ><i class='bx bx-moon'></i></button>
+                >
+                    <md-icon-button on:click={toggleDarkMode}>
+                        <i class='bx bx-moon'></i>
+                    </md-icon-button>
+                </div>
+
             {:else}
-                <button
-                        on:click={toggleDarkMode}
+                <div
+                        class="my-button"
                         data-tooltip="Svetlý režim"
-                ><i class='bx bxs-sun'></i></button>
+                >
+                    <md-icon-button on:click={toggleDarkMode}>
+                        <i class='bx bxs-sun'></i>
+                    </md-icon-button>
+                </div>
             {/if}
 
+            <div
+                    class="my-button"
+                    data-tooltip="Nastavenia"
+            >
+                <md-icon-button>
+                    <i class='bx bx-cog'></i>
+                </md-icon-button>
+            </div>
 
-            <button data-tooltip="Nastavenia"><i class='bx bx-cog'></i></button>
 
             <!-- Odhlasenie  -->
-            <button
-                    on:click={logOut}
+
+            <div
+                    class="my-button"
                     data-tooltip="Odhlásiť sa"
-            ><i class='bx bx-log-out'></i></button>
+            >
+                <md-icon-button on:click={logOut}>
+                    <i class='bx bx-log-out'></i>
+                </md-icon-button>
+            </div>
+
 
             <!-- Profilovka  -->
-            <img src="{loggedUser.photoURL}" alt="">
+            <img src="{loggedUser.photoURL}" alt="Profilova fotka">
         </nav>
     </nav>
 
@@ -104,9 +135,9 @@
     .burger {
         position: fixed;
         z-index: 2;
-        top: 5px;
-        left: 5px;
-        width: 72px;
+        top: 15px;
+        left: 15px;
+
     }
 
     .burger i{
@@ -203,14 +234,14 @@
         color: var(--navbar-icon-color);
     }
 
-    .navbar nav button{
+    .navbar nav .my-button{
         position: relative;
     }
 
-    .navbar nav button::before {
+    .navbar nav .my-button::before {
         --scale: 0;
 
-        --translate-y: 60%;
+        --translate-y: 120%;
 
         position: absolute;
         bottom: -.25rem;
@@ -228,7 +259,7 @@
         background: var(--tooltip-color);
     }
 
-    .navbar nav button:hover::before {
+    .navbar nav .my-button:hover::before {
         --scale: 1;
     }
 
