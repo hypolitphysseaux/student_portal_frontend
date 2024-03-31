@@ -2,7 +2,7 @@
 
   // Initialize Firebase
   import { initializeApp } from "firebase/app";
-  import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
+
 
 
   // TODO: Add SDKs for Firebase products that you want to use
@@ -19,8 +19,8 @@
   };
 
   const firebaseApp = initializeApp(firebaseConfig);
-  const db = getFirestore(firebaseApp);
-  //---------------------------------
+
+  //--------------------------------
 
   //Routing
   import { Router, Link, Route } from "svelte-routing";
@@ -59,19 +59,6 @@
     });
   }
 
-  async function testWrite(){ //WORKING
-    const testName = document.getElementById("testInput") || HTMLInputElement;
-
-    try {
-      const docRef = await addDoc(collection(db, "usersDetailasds"), {
-        status: testName.value
-      });
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  }
-
   //----------------------------
 </script>
 
@@ -87,6 +74,7 @@
       <LoginForm
               bind:loggedIn={loggedIn}
               bind:loggedUser={loggedUser}
+              bind:isSigningUp={isSigningUp}
       ></LoginForm>
     {/if}
 
@@ -97,7 +85,9 @@
             !isResetingPassword &&
             isSigningUp
     }
-      <RegistrationForm></RegistrationForm>
+      <RegistrationForm
+              bind:isSigningUp={isSigningUp}
+      ></RegistrationForm>
     {/if}
 
     <!-- Resetovanie hesla -->

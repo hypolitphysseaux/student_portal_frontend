@@ -10,7 +10,7 @@
 >
     <div class="user-left">
         <div class="welcome-heading">
-            <h1>Vitajte späť, <strong>{loggedUser.displayName}</strong> !</h1>
+            <h1>Vitajte, <strong>{loggedUser.displayName}</strong> !</h1>
         </div>
 
         <img class="profile-photo" src="{loggedUser.photoURL}">

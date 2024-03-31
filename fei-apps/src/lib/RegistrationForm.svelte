@@ -1,18 +1,50 @@
 <script lang="ts">
     import firebaseApp from "../firebase";
-    import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+    import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+    import { getFirestore, setDoc , doc} from "firebase/firestore";
     const auth = getAuth(firebaseApp);
+    const db = getFirestore(firebaseApp);
 
     function register(){
+
+        // Credentials inputs
+        const meno = document.getElementById('meno').value;
+        const priezvisko = document.getElementById('priezvisko').value;
+        const aisId = document.getElementById('ais-id').value;
         const email = document.getElementById('email-reg').value;
         const password = document.getElementById('password-reg').value;
-        const confirmPassword = document.getElementById('confirm-password');
+        const confirmPassword = document.getElementById('confirm-password').value;
+
+        //Check vsetkych inputov TODO
+
+        // Check aisId ci uz neexistuje a validacia TODO
+        if (aisId.length != 6)
+        {
+            console.log("Nespravny format AIS ID!");
+            return;
+        }
+
+        //Password check
+        if (password != confirmPassword)
+        {
+            console.log("Hesla sa nezhoduju!");
+            return;
+        }
 
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                // Signed up
+
+                // Nastavenie displayName a photoURL v user
                 const user = userCredential.user;
-                console.log(user);
+                updateProfile(user,{
+                    displayName: meno + ' ' + priezvisko
+                    //TODO default profilovka
+                });
+
+                // Nastavenie userDetails vo firestore
+                setUserDetails(user.uid ,aisId);
+
+                isSigningUp = false;
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -20,6 +52,20 @@
                 console.log(errorCode, errorMessage);
             });
     }
+
+    async function setUserDetails(uid,aisId){
+        try {
+            const docRef = await setDoc(doc(db, "userDetails", uid), {
+                aisId: aisId,
+                prefersDarkTheme: false,
+                status: "offline"
+            });
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+    }
+
+    export let isSigningUp;
 </script>
 
 <div class="form-wrapper">
@@ -75,17 +121,29 @@
         <h1>Vytvorte si účet</h1>
 
         <div class="form">
-            <label for="name">AIS ID:</label>
+            <label for="meno">Meno:</label>
             <div class="custom-input">
-                <input  name="ais-id" placeholder="Zadajte AIS ID" autocomplete="off">
+                <input  id="meno" placeholder="Zadajte meno" required>
+                <i class='bx bx-pencil'></i>
+            </div>
+
+            <label for="priezvisko">Priezvisko:</label>
+            <div class="custom-input">
+                <input id="priezvisko" name="priezvisko" placeholder="Zadajte priezvisko">
+                <i class='bx bx-pencil'></i>
+            </div>
+
+            <label for="ais-id">AIS ID:</label>
+            <div class="custom-input">
+                <input id="ais-id" name="ais-id" placeholder="Zadajte AIS ID" autocomplete="off">
                 <i class='bx bxs-id-card'></i>
             </div>
 
-            <label for="email">Email:</label>
+            <label for="email-reg">Email:</label>
             <div class="custom-input">
                 <input type="email"
                        id="email-reg"
-                       name="email"
+                       name="email-reg"
                        placeholder="Zadajte email"
                        autocomplete="off"
                        required
@@ -93,24 +151,24 @@
                 <i class='bx bx-at'></i>
             </div>
 
-            <label for="password">Heslo:</label>
+            <label for="password-reg">Heslo:</label>
             <div class="custom-input">
                 <input
                         type="password"
                         id="password-reg"
-                        name="password"
+                        name="password-reg"
                         placeholder="Zadajte heslo"
                         required
                 >
                 <i class='bx bx-lock-alt'></i>
             </div>
 
-            <label for="password">Potvrďte heslo:</label>
+            <label for="confirm-password">Potvrďte heslo:</label>
             <div class="custom-input">
                 <input
                         type="password"
                         id="confirm-password"
-                        name="password"
+                        name="confirm-password"
                         placeholder="Zadajte heslo"
                         required
                 >
@@ -121,7 +179,7 @@
 
             <div class="links">
                 <a href="#">Napíšte nám</a>
-                <a href="#">Už máte účet?</a>
+                <a on:click={() => {isSigningUp = false}}>Už máte účet?</a>
             </div>
         </div>
     </div>
@@ -307,5 +365,6 @@
 
     .container .links a:hover {
         text-decoration: underline;
+        cursor: pointer;
     }
 </style>

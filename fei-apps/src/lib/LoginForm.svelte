@@ -76,6 +76,8 @@
                 const user = userCredential.user;
                 console.log(user);
 
+                //TODO nacitat userDetails
+
                 loggedUser = user;
                 loggedIn = true;
             })
@@ -88,6 +90,7 @@
 
     export let loggedIn = false;
     export let loggedUser;
+    export let isSigningUp;
 </script>
 
 <div class="form-wrapper">
@@ -189,7 +192,7 @@
 
             <div class="links">
                 <a href="#">Resetovať heslo</a>
-                <a href="#">Nemáte účet?</a>
+                <a on:click={ () => {isSigningUp = true}}>Nemáte účet?</a>
             </div>
         </div>
     </div>
@@ -375,5 +378,6 @@
 
     .container .links a:hover {
         text-decoration: underline;
+        cursor: pointer;
     }
 </style>

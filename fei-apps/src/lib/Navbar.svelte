@@ -11,7 +11,8 @@
 
     let isNavbarOpen = false;
     async function logOut(){
-        //TODO firebase logic
+        //TODO status v userDetails
+
         signOut(auth)
             .then(() =>{
                 console.log("Successfully signed out.");
@@ -30,6 +31,7 @@
 
     const toggleDarkMode = () => {
         isDarkModeEnabled = !isDarkModeEnabled;
+        //TODO nastavit preference v userDetailss
     }
 </script>
 
