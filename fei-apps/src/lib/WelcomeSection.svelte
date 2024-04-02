@@ -1,5 +1,29 @@
 <script lang="ts">
 
+    import {onMount} from "svelte";
+
+    onMount(() => {
+        const degree = 6;
+
+        const hr = document.getElementById('hr');
+        const min = document.getElementById('min');
+        const sec = document.getElementById('sec');
+
+
+        setInterval(() => {
+            const date = new Date();
+
+            const hh = date.getHours() * 30;
+            const mm = date.getMinutes() * degree;
+            const ss = date.getSeconds() * degree;
+
+            hr.style.transform = `rotateZ(${hh + (mm / 12)}deg)`;
+            min.style.transform = `rotateZ(${mm}deg)`;
+            sec.style.transform = `rotateZ(${ss}deg)`;
+
+        });
+    });
+
     export let isDarkModeEnabled;
     export let loggedUser;
 </script>
@@ -24,8 +48,28 @@
     </div>
 
     <div class="time-center">
-        <h3 class="time-heading">Čas</h3>
+        <div class="container">
+            <div class="circle"></div>
+            <div class="circle"></div>
 
+            <div class="clock">
+                <div class="clock-bg">
+                    <img src="../../public/clock.png">
+                </div>
+
+                <div class="hour">
+                    <span class="hr" id="hr"></span>
+                </div>
+
+                <div class="minute">
+                    <span class="min" id="min"></span>
+                </div>
+
+                <div class="second">
+                    <span class="sec" id="sec"></span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="stats-right">
@@ -44,7 +88,7 @@
 
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: space-around;
     }
 
     .user-left{
@@ -93,15 +137,151 @@
         color: var(--navbar-icon-color);
     }
 
+    .time-center{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 250px;
+    }
+
+    .container {
+        position: relative;
+        transform: scale(.8);
+    }
+
+    .container .circle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        animation: 3s ease-in infinite alternate;
+    }
+
+    .container .circle:nth-child(1) {
+        width: 140px;
+        height: 140px;
+        top: -30px;
+        left: -30px;
+        background: linear-gradient(#decc2f, #d26923);
+        animation-name: move-up;
+    }
+
+    @keyframes move-up {
+        to {
+            transform: translateY(-10px);
+        }
+    }
+
+    .container .circle:nth-child(2) {
+        width: 120px;
+        height: 120px;
+        bottom: -20px;
+        right: -20px;
+        background: linear-gradient(#314cd2, #4aacd3);
+        animation-name: move-down;
+    }
+
+    @keyframes move-down {
+        to {
+            transform: translateY(10px);
+        }
+    }
+
+    .clock {
+        width: 270px;
+        height: 270px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(255, 255, 255, .1);
+        border-radius: 50%;
+        backdrop-filter: blur(15px);
+        /*background: rgba(255, 255, 255, .05);*/
+        background: rgba(0, 0, 0, .65);
+        box-shadow: 0 0 30px rgba(0, 0, 0, .2);
+    }
+
+    .clock .clock-bg img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .clock::before {
+        content: '';
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        background: #fff;
+        border-radius: 50%;
+        z-index: 15;
+    }
+
+    .clock .hour,
+    .clock .minute,
+    .clock .second {
+        position: absolute;
+    }
+
+    .clock .hour,
+    .clock .hour .hr {
+        width: 160px;
+        height: 160px;
+    }
+
+    .clock .minute,
+    .clock .minute .min {
+        width: 190px;
+        height: 190px;
+    }
+
+    .clock .second,
+    .clock .second .sec {
+        width: 230px;
+        height: 230px;
+    }
+
+    .clock .hour .hr,
+    .clock .minute .min,
+    .clock .second .sec {
+        display: flex;
+        justify-content: center;
+        position: absolute;
+        border-radius: 50%;
+    }
+
+    .clock .hour .hr::before {
+        content: '';
+        position: absolute;
+        width: 8px;
+        height: 80px;
+        background: #c10931;
+        border-radius: 10px;
+    }
+
+    .clock .minute .min::before {
+        content: '';
+        position: absolute;
+        width: 6px;
+        height: 110px;
+        background: #0b3b7a;
+        border-radius: 8px;
+        z-index: 11;
+    }
+
+    .clock .second .sec::before {
+        content: '';
+        position: absolute;
+        width: 3px;
+        height: 140px;
+        background: #fff;
+        z-index: 12;
+        border-radius: 8px;
+    }
+
     .stats-right{
         display: none;
     }
 
     .stats-heading{
-        color: var(--navbar-icon-color);
-    }
-
-    .time-heading{
         color: var(--navbar-icon-color);
     }
 
