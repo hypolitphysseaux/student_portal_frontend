@@ -124,7 +124,7 @@
         width: 18px;
         height: 18px;
         border-radius: 50%;
-        border: 1px solid black;
+        border: 1px solid rgba(255,255,255,0.1);
     }
 
     .status-circle:hover{
@@ -195,8 +195,7 @@
         border: 2px solid rgba(255, 255, 255, .1);
         border-radius: 50%;
         backdrop-filter: blur(15px);
-        /*background: rgba(255, 255, 255, .05);*/
-        background: rgba(0, 0, 0, .65);
+        background: var(--clock-background);
         box-shadow: 0 0 30px rgba(0, 0, 0, .2);
     }
 

@@ -25,6 +25,8 @@
   --footer-background: #222;
   --md-icon-button-hover-state-layer-color: blue;
   --welcome-section-background: linear-gradient(90deg, #999,whitesmoke, #999) ;
+  --clock-background: rgba(0, 0, 0, .65);
+
 
   /* Not used */
   --color-gradient: linear-gradient(90deg, #eee, #f9f9f9, #eee);
@@ -52,7 +54,9 @@
   --footer-headers: #ffffff;
   --md-icon-button-hover-state-layer-color: white;
   --welcome-section-background: linear-gradient(90deg, #000,#0a1323, #000) ;
-;
+  --clock-background: rgba(255, 255, 255, .05);
+
+
   /* Not used */
   --color-gradient: linear-gradient(to right, #656871 0%, #888b94 20%, #414247, #656871 100%);
   --color-header: #fff;
