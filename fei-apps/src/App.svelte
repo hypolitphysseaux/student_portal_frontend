@@ -51,14 +51,6 @@
 
   // Functions
 
-  async function testRead(){ //WORKING
-    const querySnapshot = await getDocs(collection(db, 'userDetails'));
-
-    querySnapshot.forEach((doc) => {
-      console.log(`${doc.id} => ${doc.data().aisId}`)
-    });
-  }
-
   //----------------------------
 </script>
 

@@ -43,7 +43,7 @@
         </div>
 
         <div class="ais-id-label">
-            <label>[ais id]</label>
+            <label><strong>AIS:</strong>{" " + loggedUser.aisId}</label>
         </div>
     </div>
 
@@ -54,7 +54,7 @@
 
             <div class="clock">
                 <div class="clock-bg">
-                    <img src="../../public/clock.png">
+                    <img src="/clock.png">
                 </div>
 
                 <div class="hour">
@@ -73,8 +73,10 @@
     </div>
 
     <div class="stats-right">
-        <div class="stats-heading">
-            <h3>[stats]</h3>
+        <div class="stats-container">
+            <div class="stat">Počet aktívnych uživateľov:</div>
+            <div class="stat">Naposledy ste boli prihlásený/á:</div>
+            <div class="stat">Počet nových správ:</div>
         </div>
     </div>
 </div>
@@ -88,7 +90,7 @@
 
         display: flex;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-between;
     }
 
     .user-left{
@@ -99,9 +101,6 @@
 
     .welcome-heading{
         color: var(--navbar-icon-color);
-        display: none;
-        opacity: 0;
-        visibility: hidden;
     }
 
     .user-section{
@@ -124,7 +123,7 @@
         width: 18px;
         height: 18px;
         border-radius: 50%;
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 2px solid var(--status-border);
     }
 
     .status-circle:hover{
@@ -138,7 +137,7 @@
     }
 
     .time-center{
-        display: flex;
+        display: none;
         align-items: center;
         justify-content: center;
         height: 250px;
@@ -278,19 +277,42 @@
 
     .stats-right{
         display: none;
+        position: relative;
+        width: 300px;
+        height: 220px;
+        left: 50px;
+        backdrop-filter: blur(15px);
+        background: var(--clock-background);
+        box-shadow: 0 0 30px rgba(0, 0, 0, .2);
+        border: 2px solid rgba(255, 255, 255, .1);
     }
 
-    .stats-heading{
-        color: var(--navbar-icon-color);
+    .stats-container{
+        position: absolute;
+        top: 10px;
+        left: 10px;
+
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        justify-content: center;
+        gap: 40px;
+    }
+
+    .stat{
+        color: white;
+    }
+
+    .stat{
+
     }
 
     @media (width >=600px){
-        .welcome-heading{
-            display: inline-block;
-            opacity: 1;
-            visibility: visible;
+        .time-center{
+            display: flex;
         }
     }
+
 
     @media (width >=1000px){
         .stats-right{

@@ -1,19 +1,19 @@
 <script lang="ts">
     import firebaseApp from "../firebase";
-
     import {getAuth,
         GoogleAuthProvider,
         FacebookAuthProvider,
         signInWithPopup,
         signInWithEmailAndPassword
     } from "firebase/auth";
+    import {doc, getDoc, getFirestore, increment, updateDoc} from "firebase/firestore";
 
-
+    const db = getFirestore(firebaseApp);
     const auth = getAuth(firebaseApp);
     const googleProvider = new GoogleAuthProvider();
     const facebookProvider = new FacebookAuthProvider();
 
-    async function facebookPopUpSignIn(){ //TODO
+    async function facebookPopUpSignIn(){
         try {
             // Step 1: User tries to sign in using Google.
             let result = await signInWithPopup(auth, facebookProvider);
@@ -32,7 +32,7 @@
                 // sign-in method.
             }
         }
-    }
+    } // Facebook prihlasenie
 
     async function googlePopUpSignIn(){
         try {
@@ -45,8 +45,10 @@
             //The signed-in user info
             const user = result.user;
 
+            //TODO get user details
+
             loggedUser = user.toJSON();
-            console.log(loggedUser);
+            //console.log(loggedUser);
             loggedIn = true;
         } catch (error) {
 
@@ -62,11 +64,37 @@
                 // sign-in method.
             }
         }
-    }
+    } // Google prihlasenie //TODO flow, overenie v databaze, ais
 
+    async function setOnlineStatus(uid){
+        const docRef = doc(db, "userDetails", uid);
 
+        await updateDoc(docRef, {
+            status: "online"
+        });
+    } // Nastavenie online statusu
 
-    function logIn(){
+    async function getUserAisId(uid) {
+        const docSnap = await getDoc(doc(db, "userDetails", uid));
+        if (docSnap.exists())
+        {
+            loggedUser.aisId = docSnap.data().aisId;
+        }
+        else {
+            loggedUser.aisId = "";
+        }
+    } // Ziskanie ais id
+
+    async function incrementActiveUsers(){
+        const docRef = doc(db, "userDetails", "activeUsers");
+
+        await updateDoc(docRef, {
+            number: increment(1)
+        });
+    } // Zvysi pocet online userov o 1
+    // ! limitacia, iba raz za sekundu
+
+    async function logIn(){
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
@@ -74,19 +102,20 @@
             .then((userCredential) => {
                 // Signed in
                 const user = userCredential.user;
-                console.log(user);
-
-                //TODO nacitat userDetails
-
                 loggedUser = user;
+
+                setOnlineStatus(loggedUser.uid);
+                getUserAisId(loggedUser.uid);
+
                 loggedIn = true;
+                incrementActiveUsers();
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 console.log(errorCode, errorMessage);
             });
-    }
+    } // Prihlasenie cez email a heslo
 
     export let loggedIn = false;
     export let loggedUser;

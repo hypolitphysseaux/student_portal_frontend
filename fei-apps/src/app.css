@@ -26,7 +26,7 @@
   --md-icon-button-hover-state-layer-color: blue;
   --welcome-section-background: linear-gradient(90deg, #999,whitesmoke, #999) ;
   --clock-background: rgba(0, 0, 0, .65);
-
+  --status-border: rgba(203, 203, 203, 0.85);
 
   /* Not used */
   --color-gradient: linear-gradient(90deg, #eee, #f9f9f9, #eee);
@@ -55,6 +55,7 @@
   --md-icon-button-hover-state-layer-color: white;
   --welcome-section-background: linear-gradient(90deg, #000,#0a1323, #000) ;
   --clock-background: rgba(255, 255, 255, .05);
+  --status-border: #000;
 
 
   /* Not used */

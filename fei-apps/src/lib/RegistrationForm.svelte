@@ -7,6 +7,8 @@
 
     function register(){
 
+        //TODO error a success message
+
         // Credentials inputs
         const meno = document.getElementById('meno').value;
         const priezvisko = document.getElementById('priezvisko').value;
@@ -17,7 +19,7 @@
 
         //Check vsetkych inputov TODO
 
-        // Check aisId ci uz neexistuje a validacia TODO
+        // Check aisId ci uz neexistuje v databaze a validacia TODO
         if (aisId.length != 6)
         {
             console.log("Nespravny format AIS ID!");
@@ -51,7 +53,7 @@
                 const errorMessage = error.message;
                 console.log(errorCode, errorMessage);
             });
-    }
+    } // Registracia
 
     async function setUserDetails(uid,aisId){
         try {
@@ -63,7 +65,7 @@
         } catch (e) {
             console.error("Error adding document: ", e);
         }
-    }
+    } // Nastavenie user details po registracii
 
     export let isSigningUp;
 </script>

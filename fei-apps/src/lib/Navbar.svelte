@@ -4,35 +4,59 @@
 
     import firebaseApp from "../firebase";
     import {getAuth, signOut} from "firebase/auth";
+    import {doc, getFirestore, increment, updateDoc} from "firebase/firestore";
     const auth = getAuth(firebaseApp);
+    const db = getFirestore(firebaseApp);
     export let loggedIn = true;
     export let isDarkModeEnabled = false;
     export let loggedUser;
 
     let isNavbarOpen = false;
+
+    async function setUserDetails(uid){
+        const docRef = doc(db, "userDetails", uid);
+
+        await updateDoc(docRef, {
+            status: "offline",
+            prefersDarkTheme: isDarkModeEnabled
+        });
+    } //po odhlaseni (teda status offline)
+
+    async function decrementActiveUsers(){
+        const docRef = doc(db, "userDetails", "activeUsers");
+
+        await updateDoc(docRef, {
+            number: increment(-1)
+        });
+    } // Znizi pocet online userov o 1
+    // ! limitacia, iba raz za sekundu
+
     async function logOut(){
-        //TODO status v userDetails
+        const user = auth.currentUser;
+
+        //Nastavenie user details pred odhlasenim
+        setUserDetails(user?.uid);
 
         signOut(auth)
             .then(() =>{
+                decrementActiveUsers();
                 console.log("Successfully signed out.");
+                loggedUser = "";
+                loggedIn = false;
             })
             .catch((error) => {
                 console.log("Error when signing out.", error);
             });
-
-        loggedUser = "";
-        loggedIn = false;
-    }
+    } // Odhlasenie
 
     const toggleNavbarOpen = () => {
         isNavbarOpen = !isNavbarOpen;
-    }
+    } // Otvorenie / Zatvorenie navbaru
 
     const toggleDarkMode = () => {
         isDarkModeEnabled = !isDarkModeEnabled;
         //TODO nastavit preference v userDetailss
-    }
+    } // Prepinanie modu
 </script>
 
 <div
