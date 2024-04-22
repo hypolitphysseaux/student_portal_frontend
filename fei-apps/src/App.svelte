@@ -1,27 +1,5 @@
 <script lang="ts">
 
-  // Initialize Firebase
-  import { initializeApp } from "firebase/app";
-
-
-
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  const firebaseConfig = {  //TODO env variables
-    apiKey: "AIzaSyCRMaVlK3fnrhO1DOU7sDbKkWWL6imrcmE",
-    authDomain: "fei-apps.firebaseapp.com",
-    projectId: "fei-apps",
-    storageBucket: "fei-apps.appspot.com",
-    messagingSenderId: "360166082859",
-    appId: "1:360166082859:web:247449fb777c18cec01d6e"
-  };
-
-  const firebaseApp = initializeApp(firebaseConfig);
-
-  //--------------------------------
-
   //Routing
   import { Router, Link, Route } from "svelte-routing";
   //export let url = "";
@@ -67,6 +45,7 @@
               bind:loggedIn={loggedIn}
               bind:loggedUser={loggedUser}
               bind:isSigningUp={isSigningUp}
+              bind:isDarkModeEnabled={isDarkModeEnabled}
       ></LoginForm>
     {/if}
 

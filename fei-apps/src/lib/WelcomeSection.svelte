@@ -1,6 +1,13 @@
 <script lang="ts">
 
     import {onMount} from "svelte";
+    import {doc, getFirestore, onSnapshot} from "firebase/firestore";
+    import firebaseApp from "../firebase";
+
+    const db = getFirestore(firebaseApp);
+
+    var activeUsers;
+    var lastLogin;
 
     onMount(() => {
         const degree = 6;
@@ -20,8 +27,21 @@
             hr.style.transform = `rotateZ(${hh + (mm / 12)}deg)`;
             min.style.transform = `rotateZ(${mm}deg)`;
             sec.style.transform = `rotateZ(${ss}deg)`;
-
         });
+
+        //Listener pre pocet aktivnych userov
+        const unsub = onSnapshot(doc(db, "userDetails", "activeUsers"), (doc) => {
+            if (doc.exists()){
+                activeUsers = doc.data().number;
+            }
+        });
+
+        //Lastlogin sa lisi pri Google Provider, treba osetrit
+        if (loggedUser.metadata !== undefined){
+            lastLogin = loggedUser.metadata.lastLoginAt;
+        }else {
+            lastLogin = loggedUser.lastLoginAt;
+        }
     });
 
     export let isDarkModeEnabled;
@@ -74,9 +94,11 @@
 
     <div class="stats-right">
         <div class="stats-container">
-            <div class="stat">Počet aktívnych uživateľov:</div>
-            <div class="stat">Naposledy ste boli prihlásený/á:</div>
-            <div class="stat">Počet nových správ:</div>
+            <div class="stat">Počet aktívnych uživateľov: <strong style="font-size: 20px">{activeUsers}</strong></div>
+            <div class="stat">
+                Naposledy ste boli prihlásený/á: <strong>{lastLogin}</strong>
+            </div>
+            <div class="stat">Počet nových správ: <strong style="font-size: 20px">0</strong></div>
         </div>
     </div>
 </div>

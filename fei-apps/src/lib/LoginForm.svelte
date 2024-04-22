@@ -45,9 +45,11 @@
             //The signed-in user info
             const user = result.user;
 
+            incrementActiveUsers();
             //TODO get user details
 
             loggedUser = user.toJSON();
+            console.log(loggedUser);
             //console.log(loggedUser);
             loggedIn = true;
         } catch (error) {
@@ -74,16 +76,17 @@
         });
     } // Nastavenie online statusu
 
-    async function getUserAisId(uid) {
+    async function getUserDetails(uid) {
         const docSnap = await getDoc(doc(db, "userDetails", uid));
         if (docSnap.exists())
         {
             loggedUser.aisId = docSnap.data().aisId;
+            isDarkModeEnabled = docSnap.data().prefersDarkTheme;
         }
         else {
             loggedUser.aisId = "";
         }
-    } // Ziskanie ais id
+    } // Ziskanie ais id a theme preference
 
     async function incrementActiveUsers(){
         const docRef = doc(db, "userDetails", "activeUsers");
@@ -105,7 +108,7 @@
                 loggedUser = user;
 
                 setOnlineStatus(loggedUser.uid);
-                getUserAisId(loggedUser.uid);
+                getUserDetails(loggedUser.uid);
 
                 loggedIn = true;
                 incrementActiveUsers();
@@ -120,6 +123,7 @@
     export let loggedIn = false;
     export let loggedUser;
     export let isSigningUp;
+    export let isDarkModeEnabled;
 </script>
 
 <div class="form-wrapper">
