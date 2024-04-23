@@ -39,8 +39,8 @@
                 // Nastavenie displayName a photoURL v user
                 const user = userCredential.user;
                 updateProfile(user,{
-                    displayName: meno + ' ' + priezvisko
-                    //TODO default profilovka
+                    displayName: meno + ' ' + priezvisko,
+                    photoURL: "/avatar.png"
                 });
 
                 // Nastavenie userDetails vo firestore
