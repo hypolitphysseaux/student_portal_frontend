@@ -13,7 +13,7 @@ const firebaseConfig = {  //TODO env variables
     projectId: "fei-apps",
     storageBucket: "fei-apps.appspot.com",
     messagingSenderId: "360166082859",
-    appId: "1:360166082859:web:247449fb777c18cec01d6e"
+    appId: "1:360166082859:web:247449fb777c18cec01d6e",
 };
 
 // Initialize Firebase

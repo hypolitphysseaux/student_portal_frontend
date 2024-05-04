@@ -1,13 +1,18 @@
 <script lang="ts">
 
     import {onMount} from "svelte";
-    import {doc, getFirestore, onSnapshot} from "firebase/firestore";
+    import {doc, getFirestore, onSnapshot, updateDoc} from "firebase/firestore";
     import firebaseApp from "../firebase";
+    import {getAuth, updateProfile} from "firebase/auth";
 
+    const auth = getAuth(firebaseApp);
     const db = getFirestore(firebaseApp);
 
     var activeUsers;
     var lastLogin;
+    var statusColor = "green";
+
+    let isChangingStatus = false;
 
     onMount(() => {
         const degree = 6;
@@ -15,7 +20,6 @@
         const hr = document.getElementById('hr');
         const min = document.getElementById('min');
         const sec = document.getElementById('sec');
-
 
         setInterval(() => {
             const date = new Date();
@@ -30,9 +34,27 @@
         });
 
         //Listener pre pocet aktivnych userov
-        const unsub = onSnapshot(doc(db, "userDetails", "activeUsers"), (doc) => {
+        const activeUsersListener = onSnapshot(doc(db, "userDetails", "activeUsers"), (doc) => {
             if (doc.exists()){
                 activeUsers = doc.data().number;
+            }
+        });
+
+        //Listener pre status
+        const statusListener = onSnapshot(doc(db, "userDetails", auth.currentUser.uid), (doc) => {
+            if (doc.exists()){
+                if (doc.data().status == "online"){
+                    statusColor = "#23b223";
+                }
+                if (doc.data().status == "away"){
+                    statusColor = "#ffea00";
+                }
+                if (doc.data().status == "busy"){
+                    statusColor = "#f35353";
+                }
+                if (doc.data().status == "hidden"){
+                    statusColor = "gray";
+                }
             }
         });
 
@@ -44,8 +66,37 @@
         }
     });
 
+    async function changingStatus(){
+        isChangingStatus = !isChangingStatus;
+    }
+
+    //Todo
+    async function updateProfilePicture(){
+        updateProfile(auth.currentUser, {
+            photoURL: "/avatar2.jpg" //TODO doplnit input
+        }).then(() => {
+            // Nastavit zmenu v loggedUser
+            loggedUser.photoURL = "/avatar.png"; //TODO dorobit input
+
+        }).catch((error) => {
+            console.error(error);
+        });
+    }
+
+
+    async function  updateStatus(stat){
+        const docRef = doc(db, "userDetails", auth.currentUser.uid);
+
+        await updateDoc(docRef, {
+            status: stat
+        });
+
+        isChangingStatus = false;
+    }
+
     export let isDarkModeEnabled;
     export let loggedUser;
+
 </script>
 
 <div
@@ -59,7 +110,31 @@
 
         <div class="user-section">
             <img class="profile-photo" src="{loggedUser.photoURL}">
-            <div class="status-circle"></div>
+            <button on:click={changingStatus} class="status-circle" style="background: {statusColor}"></button>
+            {#if isChangingStatus}
+                <div class="mdc-list">
+                    <div class="mdc-list-item" on:click|preventDefault={() => updateStatus("online")}>
+                        <div class="status-circle-list-icon" style="background: #23b223"></div>
+                        <span class="mdc-list-item__ripple"></span>
+                        <span class="mdc-list-item__text">K dispozícií</span>
+                    </div>
+                    <div class="mdc-list-item" on:click|preventDefault={() => updateStatus("away")}>
+                        <div class="status-circle-list-icon" style="background: #ffea00"></div>
+                        <span class="mdc-list-item__ripple"></span>
+                        <span class="mdc-list-item__text">Preč</span>
+                    </div>
+                    <div class="mdc-list-item" on:click|preventDefault={() => updateStatus("busy")}>
+                        <div class="status-circle-list-icon" style="background: #f35353"></div>
+                        <span class="mdc-list-item__ripple"></span>
+                        <span class="mdc-list-item__text">Nemám čas</span>
+                    </div>
+                    <div class="mdc-list-item" on:click|preventDefault={() => updateStatus("hidden")}>
+                        <div class="status-circle-list-icon" style="background: gray"></div>
+                        <span class="mdc-list-item__ripple"></span>
+                        <span class="mdc-list-item__text">Neviditeľný</span>
+                    </div>
+                </div>
+            {/if}
         </div>
 
         <div class="ais-id-label">
@@ -69,9 +144,6 @@
 
     <div class="time-center">
         <div class="container">
-            <div class="circle"></div>
-            <div class="circle"></div>
-
             <div class="clock">
                 <div class="clock-bg">
                     <img src="/clock.png">
@@ -103,7 +175,21 @@
     </div>
 </div>
 
-<style>
+<style lang="scss">
+
+    @use "@material/list";
+    @include list.deprecated-core-styles;
+
+
+    .mdc-list{
+      position: absolute;
+      left: 80px;
+      background: var(--status-list-background);
+      color: var(--navbar-icon-color);
+      border-radius: 8px;
+      box-shadow: var(--box-shadow);
+    }
+
     .welcome-section-container{
         background: var(--welcome-section-background);
         padding: 15px 9%;
@@ -141,7 +227,6 @@
         position: absolute;
         bottom: 0;
         left: 45px;
-        background: green; /*Online*/
         width: 18px;
         height: 18px;
         border-radius: 50%;
@@ -152,6 +237,16 @@
         cursor: pointer;
         transform: scale(1.15);
         transition: .2s ease;
+    }
+
+    .status-circle-list-icon{
+      top: 10px;
+      margin-right: 20px;
+      margin-top: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid black;
     }
 
     .ais-id-label{
@@ -170,42 +265,6 @@
         transform: scale(.8);
     }
 
-    .container .circle {
-        position: absolute;
-        border-radius: 50%;
-        pointer-events: none;
-        animation: 3s ease-in infinite alternate;
-    }
-
-    .container .circle:nth-child(1) {
-        width: 140px;
-        height: 140px;
-        top: -30px;
-        left: -30px;
-        background: linear-gradient(#decc2f, #d26923);
-        animation-name: move-up;
-    }
-
-    @keyframes move-up {
-        to {
-            transform: translateY(-10px);
-        }
-    }
-
-    .container .circle:nth-child(2) {
-        width: 120px;
-        height: 120px;
-        bottom: -20px;
-        right: -20px;
-        background: linear-gradient(#314cd2, #4aacd3);
-        animation-name: move-down;
-    }
-
-    @keyframes move-down {
-        to {
-            transform: translateY(10px);
-        }
-    }
 
     .clock {
         width: 270px;
@@ -282,7 +341,7 @@
         position: absolute;
         width: 6px;
         height: 110px;
-        background: #0b3b7a;
+        background: #3b7dd5;
         border-radius: 8px;
         z-index: 11;
     }
