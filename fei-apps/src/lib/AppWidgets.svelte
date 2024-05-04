@@ -19,7 +19,7 @@
             <i class='bx bxs-network-chart'></i>
             <h3>CONNECTIONS</h3>
             <p>Vyhľadajte kohokoľvek na FEIke. Súkromné správy, hromadné informácie v skupinových chatoch.</p>
-            <a href="#" class="btn">SPUSTIŤ</a>
+            <a href="http://localhost:5174/" target="_blank" class="btn">SPUSTIŤ</a>
         </div>
 
         <div class="box">
@@ -40,7 +40,7 @@
             <i class='bx bx-chalkboard'></i>
             <h3>QUIZZES</h3>
             <p>TODO</p>
-            <a href="#" class="btn">SPUSTIŤ</a>
+            <a href="http://localhost:5175/" target="_blank" class="btn">SPUSTIŤ</a>
         </div>
     </div>
 </div>
