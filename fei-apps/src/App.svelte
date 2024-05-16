@@ -13,6 +13,7 @@
   import WelcomeSection from "./lib/WelcomeSection.svelte";
   import AppWidgets from "./lib/AppWidgets.svelte";
   import AppFooter from "./lib/AppFooter.svelte";
+  import ProfileInfoCard from "./lib/ProfileInfoCard.svelte";
   //import firestore = firebase.firestore;
   //----------------------------
 
@@ -98,6 +99,12 @@
               bind:isDarkModeEnabled={isDarkModeEnabled}
       ></AppWidgets>
 
+      <!--
+      <ProfileInfoCard
+              bind:isDarkModeEnabled={isDarkModeEnabled}
+              bind:loggedUser={loggedUser}
+      ></ProfileInfoCard>
+      -->
 
       <!--
       <div style="display: flex; justify-content: center; flex-direction: column;">

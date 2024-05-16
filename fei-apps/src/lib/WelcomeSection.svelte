@@ -230,7 +230,7 @@
         width: 18px;
         height: 18px;
         border-radius: 50%;
-        border: 2px solid var(--status-border);
+        border: 1px solid var(--status-border);
     }
 
     .status-circle:hover{

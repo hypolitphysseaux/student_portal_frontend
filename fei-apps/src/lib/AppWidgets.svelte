@@ -1,4 +1,9 @@
 <script lang="ts">
+
+    async function startFeiConnections(){
+        console.log("Starting FEI Connections...")
+    }
+
     export let isDarkModeEnabled = false;
 
 </script>
@@ -19,7 +24,7 @@
             <i class='bx bxs-network-chart'></i>
             <h3>CONNECTIONS</h3>
             <p>Vyhľadajte kohokoľvek na FEIke. Súkromné správy, hromadné informácie v skupinových chatoch.</p>
-            <a href="http://localhost:5174/" target="_blank" class="btn">SPUSTIŤ</a>
+            <a on:click={startFeiConnections} href="http://localhost:5174/" target="_blank" class="btn">SPUSTIŤ</a>
         </div>
 
         <div class="box">
@@ -39,7 +44,7 @@
         <div class="box">
             <i class='bx bx-chalkboard'></i>
             <h3>QUIZZES</h3>
-            <p>TODO</p>
+            <p>Blíži sa zápočet alebo skúška? Otestujte svoje vedomosti z daného predmetu v kvízoch</p>
             <a href="http://localhost:5175/" target="_blank" class="btn">SPUSTIŤ</a>
         </div>
     </div>

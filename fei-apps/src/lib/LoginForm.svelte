@@ -74,7 +74,7 @@
         await updateDoc(docRef, {
             status: "online"
         });
-    } // Nastavenie online statusu
+    } // Nastavenie online statusu //TODO API call
 
     async function getUserDetails(uid) {
         const docSnap = await getDoc(doc(db, "userDetails", uid));
@@ -100,6 +100,31 @@
     async function logIn(){
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
+
+        /*
+        // Post request
+        let url = "http://localhost:8000/logIn"
+
+        try {
+            const response = await fetch(url,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'email': email,
+                    'password': password
+                }),
+            });
+
+            const data = await response.json();
+            console.log(data);
+
+        }
+        catch (e){
+            console.log("Error:",e)
+        }
+        */
 
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
@@ -258,7 +283,6 @@
     }
 
     .form-wrapper{
-        /* Pre LoginForm, RegistrationForm , povodne v body */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -271,7 +295,7 @@
         margin-top: 100px;
         border-radius: 8px;
         box-shadow: rgba(100, 100, 111, 0.2) 2px 7px 25px 10px;
-        background: transparent;
+        background: #fff;
     }
 
     .container h1 {

@@ -29,6 +29,10 @@
   /*--status-border: rgba(203, 203, 203, 0.85);*/
   --status-border: #000;
   --status-list-background: whitesmoke;
+  --tab-active-color: rgba(118, 144, 199, 0.4);
+  --tab-link-hover: #0039A6;
+  --card-status-border: #fff;
+
 
   /* Not used */
   --color-gradient: linear-gradient(90deg, #eee, #f9f9f9, #eee);
@@ -55,11 +59,13 @@
   --footer-background: #000;
   --footer-headers: #ffffff;
   --md-icon-button-hover-state-layer-color: white;
-  --welcome-section-background: linear-gradient(90deg, #000,#0a1323, #000) ;
+  --welcome-section-background: linear-gradient(90deg, #000, #13223b, #000) ;
   --clock-background: rgba(255, 255, 255, .05);
   --status-border: #000;
   --status-list-background: #333;
-
+  --tab-active-color: rgba(118, 144, 199, 0.4);
+  --tab-link-hover: #ccc;
+  --card-status-border: #1f1f1f;
 
   /* Not used */
   --color-gradient: linear-gradient(to right, #656871 0%, #888b94 20%, #414247, #656871 100%);
@@ -70,7 +76,7 @@
 * {
   padding: 0;
   margin: 0;
-  box-sizing: border-box; /* Pre LoginForm, RegistrationForm */
+  box-sizing: border-box;
   font-family: 'Mulish', sans-serif;
 
   /* FEI dotted background

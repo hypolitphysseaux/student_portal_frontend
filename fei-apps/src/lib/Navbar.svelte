@@ -55,7 +55,6 @@
 
     const toggleDarkMode = () => {
         isDarkModeEnabled = !isDarkModeEnabled;
-        //TODO nastavit preference v userDetailss
     } // Prepinanie modu
 </script>
 
@@ -139,7 +138,7 @@
 
 
             <!-- Profilovka  -->
-            <img src="{loggedUser.photoURL}">
+            <img on:click={() => {console.log("Clicked on profile icon.")}} src="{loggedUser.photoURL}">
         </nav>
     </nav>
 
@@ -295,6 +294,12 @@
         height: 32px;
         margin-left: 8px;
         border-radius: 50%;
+    }
+
+    .navbar nav img:hover{
+        transform: scale(1.1);
+        cursor: pointer;
+        transition: ease-in .1s;
     }
 
     @media (width >=500px) {

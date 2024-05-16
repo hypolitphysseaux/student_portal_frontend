@@ -214,7 +214,6 @@
     }
 
     .form-wrapper{
-        /* Pre LoginForm, RegistrationForm , povodne v body */
         display: flex;
         align-items: center;
         justify-content: center;
