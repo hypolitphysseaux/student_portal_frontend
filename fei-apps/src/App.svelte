@@ -14,18 +14,17 @@
   import AppWidgets from "./lib/AppWidgets.svelte";
   import AppFooter from "./lib/AppFooter.svelte";
   import ProfileInfoCard from "./lib/ProfileInfoCard.svelte";
+  import Notes from "./lib/Notes.svelte";
   //import firestore = firebase.firestore;
   //----------------------------
 
-
-  // Login flow control
+  // State control
   let loggedIn = false;
   let isSigningUp = false;
   let isResetingPassword = false;
-
-  // State control
   let loggedUser;
   let isDarkModeEnabled = false;
+  let isProfileInfoCardOpen = false;
   //----------------------------
 
   // Functions
@@ -82,6 +81,7 @@
               bind:loggedIn={loggedIn}
               bind:loggedUser={loggedUser}
               bind:isDarkModeEnabled={isDarkModeEnabled}
+              bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
       ></Navbar>
 
       <!-- Welcome section -->
@@ -90,21 +90,30 @@
               bind:loggedUser={loggedUser}
       ></WelcomeSection>
 
-      <!-- Info section -->
 
-      <!-- Notes section -->
+      <!-- Info section -->
 
       <!-- App section -->
       <AppWidgets
               bind:isDarkModeEnabled={isDarkModeEnabled}
       ></AppWidgets>
 
-      <!--
-      <ProfileInfoCard
+      <!-- Notes section -->
+      <Notes
               bind:isDarkModeEnabled={isDarkModeEnabled}
-              bind:loggedUser={loggedUser}
-      ></ProfileInfoCard>
-      -->
+      >
+      </Notes>
+
+      <!-- Profile Info Card -->
+      {#if isProfileInfoCardOpen}
+        <ProfileInfoCard
+                bind:isDarkModeEnabled={isDarkModeEnabled}
+                bind:loggedUser={loggedUser}
+                bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
+        ></ProfileInfoCard>
+      {/if}
+
+
 
       <!--
       <div style="display: flex; justify-content: center; flex-direction: column;">

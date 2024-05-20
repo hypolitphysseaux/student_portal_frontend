@@ -10,6 +10,7 @@
     export let loggedIn = true;
     export let isDarkModeEnabled = false;
     export let loggedUser;
+    export let isProfileInfoCardOpen = false;
 
     let isNavbarOpen = false;
 
@@ -40,7 +41,7 @@
         signOut(auth)
             .then(() =>{
                 decrementActiveUsers();
-                console.log("Successfully signed out.");
+                isProfileInfoCardOpen = false;
                 loggedUser = "";
                 loggedIn = false;
             })
@@ -56,6 +57,11 @@
     const toggleDarkMode = () => {
         isDarkModeEnabled = !isDarkModeEnabled;
     } // Prepinanie modu
+
+    const showProfileInfoCard = () => {
+        isProfileInfoCardOpen = true;
+    } // Otvorenie
+
 </script>
 
 <div
@@ -138,7 +144,7 @@
 
 
             <!-- Profilovka  -->
-            <img on:click={() => {console.log("Clicked on profile icon.")}} src="{loggedUser.photoURL}">
+            <img on:mouseenter={showProfileInfoCard} src="{loggedUser.photoURL}">
         </nav>
     </nav>
 

@@ -12,6 +12,10 @@
         class="widgets-container"
         class:dark-mode={isDarkModeEnabled}
 >
+    <div class="heading">
+        <h2>Zoznam aplikácií</h2>
+    </div>
+
     <div class="box-container">
         <div class="box">
             <i class='bx bxs-school'></i>
@@ -71,10 +75,11 @@
 
     /* Zoznam aplikacii */
     .widgets-container .heading {
-        text-align: center;
-        padding-bottom: 15px;
-        color: #000;
-        font-size: 25px;
+        position: absolute;
+        text-align: left;
+        color: var(--primary-color-heading);
+        font-size: 20px;
+        margin-top: 50px;
     }
 
     .widgets-container .box-container {

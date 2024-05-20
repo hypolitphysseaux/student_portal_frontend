@@ -32,7 +32,7 @@
   --tab-active-color: rgba(118, 144, 199, 0.4);
   --tab-link-hover: #0039A6;
   --card-status-border: #fff;
-
+  --profile-card-background: linear-gradient(90deg, ghostwhite, #fff, ghostwhite);
 
   /* Not used */
   --color-gradient: linear-gradient(90deg, #eee, #f9f9f9, #eee);
@@ -66,6 +66,7 @@
   --tab-active-color: rgba(118, 144, 199, 0.4);
   --tab-link-hover: #ccc;
   --card-status-border: #1f1f1f;
+  --profile-card-background: linear-gradient(90deg, #1f1f1f, #181b21, #1f1f1f);
 
   /* Not used */
   --color-gradient: linear-gradient(to right, #656871 0%, #888b94 20%, #414247, #656871 100%);

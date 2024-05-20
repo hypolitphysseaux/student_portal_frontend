@@ -4,7 +4,9 @@
         GoogleAuthProvider,
         FacebookAuthProvider,
         signInWithPopup,
-        signInWithEmailAndPassword
+        signInWithEmailAndPassword,
+        setPersistence,
+        browserLocalPersistence
     } from "firebase/auth";
     import {doc, getDoc, getFirestore, increment, updateDoc} from "firebase/firestore";
 
@@ -97,34 +99,42 @@
     } // Zvysi pocet online userov o 1
     // ! limitacia, iba raz za sekundu
 
+
+    //TODO onAuthStateChanged observer
+
     async function logIn(){
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
-
         /*
-        // Post request
-        let url = "http://localhost:8000/logIn"
+        setPersistence(auth, browserLocalPersistence)
+            .then(() => {
+                return signInWithEmailAndPassword(auth, email, password);
+            })
+            .then((userCredential) => {
+                // Signed in
+                const user = userCredential.user;
+                loggedUser = user;
 
-        try {
-            const response = await fetch(url,{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    'email': email,
-                    'password': password
-                }),
+                setOnlineStatus(loggedUser.uid);
+                getUserDetails(loggedUser.uid);
+
+                loggedIn = true;
+                incrementActiveUsers();
+            })
+            .catch((error) => {
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
             });
-
-            const data = await response.json();
-            console.log(data);
-
-        }
-        catch (e){
-            console.log("Error:",e)
-        }
         */
+
+        //TODO spravne zobrazovanie po reloade
+        if (auth.currentUser){ //Toto je by default Local storage persistance
+            // Chcem session? alebo remember me checkbox?
+            const user = auth.currentUser;
+            loggedUser = user;
+            loggedIn = true;
+        }
 
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
@@ -142,7 +152,9 @@
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 console.log(errorCode, errorMessage);
+                //TODO spravne zobrazovanie erroru na obrazovku
             });
+
     } // Prihlasenie cez email a heslo
 
     export let loggedIn = false;

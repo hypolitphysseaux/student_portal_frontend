@@ -1,23 +1,36 @@
 <script lang="ts">
-    const allLinks = document.querySelectorAll(".tabs a");
-    const allTabs = document.querySelectorAll(".tab-content");
+    import {onMount} from "svelte";
+    import { fade } from 'svelte/transition';
 
-    allLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            const linkId = link.id;
+    onMount(() => {
+        const allLinks = document.querySelectorAll(".tabs a");
+        const allTabs = document.querySelectorAll(".tab-content");
 
-            allLinks.forEach(l => l.classList.toggle("active", l === link));
-            allTabs.forEach(tab => tab.classList.toggle("active-tab-content", tab.id === linkId));
+        allLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                const linkId = link.id;
+
+                allLinks.forEach(l => l.classList.toggle("active", l === link));
+                allTabs.forEach(tab => tab.classList.toggle("active-tab-content", tab.id === linkId));
+            });
         });
     });
 
+    const closeProfileInfoCard = () => {
+        isProfileInfoCardOpen = false;
+    };
+
     export let isDarkModeEnabled;
     export let loggedUser;
+
+    export let isProfileInfoCardOpen = false;
 </script>
 
 <div
         class="profile-card-container"
         class:dark-mode={isDarkModeEnabled}
+        in:fade={{ delay: 100 , duration: 250 }}
+        out:fade={{ duration: 100 }}
 >
     <div class="container">
         <header>
@@ -49,13 +62,13 @@
         <div class="tabs-container">
             <ul class="tabs">
                 <li>
-                    <a href="#about" id="tab-1">O mne</a>
+                    <a id="tab-1">O mne</a>
                 </li>
                 <li>
-                    <a href="#contact" id="tab-2">Kontakt</a>
+                    <a id="tab-2">Kontakt</a>
                 </li>
                 <li>
-                    <a href="#social" id="tab-3">Siete</a>
+                    <a id="tab-3">Siete</a>
                 </li>
                 <!--
                 <li>
@@ -66,17 +79,17 @@
             </ul>
         </div>
 
-        <div class="tab-content" id="tab-1">
+        <div class="tab-content active-tab-content" id="tab-1">
             <p>
                 Študent, admin pre API. 2 roc bc
             </p>
         </div>
 
         <div class="tab-content" id="tab-2">
-
+            TODO
         </div>
 
-        <div class="tab-content active-tab-content" id="tab-3">
+        <div class="tab-content" id="tab-3">
             <div class="social-links">
                 <a href="#"><i class='bx bxl-youtube'></i></a>
                 <a href="#"><i class='bx bxl-linkedin-square' ></i></a>
@@ -87,45 +100,15 @@
             </div>
         </div>
 
-
-        <div class="tab-content" id="tab-4">
-            <p>
-                Here are some of my students comments 👨‍🎓
-            </p>
-            <div class="comments">
-                <div class="comment">
-                    <img src="avatar.png">
-                    <div>
-                        <h4>John D</h4>
-                        <p>
-                            Incredible instructor! Clear explanations and practical examples.
-                        </p>
-                    </div>
-                </div>
-                <div class="comment">
-                    <img src="avatar.png">
-                    <div>
-                        <h4>Alex R</h4>
-                        <p>
-                            Transformative learning experience, thanks to the insightful guidance.
-                        </p>
-                    </div>
-                </div>
-                <div class="comment">
-                    <img src="avatar.png">
-                    <div>
-                        <h4>Sarah K</h4>
-                        <p>
-                            Engaging content, easy to follow, highly recommended.
-                        </p>
-                    </div>
-                </div>
-            </div>
+        <div
+                class="my-button"
+                data-tooltip="Zavrieť"
+        >
+            <md-icon-button on:click={closeProfileInfoCard}>
+                <i class='bx bx-x'></i>
+            </md-icon-button>
         </div>
     </div>
-
-
-    <script src="script.js"></script>
 </div>
 
 
@@ -133,21 +116,24 @@
 <style>
     a {
         text-decoration: none;
+        cursor: pointer;
     }
 
     .profile-card-container {
-        background: var(--dotted-background);
-        background-size: 10px 10px;
+        position: fixed;
+        top: 150px;
+        right: 0px;
         color: var(--navbar-icon-color);
         display: flex;
-        align-items: center;
+        align-items: end;
         justify-content: center;
         flex-direction: column;
-        height: 100vh;
+        /*height: 100vh;*/
+        /*width: fit-content;*/
     }
 
     .container {
-        background: var(--color-card-background);
+        background: var(--profile-card-background);
         width: 448px;
         padding: 16px;
         display: flex;
@@ -207,7 +193,7 @@
 
     .status-circle{
         position: absolute;
-        background: green;
+        background: green; /* TODO */
         bottom: 15px;
         right: 10px;
         width: 22px;
@@ -244,7 +230,7 @@
     }
 
     .container .social-links a {
-        background: var(--color-card-background);
+        background: transparent;
         padding: 8px;
         display: flex;
         width: 48px;
@@ -286,7 +272,7 @@
     }
 
     .container .tabs-container .tabs li {
-        z-index: 2;
+        /*z-index: 2;*/
     }
 
     .container .tabs-container .tabs li a {
@@ -312,7 +298,7 @@
         width: 112px;
         height: 100%;
         background: var(--tab-active-color);
-        z-index: 1;
+        /*z-index: 1;*/
         border-radius: 8px;
         transition: all 0.5s ease;
     }
@@ -345,60 +331,39 @@
         transform: translateX(224px);
     }
 
-    .container .tab-content .vote {
-        display: flex;
-        flex-direction: column;
-        margin-top: 1px;
-        gap: 12px;
-        padding: 8px 0;
+
+    .my-button{
+        /*align-self: end;*/
     }
 
-    .container .tab-content .vote a {
-        display: flex;
-        background: #fafafa;
-        gap: 8px;
-        border-radius: 5px;
-        color: #757575;
-        padding: 8px;
-        border: 1px solid #eee;
-        transition: all 0.3s ease;
+    .my-button i{
+        font-size: 25px;
+        color: var(--navbar-icon-color);
     }
 
-    .container .tab-content .vote a:hover {
-        border: 1px solid #7e57c2;
-        color: #7e57c2;
-    }
+    .my-button::before {
+        --scale: 0;
 
-    .container .tab-content .comments {
-        margin-top: 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
+        --translate-y: 100%;
 
-    .container .tab-content .comments .comment {
-        display: flex;
-        gap: 16px;
-        align-items: center;
-        padding: 8px;
-        background: #fafafa;
-        border: 1px solid #eee;
+        position: absolute;
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%) translateY(var(--translate-y, 0)) scale(var(--scale));
+        transition: 300ms transform;
+        transform-origin: top center;
+
+        content: attr(data-tooltip);
+        color: white;
+        padding: .5rem;
         border-radius: 8px;
+        text-align: center;
+        width: max-content;
+        background: var(--tooltip-color);
     }
 
-    .container .tab-content .comments .comment h4 {
-        margin-bottom: 5px;
-    }
-
-    .container .tab-content .comments .comment p {
-        font-size: 13px;
-    }
-
-    .container .tab-content .comments .comment img {
-        width: 48px;
-        aspect-ratio: 1/1;
-        object-fit: cover;
-        border-radius: 50%;
+    .my-button:hover::before {
+        --scale: 1;
     }
 
     /*

@@ -45,15 +45,19 @@
             if (doc.exists()){
                 if (doc.data().status == "online"){
                     statusColor = "#23b223";
+                    loggedUser.status = "online";
                 }
                 if (doc.data().status == "away"){
                     statusColor = "#ffea00";
+                    loggedUser.status = "away";
                 }
                 if (doc.data().status == "busy"){
                     statusColor = "#f35353";
+                    loggedUser.status = "busy";
                 }
                 if (doc.data().status == "hidden"){
                     statusColor = "gray";
+                    loggedUser.status = "hidden";
                 }
             }
         });
@@ -104,6 +108,9 @@
         class:dark-mode={isDarkModeEnabled}
 >
     <div class="user-left">
+        {#if loggedUser.status == "busy"}
+            <i class='bx bx-bell-off' style="font-size: 20px; color: var(--navbar-icon-color);"></i>
+        {/if}
         <div class="welcome-heading">
             <h1>Vitajte, <strong>{loggedUser.displayName}</strong> !</h1>
         </div>
