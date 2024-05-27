@@ -1,4 +1,23 @@
 <script lang="ts">
+    import {onMount} from "svelte";
+    import Swiper from 'swiper/bundle';
+    import 'swiper/css/bundle';
+    import '@material/web/button/filled-tonal-button.js'
+    import '@material/web/button/filled-button.js'
+
+    onMount(() => {
+        const swiper = new Swiper('.swiper', {
+            slidesPerView: 1,
+
+            pagination: {
+                el: '.swiper-pagination',
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev'
+            },
+        });
+    });
 
     export let isDarkModeEnabled;
 </script>
@@ -13,6 +32,27 @@
 
     <div class="notes">
 
+        <div class="swiper">
+            <!-- Additional required wrapper -->
+            <div class="swiper-wrapper">
+                <!-- Slides -->
+                <div class="swiper-slide">Slide 1</div>
+                <div class="swiper-slide">Slide 2</div>
+                <div class="swiper-slide">Slide 3</div>
+            </div>
+
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
+        
+        <md-filled-tonal-button>
+            Pridať poznámku
+        </md-filled-tonal-button>
+
+        <md-filled-button>
+            Odstrániť všetky poznámky
+        </md-filled-button>
     </div>
 </div>
 
@@ -43,4 +83,5 @@
          */
         margin-top: 150px;
     }
+
 </style>
