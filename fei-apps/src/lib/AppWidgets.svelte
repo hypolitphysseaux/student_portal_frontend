@@ -51,6 +51,13 @@
             <p>Blíži sa zápočet alebo skúška? Otestujte svoje vedomosti z daného predmetu v kvízoch</p>
             <a href="http://localhost:5175/" target="_blank" class="btn">SPUSTIŤ</a>
         </div>
+
+        <div class="box">
+            <i class='bx bx-file'></i>
+            <h3>RESOURCES</h3>
+            <p>Portál študijných materiálov...</p>
+            <a target="_blank" class="btn">SPUSTIŤ</a>
+        </div>
     </div>
 </div>
 

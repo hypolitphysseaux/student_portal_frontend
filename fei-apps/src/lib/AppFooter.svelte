@@ -17,6 +17,7 @@
                     <li><a href="#">Chess</a></li>
                     <li><a href="#">Student Portal</a></li>
                     <li><a href="#">Quizzes</a></li>
+                    <li><a href="#">Resources</a></li>
                 </ul>
             </div>
             <div class="footer-col">

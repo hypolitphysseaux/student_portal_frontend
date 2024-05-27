@@ -55,7 +55,7 @@
         </header>
 
         <div class="about">
-            <h2>Ing. {loggedUser.displayName} PhD <i class='bx bxs-badge-check'></i></h2>
+            <h2>{loggedUser.displayName}<i class='bx bxs-badge-check'></i></h2>
             <p>Informačné a komunikačné technológie</p>
         </div>
 
@@ -86,7 +86,15 @@
         </div>
 
         <div class="tab-content" id="tab-2">
-            TODO
+            <div class="contact">
+                <div class="contact-type">Email:</div>
+                <div class="contact-value">{loggedUser.email}</div>
+            </div>
+
+            <div class="contact">
+                <div class="contact-type">Tel.č:</div>
+                <div class="contact-value">TODO</div>
+            </div>
         </div>
 
         <div class="tab-content" id="tab-3">
@@ -315,9 +323,17 @@
         height: 100px;
         padding: 0 4px;
         font-size: 15px;
-        margin-bottom: 16px;
+        margin-bottom: 5px;
         color: var(--color-info);
     }
+
+    .container .tab-content .contact{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 250px;
+    }
+
 
     .container .tabs-container .tabs li:nth-child(1):has(.active)~#active-tab {
         transform: translateX(0);
