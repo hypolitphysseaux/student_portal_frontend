@@ -101,6 +101,7 @@
       <!-- Notes section -->
       <Notes
               bind:isDarkModeEnabled={isDarkModeEnabled}
+              bind:loggedUser={loggedUser}
       >
       </Notes>
 

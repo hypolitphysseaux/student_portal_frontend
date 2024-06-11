@@ -1,33 +1,61 @@
 <script lang="ts">
     import {onMount} from "svelte";
     import { fade } from 'svelte/transition';
+    import {doc, getFirestore, onSnapshot, updateDoc} from "firebase/firestore";
+    import firebaseApp from "../firebase";
     import '@material/web/button/filled-tonal-button.js'
     import '@material/web/button/filled-button.js'
 
     import '@material/web/iconbutton/icon-button.js'
     import '@material/web/fab/fab.js'
 
+    const db = getFirestore(firebaseApp);
 
-    onMount(() => {
-        //Nacitat moje poznamky z databazy
-        let notes = [];
+    //Nacitat moje poznamky z databazy
+    var notes = [];
 
-        //Zobrazit dolezite ako prve
+    onMount(async () => {
+        //Listener pre notes
+        const myNotes = onSnapshot(doc(db, "notes", loggedUser.uid), (doc) => {
+            if (doc.exists()){
+                //Vymazat ?
+                notes = [];
+
+                // Nacitanie poznamok
+                for (let i = 0; i < doc.data().notes.length; i++){
+                    notes.push(doc.data().notes[i]);
+                }
+
+                //Zobrazit dolezite ako prve
+                notes.sort((a, b) => b.isImportant - a.isImportant);
+                notes = [...notes];
+            }
+        });
+
     });
 
     async function addNote(){}
-    async function deleteNote(noteId){
-        //TODO
-        let note = document.getElementById(noteId);
-        if (note){
-            note.remove();
-        }
 
+    async function deleteNote(noteId){
+        //Odstranit z databazy
+
+        notes = notes.filter(note => note.noteId !== noteId);
     }
-    async function deleteAllNotes(){}
-    async function toggleStar(){}
+    async function deleteAllNotes(){
+        //Odstranit z databazy, listener a each statement?
+    }
+
+    async function toggleStar(noteId){
+        let note = document.getElementById(noteId);
+
+        if (note){
+            //Updatnut v databaze
+            //Styl bude v svelte if statement, treba listener?
+        }
+    }
 
     export let isDarkModeEnabled;
+    export let loggedUser;
 </script>
 
 <div
@@ -39,65 +67,42 @@
     </div>
 
     <div class="notes">
-        <!-- {each} ? -->
+        {#each notes as note}
+            <div
+                    class="note"
+                    id={note.noteId}
+                    in:fade={{ delay: 100 , duration: 250 }}
+                    out:fade={{ duration: 100 }}
+            >
+                <div class="star-mark">
+                    <md-icon-button on:click={toggleStar}>
+                        {#if note.isImportant}
+                            <i class='bx bxs-star'></i>
+                        {:else}
+                            <i class='bx bx-star'></i>
+                        {/if}
+                    </md-icon-button>
+                </div>
 
-        <div
-                class="note"
-                id="note1"
-                in:fade={{ delay: 100 , duration: 250 }}
-                out:fade={{ duration: 100 }}
-        >
-            <div class="star-mark">
-                <md-icon-button on:click={toggleStar}>
-                    <i class='bx bx-star'></i>
-                </md-icon-button>
+                <div class="delete-button">
+                    <md-icon-button on:click|preventDefault={() => deleteNote(note.noteId)}>
+                        <i class='bx bxs-trash-alt'></i>
+                    </md-icon-button>
+                </div>
+
+                <div class="note-title">
+                    {note.title}
+                </div>
+
+                <div class="note-content">
+                    {note.content}
+                </div>
             </div>
-
-            <div class="delete-button">
-                <md-icon-button on:click|preventDefault={() => deleteNote("note1")}>
-                    <i class='bx bxs-trash-alt'></i>
-                </md-icon-button>
-            </div>
-
-            <div class="note-title">
-                Nakup
-            </div>
-
-            <div class="note-content">
-                Maso, rajcina, mlieko
-            </div>
-        </div>
-
-        <div
-                class="note"
-                id="note2"
-                in:fade={{ delay: 100 , duration: 250 }}
-                out:fade={{ duration: 100 }}
-        >
-            <div class="star-mark">
-                <md-icon-button on:click={toggleStar}>
-                    <i class='bx bx-star'></i>
-                </md-icon-button>
-            </div>
-
-            <div class="delete-button">
-                <md-icon-button on:click|preventDefault={() => deleteNote("note2")}>
-                    <i class='bx bxs-trash-alt'></i>
-                </md-icon-button>
-            </div>
-
-            <div class="note-title">
-                Title
-            </div>
-
-            <div class="note-content">
-                lorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentsum dolor epic shit contentlorem ipsum dolor epic shit contentsum dolor epic shit contentlorem ipsum dolor epic shit content
-                lorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentsum dolor epic shit contentlorem ipsum dolor epic shit contentsum dolor epic shit contentlorem ipsum dolor epic shit content
-            </div>
-        </div>
-
+        {/each}
     </div>
 
+
+    <!-- Buttons //TODO nastylovat -->
     <md-filled-tonal-button
         on:click={addNote}
     >
