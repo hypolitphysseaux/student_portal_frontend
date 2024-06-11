@@ -12,17 +12,10 @@
     var lastLogin;
     var statusColor = "green";
 
-    let currentDate: Array<{day: number; month: number; year: number }> = [];
+
     let isChangingStatus = false;
 
     onMount(() => {
-        const date = new Date();
-        currentDate.day = date.getDate();
-        currentDate.month = date.getUTCMonth();
-        currentDate.year = date.getFullYear();
-
-
-
         const degree = 6;
 
         const hr = document.getElementById('hr');
@@ -159,17 +152,6 @@
 
     <div class="time-center">
         <div class="container">
-
-            <div class="date">
-                <!-- 25.4.2024 -->
-                <div class="left">
-                    {currentDate.day}.{currentDate.month}.
-                </div>
-                <div class="right">
-                    {currentDate.year}
-                </div>
-            </div>
-
             <div class="clock">
                 <div class="clock-bg">
                     <img src="/clock.png">
@@ -289,19 +271,6 @@
     .container {
         position: relative;
         transform: scale(.8);
-    }
-
-    .date{
-      display: flex;
-      gap: 280px;
-      position: absolute;
-      left: -140px;
-      top: 100px;
-      font-size: 50px;
-      font-weight: bold;
-      letter-spacing: 5px;
-      opacity: 0.5;
-      background: white;
     }
 
     .clock {

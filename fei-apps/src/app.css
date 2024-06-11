@@ -33,6 +33,7 @@
   --tab-link-hover: #0039A6;
   --card-status-border: #fff;
   --profile-card-background: linear-gradient(90deg, ghostwhite, #fff, ghostwhite);
+  --note-hover: 0 10px 15px rgba(0, 0, 0, .3);
 
   /* Not used */
   --color-gradient: linear-gradient(90deg, #eee, #f9f9f9, #eee);
@@ -50,7 +51,7 @@
   --search-text-color: #fff;
   --color-background: #252525;
   --dotted-background: radial-gradient(circle, rgb(0, 0, 0, .85) 2px, #414247 0px); /* with background-size: 10px 10px;*/
-  --box-shadow: rgba(200, 200, 200, .1) 0px 7px 29px 5px;
+  --box-shadow: rgba(93, 93, 93, 0.1) 0px 7px 29px 5px;
   --box-shadow--hover: 0 10px 15px rgba(0, 57, 166, 0.2);
   --color-info: #ccc;
   --color-card-background: #1f1f1f;
@@ -67,6 +68,7 @@
   --tab-link-hover: #ccc;
   --card-status-border: #1f1f1f;
   --profile-card-background: linear-gradient(90deg, #1f1f1f, #181b21, #1f1f1f);
+  --note-hover: 0 10px 15px rgba(0, 0, 0, 0.2);
 
   /* Not used */
   --color-gradient: linear-gradient(to right, #656871 0%, #888b94 20%, #414247, #656871 100%);

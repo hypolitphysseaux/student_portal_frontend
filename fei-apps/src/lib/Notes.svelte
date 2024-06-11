@@ -1,5 +1,6 @@
 <script lang="ts">
     import {onMount} from "svelte";
+    import { fade } from 'svelte/transition';
     import '@material/web/button/filled-tonal-button.js'
     import '@material/web/button/filled-button.js'
 
@@ -15,7 +16,14 @@
     });
 
     async function addNote(){}
-    async function deleteNote(){}
+    async function deleteNote(noteId){
+        //TODO
+        let note = document.getElementById(noteId);
+        if (note){
+            note.remove();
+        }
+
+    }
     async function deleteAllNotes(){}
     async function toggleStar(){}
 
@@ -33,7 +41,12 @@
     <div class="notes">
         <!-- {each} ? -->
 
-        <div class="note">
+        <div
+                class="note"
+                id="note1"
+                in:fade={{ delay: 100 , duration: 250 }}
+                out:fade={{ duration: 100 }}
+        >
             <div class="star-mark">
                 <md-icon-button on:click={toggleStar}>
                     <i class='bx bx-star'></i>
@@ -41,19 +54,26 @@
             </div>
 
             <div class="delete-button">
-                <md-icon-button on:click={deleteNote}>
+                <md-icon-button on:click|preventDefault={() => deleteNote("note1")}>
                     <i class='bx bxs-trash-alt'></i>
                 </md-icon-button>
             </div>
 
             <div class="note-title">
-                Title
+                Nakup
             </div>
 
+            <div class="note-content">
+                Maso, rajcina, mlieko
+            </div>
         </div>
 
-
-        <div class="note">
+        <div
+                class="note"
+                id="note2"
+                in:fade={{ delay: 100 , duration: 250 }}
+                out:fade={{ duration: 100 }}
+        >
             <div class="star-mark">
                 <md-icon-button on:click={toggleStar}>
                     <i class='bx bx-star'></i>
@@ -61,7 +81,7 @@
             </div>
 
             <div class="delete-button">
-                <md-icon-button on:click={deleteNote}>
+                <md-icon-button on:click|preventDefault={() => deleteNote("note2")}>
                     <i class='bx bxs-trash-alt'></i>
                 </md-icon-button>
             </div>
@@ -70,6 +90,10 @@
                 Title
             </div>
 
+            <div class="note-content">
+                lorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentsum dolor epic shit contentlorem ipsum dolor epic shit contentsum dolor epic shit contentlorem ipsum dolor epic shit content
+                lorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentlorem ipsum dolor epic shit contentsum dolor epic shit contentlorem ipsum dolor epic shit contentsum dolor epic shit contentlorem ipsum dolor epic shit content
+            </div>
         </div>
 
     </div>
@@ -110,21 +134,30 @@
         margin-top: 150px;
         margin-bottom: 20px;
 
+        /*
         display: flex;
-        flex-direction: row;
+        flex-direction: row;*/
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
         gap: 15px;
     }
 
     .notes-container .notes .note{
-        height: 250px;
+        /*height: 250px;
         width: 400px;
-
-        background: var(--search-background);
-        border: 2px solid var(--navbar-icon-color);
-        border-radius: 8px;
+        */
 
         position: relative;
+        box-shadow: var(--box-shadow);
+        border-radius: 8px;
+        background: var(--search-background);
+        text-align: center;
+        padding: 120px 100px;
 
+        &:hover{
+            transform: scale(1.02);
+            box-shadow: var(--note-hover);
+        }
     }
 
     .notes-container .notes .note .delete-button{
@@ -157,6 +190,37 @@
         overflow: hidden;
 
         font-size: 30px;
-        color: #1d1d1d;
+        color: var(--navbar-icon-color);
+    }
+
+    .notes-container .notes .note .note-content{
+        position: absolute;
+        top: 25%;
+        left: 10%;
+        margin-right: 10%;
+
+        color: var(--color-info);
+        height: 150px;
+        overflow: auto;
+    }
+
+    /* SCROLLBAR */
+    /* width */
+    ::-webkit-scrollbar {
+        width: 5px;
+    }
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: var(--search-background);
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: var(--primary-button);
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary-button--hover);
     }
 </style>
