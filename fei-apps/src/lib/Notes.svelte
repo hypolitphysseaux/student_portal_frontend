@@ -3,11 +3,9 @@
     import { fade } from 'svelte/transition';
 
     import { v4 as uuidv4 } from 'uuid';
-    import {doc, getFirestore, onSnapshot, updateDoc, getDoc, arrayUnion, setDoc, arrayRemove} from "firebase/firestore";
+    import {doc, getFirestore, onSnapshot, updateDoc, getDoc, arrayUnion, setDoc} from "firebase/firestore";
     import firebaseApp from "../firebase";
 
-    import '@material/web/button/filled-tonal-button.js'
-    import '@material/web/button/filled-button.js'
     import '@material/web/iconbutton/icon-button.js'
     import '@material/web/fab/fab.js'
 
@@ -16,11 +14,13 @@
     //Nacitat moje poznamky z databazy
     var notes = [];
 
+    let editingNoteId = null;
+    let hoveredNoteId = null;
+
     onMount(async () => {
         //Listener pre notes
         const myNotes = onSnapshot(doc(db, "notes", loggedUser.uid), (doc) => {
             if (doc.exists()){
-                //Vymazat ?
                 notes = [];
 
                 // Nacitanie poznamok
@@ -42,11 +42,11 @@
             const userNotesDoc = await getDoc(userNotesRef);
 
             if (!userNotesDoc.exists()) {
-                await setDoc(userNotesRef, { // Use setDoc to create the document
+                await setDoc(userNotesRef, {
                     notes: [{
                         noteId: uuidv4(),
                         title: "Nadpis",
-                        isImporatant: false,
+                        isImportant: false,
                         content: "Sem zadajte text.",
                         created: new Date()
                     }]
@@ -59,7 +59,7 @@
                 notes: arrayUnion({
                     noteId: uuidv4(),
                     title: "Nadpis",
-                    isImporatant: false,
+                    isImportant: false,
                     content: "Sem zadajte text.",
                     created: new Date()
                 })
@@ -71,6 +71,42 @@
         }
     }
 
+    async function saveNote(noteId){
+        const title = document.getElementById("note-title-textarea").value;
+        const content = document.getElementById("note-title-contentarea").value;
+
+        try {
+            const userNotesRef = doc(db, "notes", loggedUser.uid);
+            const userNotesDoc = await getDoc(userNotesRef);
+
+            if (!userNotesDoc.exists()) {
+                console.error("User's note document not found.");
+                return;
+            }
+
+            let notes = userNotesDoc.data().notes;
+            const noteIndex = notes.findIndex(note => note.noteId === noteId);
+
+            if (noteIndex === -1) {
+                console.error("Note not found in user's document.");
+                return;
+            }
+
+            notes[noteIndex].title = title;
+            notes[noteIndex].content = content;
+
+            await updateDoc(userNotesRef, {
+                notes: notes
+            });
+
+        } catch (error) {
+            console.error("Error deleting note:", error);
+        }
+    }
+
+    async function discardNote(){
+        editingNoteId = null;
+    }
     async function deleteNote(noteId){
         try {
             const userNotesRef = doc(db, "notes", loggedUser.uid);
@@ -184,6 +220,12 @@
             <div
                     class="note"
                     id={note.noteId}
+                    on:mouseover={() => {
+                        hoveredNoteId = note.noteId;
+                    }}
+                    on:mouseleave={() => {
+                        hoveredNoteId = null;
+                    }}
                     in:fade={{ delay: 100 , duration: 250 }}
                     out:fade={{ duration: 100 }}
             >
@@ -203,34 +245,83 @@
                     </md-icon-button>
                 </div>
 
-                <div class="note-title">
-                    {note.title}
-                </div>
+                {#if (hoveredNoteId === note.noteId) && (editingNoteId !== note.noteId)}
+                    <div class="edit-button">
+                        <md-icon-button on:click={() => {
+                            editingNoteId = note.noteId;
+                            editingNoteBackup = note;
+                        }}>
+                            <i class='bx bxs-edit-alt'></i>
+                        </md-icon-button>
+                    </div>
+                {/if}
 
-                <div class="note-content">
-                    {note.content}
-                </div>
+
+                {#if editingNoteId !== note.noteId}
+                    <div class="note-title">
+                        <span>{note.title}</span>
+                    </div>
+
+                    <div class="note-content">
+                        {note.content}
+                    </div>
+                {/if}
+
+                <!-- Editing note -->
+                {#if (editingNoteId === note.noteId)}
+                    <!-- TODO nadizajnovat textareau -->
+                    <textarea
+                            id="note-title-textarea"
+                            value={note.title}
+                            class="note-title-textarea"
+                    ></textarea>
+                    <textarea
+                            id="note-title-contentarea"
+                            value={note.content}
+                            class="note-title-contentarea"
+                    ></textarea>
+
+                    <div class="save-button">
+                        <md-icon-button on:click|preventDefault={() => {
+                            saveNote(note.noteId);
+                            editingNoteId = null;
+                        }}>
+                            <i class='bx bx-check-circle'></i>
+                        </md-icon-button>
+                    </div>
+
+                    <div class="discard-button">
+                        <md-icon-button on:click|preventDefault={() => {discardNote(note.noteId)}}>
+                            <i class='bx bx-x'></i>
+                        </md-icon-button>
+                    </div>
+                {/if}
             </div>
         {/each}
     </div>
 
 
     <!-- Buttons -->
-    <button
-            class="add-btn"
-            on:click={addNote}
-    >
-        <i class='bx bx-plus'></i>
-        Pridať poznámku
-    </button>
+    <div class="buttons">
+        <button
+                class="add-btn"
+                on:click={addNote}
+        >
+            <i class='bx bx-plus'></i>
+            Pridať poznámku
+        </button>
 
-    <button
-            class="delete-all-btn"
-            on:click={deleteAllNotes}
-    >
-        <i class='bx bxs-trash-alt'></i>
-        Odstrániť všetky poznámky
-    </button>
+        {#if notes.length > 1}
+            <button
+                    class="delete-all-btn"
+                    on:click={deleteAllNotes}
+            >
+                <i class='bx bxs-trash-alt'></i>
+                Odstrániť všetky poznámky
+            </button>
+        {/if}
+    </div>
+
 </div>
 
 
@@ -242,6 +333,12 @@
         padding: 15px 9%;
         padding-bottom: 50px;
         box-shadow: var(--box-shadow) ; /* 0 5px 10px rgba(0, 0, 0, .1) */
+    }
+
+    .notes-container .buttons{
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
     }
 
     .notes-container .add-btn{
@@ -326,11 +423,44 @@
         }
     }
 
+    .notes-container .notes .note .edit-button{
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        --md-icon-button-hover-state-layer-color: blue;
+    }
+
+    .notes-container .notes .note .edit-button i{
+        color: var(--navbar-icon-color);
+    }
+
+    .notes-container .notes .note .save-button{
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        --md-icon-button-hover-state-layer-color: var(--navbar-icon-color);
+    }
+
+    .notes-container .notes .note .save-button i{
+        color: #23b223;
+    }
+
+    .notes-container .notes .note .discard-button{
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+        --md-icon-button-hover-state-layer-color: var(--navbar-icon-color);
+    }
+
+    .notes-container .notes .note .discard-button i{
+        color: red;
+    }
+
     .notes-container .notes .note .delete-button{
         position: absolute;
         top: 5px;
         right: 5px;
-        --md-icon-button-hover-state-layer-color: red;
+        --md-icon-button-hover-state-layer-color: var(--navbar-icon-color);
     }
 
     .notes-container .notes .note .delete-button i{
@@ -354,21 +484,26 @@
         left: 50%;
         transform: translateX(-50%);
         overflow: hidden;
+        width: 280px;
 
         font-size: 30px;
         color: var(--navbar-icon-color);
     }
+
+
 
     .notes-container .notes .note .note-content{
         position: absolute;
         top: 25%;
         left: 10%;
         margin-right: 10%;
+        text-align: left;
 
         color: var(--color-info);
         height: 150px;
         overflow: auto;
     }
+
 
     /* SCROLLBAR */
     /* width */
@@ -388,5 +523,12 @@
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
         background: var(--primary-button--hover);
+    }
+
+    @media (width <=500px){
+        .notes-container .buttons{
+            flex-direction: column;
+            width: 75%;
+        }
     }
 </style>
