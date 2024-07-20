@@ -34,6 +34,7 @@
   --card-status-border: #fff;
   --profile-card-background: linear-gradient(90deg, ghostwhite, #fff, ghostwhite);
   --note-hover: 0 10px 15px rgba(0, 0, 0, .3);
+  --note-text-area-background: #eff1f2;
 
   /* Not used */
   --color-gradient: linear-gradient(90deg, #eee, #f9f9f9, #eee);
@@ -69,6 +70,7 @@
   --card-status-border: #1f1f1f;
   --profile-card-background: linear-gradient(90deg, #1f1f1f, #181b21, #1f1f1f);
   --note-hover: 0 10px 15px rgba(0, 0, 0, 0.2);
+  --note-text-area-background: rgba(40, 40, 40, 0.5);
 
   /* Not used */
   --color-gradient: linear-gradient(to right, #656871 0%, #888b94 20%, #414247, #656871 100%);
