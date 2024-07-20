@@ -40,32 +40,32 @@
         try {
             const userNotesRef = doc(db, "notes", loggedUser.uid);
             const userNotesDoc = await getDoc(userNotesRef);
+            const id = uuidv4();
 
             if (!userNotesDoc.exists()) {
                 await setDoc(userNotesRef, {
                     notes: [{
-                        noteId: uuidv4(),
+                        noteId: id,
                         title: "Nadpis",
                         isImportant: false,
                         content: "Sem zadajte text.",
                         created: new Date()
                     }]
                 });
-
+                editingNoteId = id;
                 return;
             }
 
             await updateDoc(userNotesRef, {
                 notes: arrayUnion({
-                    noteId: uuidv4(),
+                    noteId: id,
                     title: "Nadpis",
                     isImportant: false,
                     content: "Sem zadajte text.",
                     created: new Date()
                 })
             });
-
-            console.log("Note added successfully!");
+            editingNoteId = id;
         } catch (error) {
             console.error("Error adding note:", error);
         }
@@ -226,8 +226,10 @@
                     on:mouseleave={() => {
                         hoveredNoteId = null;
                     }}
+                    on:focus={() => {hoveredNoteId = note.noteId;}}
                     in:fade={{ delay: 100 , duration: 250 }}
                     out:fade={{ duration: 100 }}
+                    role="note"
             >
                 <div class="star-mark">
                     <md-icon-button on:click={() => toggleStar(note.noteId)}>
@@ -249,7 +251,6 @@
                     <div class="edit-button">
                         <md-icon-button on:click={() => {
                             editingNoteId = note.noteId;
-                            editingNoteBackup = note;
                         }}>
                             <i class='bx bxs-edit-alt'></i>
                         </md-icon-button>
@@ -263,23 +264,27 @@
                     </div>
 
                     <div class="note-content">
-                        {note.content}
+                        <p>{note.content}</p>
                     </div>
                 {/if}
 
                 <!-- Editing note -->
                 {#if (editingNoteId === note.noteId)}
-                    <!-- TODO nadizajnovat textareau -->
-                    <textarea
-                            id="note-title-textarea"
-                            value={note.title}
-                            class="note-title-textarea"
-                    ></textarea>
-                    <textarea
-                            id="note-title-contentarea"
-                            value={note.content}
-                            class="note-title-contentarea"
-                    ></textarea>
+                    <div class="note-title-textarea-wrapper">
+                        <textarea
+                                id="note-title-textarea"
+                                value={note.title}
+                                class="note-title-textarea"
+                        ></textarea>
+                    </div>
+
+                    <div class="note-title-contentarea-wrapper">
+                        <textarea
+                                id="note-title-contentarea"
+                                value={note.content}
+                                class="note-title-contentarea"
+                        ></textarea>
+                    </div>
 
                     <div class="save-button">
                         <md-icon-button on:click|preventDefault={() => {
@@ -292,7 +297,7 @@
 
                     <div class="discard-button">
                         <md-icon-button on:click|preventDefault={() => {discardNote(note.noteId)}}>
-                            <i class='bx bx-x'></i>
+                            <i class='bx bx-x-circle'></i>
                         </md-icon-button>
                     </div>
                 {/if}
@@ -406,10 +411,6 @@
     }
 
     .notes-container .notes .note{
-        /*height: 250px;
-        width: 400px;
-        */
-
         position: relative;
         box-shadow: var(--box-shadow);
         border-radius: 8px;
@@ -421,6 +422,48 @@
             transform: scale(1.02);
             box-shadow: var(--note-hover);
         }
+    }
+
+    .notes-container .notes .note .note-title-textarea-wrapper{
+        width: 50%;
+        transform: translateX(-5%);
+        position: absolute;
+        top: 5px;
+    }
+
+    .notes-container .notes .note .note-title-textarea-wrapper textarea{
+        color: var(--navbar-icon-color);
+        background: var(--note-text-area-background);
+        border: none;
+        box-shadow: var(--box-shadow);
+        font-size: 20px;
+        text-align: center;
+        resize: none;
+        cursor: pointer;
+
+        width: 100%;
+    }
+
+    .notes-container .notes .note .note-title-contentarea-wrapper{
+        width: 100%;
+        height: 50%;
+        transform: translateX(-26%);
+        position: absolute;
+        bottom: 25%;
+    }
+
+    .notes-container .notes .note .note-title-contentarea-wrapper textarea{
+        color: var(--navbar-icon-color);
+        background: var(--note-text-area-background);
+        border: none;
+        box-shadow: var(--box-shadow);
+        font-size: 18px;
+        text-align: left;
+        resize: none;
+        cursor: pointer;
+
+        width: 75%;
+        height: 100%;
     }
 
     .notes-container .notes .note .edit-button{
@@ -501,7 +544,12 @@
 
         color: var(--color-info);
         height: 150px;
+        width: 300px;
         overflow: auto;
+    }
+
+    .notes-container .notes .note .note-content p{
+        overflow-wrap: break-word;
     }
 
 
@@ -525,6 +573,10 @@
         background: var(--primary-button--hover);
     }
 
+    /* TODO porobit breakpointy pre editovanie poznamok
+    Dokoncit dizajn textareii, Nastavit maximalnu dlzku nadpisu a poznamky
+    Pridat zobrazenie datumu vytvorenia
+              */
     @media (width <=500px){
         .notes-container .buttons{
             flex-direction: column;
