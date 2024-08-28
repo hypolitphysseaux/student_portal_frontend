@@ -15,6 +15,7 @@
   import AppFooter from "./lib/AppFooter.svelte";
   import ProfileInfoCard from "./lib/ProfileInfoCard.svelte";
   import Notes from "./lib/Notes.svelte";
+  import {onMount} from "svelte";
   //import firestore = firebase.firestore;
   //----------------------------
 
@@ -28,7 +29,21 @@
   //----------------------------
 
   // Functions
+  onMount(() => {
+    console.log("App loaded.");
 
+    //TODO setPersistence??s
+    // TODO skontrolujeme, ci je user v session?
+    /*
+    if (auth.currentUser){ //Toto je by default Local storage persistance
+      // Chcem session? alebo remember me checkbox?
+      const user = auth.currentUser;
+      loggedUser = user;
+      loggedIn = true;
+    }
+     */
+
+  });
   //----------------------------
 </script>
 

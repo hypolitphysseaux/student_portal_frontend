@@ -573,7 +573,7 @@
         background: var(--primary-button--hover);
     }
 
-    /* TODO porobit breakpointy pre editovanie poznamok
+    /* TODO porobit media breakpointy pre editovanie poznamok
     Dokoncit dizajn textareii, Nastavit maximalnu dlzku nadpisu a poznamky
     Pridat zobrazenie datumu vytvorenia
               */

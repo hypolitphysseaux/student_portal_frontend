@@ -16,6 +16,8 @@
     const facebookProvider = new FacebookAuthProvider();
 
     async function facebookPopUpSignIn(){
+        alert("Momentálne nie je k dispozícií.");
+        /*
         try {
             // Step 1: User tries to sign in using Google.
             let result = await signInWithPopup(auth, facebookProvider);
@@ -34,6 +36,7 @@
                 // sign-in method.
             }
         }
+         */
     } // Facebook prihlasenie
 
     async function googlePopUpSignIn(){
@@ -48,11 +51,11 @@
             const user = result.user;
 
             incrementActiveUsers();
-            //TODO get user details
+            //TODO get user details [ais / theme ... , not implemented here yet]
 
-            loggedUser = user.toJSON();
-            console.log(loggedUser);
+            //loggedUser = user.toJSON();
             //console.log(loggedUser);
+
             loggedIn = true;
         } catch (error) {
 
@@ -105,7 +108,7 @@
     async function logIn(){
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
-        /*
+        /* //TODO ?sessions
         setPersistence(auth, browserLocalPersistence)
             .then(() => {
                 return signInWithEmailAndPassword(auth, email, password);
@@ -129,6 +132,7 @@
         */
 
         //TODO spravne zobrazovanie po reloade
+        // toto nema byt v onmounte pri nacitani appky??? <<<--------------------
         if (auth.currentUser){ //Toto je by default Local storage persistance
             // Chcem session? alebo remember me checkbox?
             const user = auth.currentUser;
@@ -149,10 +153,25 @@
                 incrementActiveUsers();
             })
             .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorCode, errorMessage);
-                //TODO spravne zobrazovanie erroru na obrazovku
+                console.log(error.code);
+
+                //TODO
+                if (error.code == "auth/invalid-credential"){
+                    errorLabel = "Nesprávny email alebo heslo.";
+
+                }
+
+                if (error.code == "auth/invalid-email"){
+                    errorLabel = "Nesprávny email.";
+
+                    //Focus email input
+                }
+
+                if (error.code == "auth/missing-password"){
+                    errorLabel = "Zadajte heslo.";
+
+                    //Focus password input
+                }
             });
 
     } // Prihlasenie cez email a heslo
@@ -161,6 +180,8 @@
     export let loggedUser;
     export let isSigningUp;
     export let isDarkModeEnabled;
+
+    let errorLabel = null;
 </script>
 
 <div class="form-wrapper">
@@ -254,6 +275,12 @@
                         placeholder="Zadajte heslo">
                 <i class='bx bx-lock-alt'></i>
             </div>
+
+            {#if errorLabel} <!-- TODO nastylovat-->
+                <div class="errorLabel">
+                    {errorLabel}
+                </div>
+            {/if}
 
             <button
                     on:click={logIn}
