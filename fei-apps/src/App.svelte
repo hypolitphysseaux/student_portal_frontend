@@ -16,6 +16,8 @@
   import ProfileInfoCard from "./lib/ProfileInfoCard.svelte";
   import Notes from "./lib/Notes.svelte";
   import {onMount} from "svelte";
+  import {getAuth} from "firebase/auth";
+  import firebaseApp from "./firebase";
   //import firestore = firebase.firestore;
   //----------------------------
 
@@ -32,16 +34,21 @@
   onMount(() => {
     console.log("App loaded.");
 
-    //TODO setPersistence??s
-    // TODO skontrolujeme, ci je user v session?
-    /*
+    const auth = getAuth(firebaseApp);
+
+    // TODO skontrolujeme, ci je user v session? v local storage?
+
+    console.log("Checking for user.");
+    console.log(auth.currentUser);
+
     if (auth.currentUser){ //Toto je by default Local storage persistance
       // Chcem session? alebo remember me checkbox?
       const user = auth.currentUser;
       loggedUser = user;
       loggedIn = true;
+
+      console.log("User found.", user);
     }
-     */
 
   });
   //----------------------------
@@ -128,21 +135,6 @@
                 bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
         ></ProfileInfoCard>
       {/if}
-
-
-
-      <!--
-      <div style="display: flex; justify-content: center; flex-direction: column;">
-        <h3>Test na citanie z firestore</h3>
-        <button style="width: 200px" on:click={testRead}>Read</button>
-      </div>
-
-      <div style="display: flex; justify-content: center; flex-direction: column;">
-        <h3>Test na zapis do firestore</h3>
-        <input type="text" id="testInput">
-        <button style="width: 200px" on:click={testWrite}>Write</button>
-      </div>
-      -->
     {/if}
   </div>
 

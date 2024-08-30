@@ -4,9 +4,7 @@
         GoogleAuthProvider,
         FacebookAuthProvider,
         signInWithPopup,
-        signInWithEmailAndPassword,
-        setPersistence,
-        browserLocalPersistence
+        signInWithEmailAndPassword
     } from "firebase/auth";
     import {doc, getDoc, getFirestore, increment, updateDoc} from "firebase/firestore";
 
@@ -111,10 +109,11 @@
         const email = document.getElementById('email') || new HTMLElement();
         const password = document.getElementById('password') || new HTMLElement();
 
-        /* //TODO ?sessions
+        /*
+         //TODO ?sessions
         setPersistence(auth, browserLocalPersistence)
             .then(() => {
-                return signInWithEmailAndPassword(auth, email, password);
+                return signInWithEmailAndPassword(auth, email.value, password.value);
             })
             .then((userCredential) => {
                 // Signed in
@@ -134,13 +133,11 @@
             });
         */
 
-        //TODO spravne zobrazovanie po reloade
-        // toto nema byt v onmounte pri nacitani appky??? <<<--------------------
-        if (auth.currentUser){ //Toto je by default Local storage persistance
-            // Chcem session? alebo remember me checkbox?
-            const user = auth.currentUser;
-            loggedUser = user;
-            loggedIn = true;
+        if (!email.value)
+        {
+            errorLabel = "Zadajte email.";
+            email.focus();
+            return;
         }
 
         signInWithEmailAndPassword(auth, email.value, password.value)
@@ -149,6 +146,9 @@
                 const user = userCredential.user;
                 loggedUser = user;
 
+                //TODO Create a session / Store current user in a local storage ?
+                // Kvoli reloadu
+
                 setOnlineStatus(loggedUser.uid);
                 getUserDetails(loggedUser.uid);
 
@@ -156,13 +156,12 @@
                 incrementActiveUsers();
             })
             .catch((error) => {
-                //TODO
                 if (error.code == "auth/invalid-credential"){
                     errorLabel = "Nesprávny email alebo heslo.";
                 }
 
                 if (error.code == "auth/invalid-email"){
-                    errorLabel = "Nesprávny email.";  //TODO dorobit checknutie ziadneho emailu
+                    errorLabel = "Nesprávny email.";
 
                     //Focus email input
                     email.focus();
