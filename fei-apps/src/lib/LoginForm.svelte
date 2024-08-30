@@ -162,7 +162,7 @@
                 }
 
                 if (error.code == "auth/invalid-email"){
-                    errorLabel = "Nesprávny email.";
+                    errorLabel = "Nesprávny email.";  //TODO dorobit checknutie ziadneho emailu
 
                     //Focus email input
                     email.focus();
@@ -261,6 +261,9 @@
                         on:click={() => {
                             errorLabel = null;
                         }}
+                        on:input={() => {
+                            errorLabel = null;
+                        }}
                         type="email"
                         name="email"
                         id="email"
@@ -274,6 +277,9 @@
             <div class="custom-input">
                 <input
                         on:click={() => {
+                            errorLabel = null;
+                        }}
+                        on:input={() => {
                             errorLabel = null;
                         }}
                         type="password"
