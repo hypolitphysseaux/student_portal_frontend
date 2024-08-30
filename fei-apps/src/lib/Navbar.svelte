@@ -144,7 +144,7 @@
 
 
             <!-- Profilovka  -->
-            <img on:mouseenter={showProfileInfoCard} src="{loggedUser.photoURL}">
+            <img on:click={showProfileInfoCard} src="{loggedUser.photoURL}">
         </nav>
     </nav>
 

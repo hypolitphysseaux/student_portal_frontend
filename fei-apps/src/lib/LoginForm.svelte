@@ -10,6 +10,8 @@
     } from "firebase/auth";
     import {doc, getDoc, getFirestore, increment, updateDoc} from "firebase/firestore";
 
+    import { fade } from 'svelte/transition';
+
     const db = getFirestore(firebaseApp);
     const auth = getAuth(firebaseApp);
     const googleProvider = new GoogleAuthProvider();
@@ -79,7 +81,7 @@
         await updateDoc(docRef, {
             status: "online"
         });
-    } // Nastavenie online statusu //TODO API call
+    } // Nastavenie online statusu
 
     async function getUserDetails(uid) {
         const docSnap = await getDoc(doc(db, "userDetails", uid));
@@ -106,8 +108,9 @@
     //TODO onAuthStateChanged observer
 
     async function logIn(){
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+        const email = document.getElementById('email') || new HTMLElement();
+        const password = document.getElementById('password') || new HTMLElement();
+
         /* //TODO ?sessions
         setPersistence(auth, browserLocalPersistence)
             .then(() => {
@@ -140,7 +143,7 @@
             loggedIn = true;
         }
 
-        signInWithEmailAndPassword(auth, email, password)
+        signInWithEmailAndPassword(auth, email.value, password.value)
             .then((userCredential) => {
                 // Signed in
                 const user = userCredential.user;
@@ -153,24 +156,23 @@
                 incrementActiveUsers();
             })
             .catch((error) => {
-                console.log(error.code);
-
                 //TODO
                 if (error.code == "auth/invalid-credential"){
                     errorLabel = "Nesprávny email alebo heslo.";
-
                 }
 
                 if (error.code == "auth/invalid-email"){
                     errorLabel = "Nesprávny email.";
 
                     //Focus email input
+                    email.focus();
                 }
 
                 if (error.code == "auth/missing-password"){
                     errorLabel = "Zadajte heslo.";
 
                     //Focus password input
+                    password.focus();
                 }
             });
 
@@ -256,29 +258,39 @@
             <label for="email">Email:</label>
             <div class="custom-input">
                 <input
+                        on:click={() => {
+                            errorLabel = null;
+                        }}
                         type="email"
                         name="email"
                         id="email"
                         placeholder="Zadajte email"
-                        required
-                        autocomplete="off">
+                        autocomplete="off"
+                >
                 <i class='bx bx-at'></i>
             </div>
 
             <label for="password">Heslo:</label>
             <div class="custom-input">
                 <input
+                        on:click={() => {
+                            errorLabel = null;
+                        }}
                         type="password"
                         name="password"
                         id="password"
-                        required
-                        placeholder="Zadajte heslo">
+                        placeholder="Zadajte heslo"
+                >
                 <i class='bx bx-lock-alt'></i>
             </div>
 
-            {#if errorLabel} <!-- TODO nastylovat-->
+            {#if errorLabel}
                 <div class="errorLabel">
-                    {errorLabel}
+                    <label
+                            out:fade={{ duration: 200 }}
+                    >
+                        {errorLabel}
+                    </label>
                 </div>
             {/if}
 
@@ -399,6 +411,17 @@
         letter-spacing: 0.03rem;
         display: block;
         margin-top: 12px;
+    }
+
+    .container .form .errorLabel{
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .container .form .errorLabel label{
+        color: red;
+        font-size: 15px;
     }
 
     .container .form .custom-input {
