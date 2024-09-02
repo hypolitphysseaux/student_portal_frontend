@@ -15,6 +15,7 @@
   import AppFooter from "./lib/AppFooter.svelte";
   import ProfileInfoCard from "./lib/ProfileInfoCard.svelte";
   import Notes from "./lib/Notes.svelte";
+  import ResetPasswordForm from "./lib/ResetPasswordForm.svelte";
   import {onMount} from "svelte";
   import {getAuth} from "firebase/auth";
   import firebaseApp from "./firebase";
@@ -67,6 +68,7 @@
               bind:loggedIn={loggedIn}
               bind:loggedUser={loggedUser}
               bind:isSigningUp={isSigningUp}
+              bind:isResetingPassword={isResetingPassword}
               bind:isDarkModeEnabled={isDarkModeEnabled}
       ></LoginForm>
     {/if}
@@ -89,9 +91,9 @@
             !isSigningUp &&
             isResetingPassword
     }
-      <div>
-        Reset password TODO
-      </div>
+      <ResetPasswordForm
+              bind:isResetingPassword={isResetingPassword}
+      ></ResetPasswordForm>
     {/if}
 
 

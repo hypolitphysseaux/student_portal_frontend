@@ -7,7 +7,7 @@ import { getAuth, GoogleAuthProvider,signInWithPopup } from "firebase/auth";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-const firebaseConfig = {  //TODO env variables
+const firebaseConfig = {
     apiKey: "AIzaSyCRMaVlK3fnrhO1DOU7sDbKkWWL6imrcmE",
     authDomain: "fei-apps.firebaseapp.com",
     projectId: "fei-apps",

@@ -180,6 +180,7 @@
     export let loggedIn = false;
     export let loggedUser;
     export let isSigningUp;
+    export let isResetingPassword;
     export let isDarkModeEnabled;
 
     let errorLabel = null;
@@ -305,7 +306,7 @@
                     class="login">Prihlásiť sa</button>
 
             <div class="links">
-                <a href="#">Resetovať heslo</a>
+                <a on:click={ () => {isResetingPassword = true}}>Resetovať heslo</a>
                 <a on:click={ () => {isSigningUp = true}}>Nemáte účet?</a>
             </div>
         </div>

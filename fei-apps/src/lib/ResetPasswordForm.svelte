@@ -1,126 +1,43 @@
 <script lang="ts">
-    import firebaseApp from "../firebase";
-    import { getAuth, createUserWithEmailAndPassword, updateProfile,sendEmailVerification } from "firebase/auth";
-    import { getFirestore, setDoc , doc} from "firebase/firestore";
+    import { getAuth, sendPasswordResetEmail } from "firebase/auth";
     import { fade } from 'svelte/transition';
+    import firebaseApp from "../firebase";
 
     const auth = getAuth(firebaseApp);
-    const db = getFirestore(firebaseApp);
 
-    function register() {
-        // Credentials inputs
-        const meno = document.getElementById('meno') || new HTMLElement();
-        const priezvisko = document.getElementById('priezvisko') || new HTMLElement();
-        const aisId = document.getElementById('ais-id') || new HTMLElement();
-        const email = document.getElementById('email-reg') || new HTMLElement();
-        const password = document.getElementById('password-reg') || new HTMLElement();
-        const confirmPassword = document.getElementById('confirm-password') || new HTMLElement();
-
-        //Check vsetkych inputov
-        if (!(meno.value && priezvisko.value))
-        {
-            errorLabel = "Vyplňte svoje meno a priezvisko.";
-            if (!(meno.value))
-            {
-                meno.focus();
-                return;
-            }
-
-            priezvisko.focus();
-            return;
-        }
-
-        if (!aisId.value)
-        {
-            errorLabel = "Zadajte svoje AIS ID.";
-            aisId.focus();
-            return;
-        }
-
-        if (aisId.value.length != 6) //TODO dorobit kompletne validaciu AIS ID
-        {
-            errorLabel = "Nesprávny formát AIS ID.";
-            aisId.focus();
-            return;
-        }
+    async function sendResetEmail(){
+        const email = document.getElementById('email') || new HTMLElement();
 
         if (!email.value)
         {
-            errorLabel = "Zadajte svoj email.";
+            errorLabel = "Zadajte email.";
             email.focus();
             return;
         }
 
-        if (password.value != confirmPassword.value)
-        {
-            errorLabel = "Heslá sa nezhodujú.";
-            return;
-        }
+        //TODO Overenie, ci email je zaregistrovany API?
 
-        createUserWithEmailAndPassword(auth, email.value, password.value)
-            .then((userCredential) => {
+        sendPasswordResetEmail(auth, email.value)
+            .then(() => {
+                console.log("Password reset email sent successfully.");
 
-                // Nastavenie displayName a photoURL v user
-                const user = userCredential.user;
-                updateProfile(user,{
-                    displayName: meno.value + ' ' + priezvisko.value,
-                    photoURL: "/avatar.png"
-                });
-
-                // Nastavenie userDetails vo firestore
-                setUserDetails(user.uid , aisId.value);
-
-                sendEmailVerification(user)
-                    .then(() => {
-                        console.log("Email verification sent!");
-                    });
-
-                isSigningUp = false;
+                successLabel = "Email bol poslaný na " + email.value;
             })
             .catch((error) => {
-                if (error.code == "auth/weak-password"){
-                    errorLabel = "Heslo musí mať aspon 6 znakov.";
-                }
-
-                if (error.code == "auth/missing-email"){
-                    errorLabel = "Zadajte email.";
-
-                    //Focus email input
-                    email.focus();
-                }
-
                 if (error.code == "auth/invalid-email"){
                     errorLabel = "Nesprávny email.";
 
                     //Focus email input
                     email.focus();
                 }
-
-                if (error.code == "auth/missing-password"){
-                    errorLabel = "Zadajte heslo.";
-
-                    //Focus password input
-                    password.focus();
-                }
-
             });
-    } // Registracia
 
-    async function setUserDetails(uid,aisId){
-        try {
-            const docRef = await setDoc(doc(db, "userDetails", uid), {
-                aisId: aisId,
-                prefersDarkTheme: false,
-                status: "offline"
-            });
-        } catch (e) {
-            console.error("Error adding document: ", e);
-        }
-    } // Nastavenie user details po registracii
+    } // Zaslanie emailu pre resetovanie hesla
 
-    export let isSigningUp;
+    export let isResetingPassword;
 
     let errorLabel = null;
+    let successLabel = null;
 </script>
 
 <div class="form-wrapper">
@@ -173,10 +90,10 @@
     </div>
 
     <div class="container">
-        <h1>Vytvorte si účet</h1>
+        <h1>Resetovanie hesla</h1>
 
         <div class="form">
-            <label for="meno">Meno:</label>
+            <label for="email">Email:</label>
             <div class="custom-input">
                 <input
                         on:click={() => {
@@ -185,94 +102,13 @@
                         on:input={() => {
                             errorLabel = null;
                         }}
-                        id="meno"
-                        placeholder="Zadajte meno">
-                <i class='bx bx-pencil'></i>
-            </div>
-
-            <label for="priezvisko">Priezvisko:</label>
-            <div class="custom-input">
-                <input
-                        on:click={() => {
-                            errorLabel = null;
-                        }}
-                        on:input={() => {
-                            errorLabel = null;
-                        }}
-                        id="priezvisko"
-                        name="priezvisko"
-                        placeholder="Zadajte priezvisko">
-                <i class='bx bx-pencil'></i>
-            </div>
-
-            <label for="ais-id">AIS ID:</label>
-            <div class="custom-input">
-                <input
-                        on:click={() => {
-                            errorLabel = null;
-                        }}
-                        on:input={() => {
-                            errorLabel = null;
-                        }}
-                        id="ais-id"
-                        name="ais-id"
-                        placeholder="Zadajte AIS ID"
-                        autocomplete="off">
-                <i class='bx bxs-id-card'></i>
-            </div>
-
-            <label for="email-reg">Email:</label>
-            <div class="custom-input">
-                <input type="email"
-                       id="email-reg"
-                       name="email-reg"
-                       placeholder="Zadajte email"
-                       autocomplete="off"
-                       required
-                       on:click={() => {
-                            errorLabel = null;
-                       }}
-                       on:input={() => {
-                            errorLabel = null;
-                       }}
+                        type="email"
+                        name="email"
+                        id="email"
+                        placeholder="Zadajte email"
+                        autocomplete="off"
                 >
                 <i class='bx bx-at'></i>
-            </div>
-
-            <label for="password-reg">Heslo:</label>
-            <div class="custom-input">
-                <input
-                        on:click={() => {
-                            errorLabel = null;
-                        }}
-                        on:input={() => {
-                            errorLabel = null;
-                        }}
-                        type="password"
-                        id="password-reg"
-                        name="password-reg"
-                        placeholder="Zadajte heslo"
-                        required
-                >
-                <i class='bx bx-lock-alt'></i>
-            </div>
-
-            <label for="confirm-password">Potvrďte heslo:</label>
-            <div class="custom-input">
-                <input
-                        type="password"
-                        id="confirm-password"
-                        name="confirm-password"
-                        placeholder="Zadajte heslo"
-                        required
-                        on:click={() => {
-                            errorLabel = null;
-                        }}
-                        on:input={() => {
-                            errorLabel = null;
-                        }}
-                >
-                <i class='bx bx-lock-alt'></i>
             </div>
 
             {#if errorLabel}
@@ -285,20 +121,31 @@
                 </div>
             {/if}
 
-            <button on:click={register} class="login">Registrovať sa</button>
+            {#if successLabel}
+                <div class="successLabel">
+                    <label
+                            out:fade={{ duration: 200 }}
+                    >
+                        {successLabel}
+                    </label>
+                </div>
+            {/if}
+
+            <button
+                    on:click={sendResetEmail}
+                    class="login">Poslať email</button>
 
             <div class="links">
-                <a on:click={() => {alert("Momentálne nedostupné.");}} href="#">Napíšte nám</a>
-                <a on:click={() => {isSigningUp = false;}}>Už máte účet?</a>
+                <a on:click={ () => {isResetingPassword = false}}>Späť</a>
             </div>
         </div>
     </div>
 </div>
 
 
-
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
+
 
     .logo {
         position: absolute;
@@ -333,8 +180,8 @@
         padding: 40px 32px;
         margin-top: 100px;
         border-radius: 8px;
-        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-        background-color: #fff;
+        box-shadow: rgba(100, 100, 111, 0.2) 2px 7px 25px 10px;
+        background: #fff;
     }
 
     .container h1 {
@@ -401,10 +248,6 @@
         margin-top: 12px;
     }
 
-    .container .form .custom-input {
-        position: relative;
-    }
-
     .container .form .errorLabel{
         display: flex;
         justify-content: center;
@@ -414,6 +257,21 @@
     .container .form .errorLabel label{
         color: red;
         font-size: 15px;
+    }
+
+    .container .form .successLabel{
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .container .form .successLabel label{
+        color: green;
+        font-size: 15px;
+    }
+
+    .container .form .custom-input {
+        position: relative;
     }
 
     .container .form .custom-input input {
