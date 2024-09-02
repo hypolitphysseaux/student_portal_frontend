@@ -109,30 +109,6 @@
         const email = document.getElementById('email') || new HTMLElement();
         const password = document.getElementById('password') || new HTMLElement();
 
-        /*
-         //TODO ?sessions
-        setPersistence(auth, browserLocalPersistence)
-            .then(() => {
-                return signInWithEmailAndPassword(auth, email.value, password.value);
-            })
-            .then((userCredential) => {
-                // Signed in
-                const user = userCredential.user;
-                loggedUser = user;
-
-                setOnlineStatus(loggedUser.uid);
-                getUserDetails(loggedUser.uid);
-
-                loggedIn = true;
-                incrementActiveUsers();
-            })
-            .catch((error) => {
-                // Handle Errors here.
-                const errorCode = error.code;
-                const errorMessage = error.message;
-            });
-        */
-
         if (!email.value)
         {
             errorLabel = "Zadajte email.";
@@ -146,8 +122,9 @@
                 const user = userCredential.user;
                 loggedUser = user;
 
-                //TODO Create a session / Store current user in a local storage ?
-                // Kvoli reloadu
+
+                //TODO Store current user in a local storage ?
+                // Kvoli reloadu , pri signout vymazat
 
                 setOnlineStatus(loggedUser.uid);
                 getUserDetails(loggedUser.uid);

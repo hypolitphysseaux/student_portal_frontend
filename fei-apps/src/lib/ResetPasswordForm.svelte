@@ -15,7 +15,7 @@
             return;
         }
 
-        //TODO Overenie, ci email je zaregistrovany API?
+        //TODO Overenie, ci email je zaregistrovany ,, API?
 
         sendPasswordResetEmail(auth, email.value)
             .then(() => {

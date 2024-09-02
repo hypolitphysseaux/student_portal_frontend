@@ -4,9 +4,11 @@
     import {doc, getFirestore, onSnapshot, updateDoc} from "firebase/firestore";
     import firebaseApp from "../firebase";
     import {getAuth, updateProfile} from "firebase/auth";
+    import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
     const auth = getAuth(firebaseApp);
     const db = getFirestore(firebaseApp);
+    const storage = getStorage();
 
     var activeUsers;
     var lastLogin;
@@ -14,6 +16,7 @@
 
 
     let isChangingStatus = false;
+    let isChangingPhoto = false;
 
     onMount(() => {
         const degree = 6;
@@ -75,17 +78,50 @@
         isChangingStatus = !isChangingStatus;
     }
 
-    //Todo
-    async function updateProfilePicture(){
-        updateProfile(auth.currentUser, {
-            photoURL: "/avatar2.jpg" //TODO doplnit input
-        }).then(() => {
-            // Nastavit zmenu v loggedUser
-            loggedUser.photoURL = "/avatar.png"; //TODO dorobit input
+    function updateProfilePicture(){
 
-        }).catch((error) => {
-            console.error(error);
-        });
+        const fileInput = document.getElementById("profile-picture-input");
+        const file = fileInput.files[0];
+
+        if (!file){
+            console.log("Provide your photo."); //TODO label
+            return;
+        }
+
+        // 1. Vytvorte referenciu na umiestnenie obrázka v Storage
+        const storageRef = ref(storage, `users/${auth.currentUser.uid}/profile.jpg`);
+
+        // 2. Vytvorte úlohu na nahratie súboru
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        // 3. Sledujte priebeh nahrávania
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log(`Nahrávanie: ${progress}%`); //TODO animacia?
+            },
+            (error) => {
+                console.error('Chyba pri nahrávaní:', error); //TODO label
+            },
+            () => {
+                // 4. Získajte URL nahratého obrázka
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    updateProfile(auth.currentUser, {
+                        photoURL: downloadURL
+                    }).then(() => {
+                        //TODO label / push notifikacia <---
+
+                        //Refresh loggedUser
+                        loggedUser = auth.currentUser;
+
+                        isChangingPhoto = false;
+                    }).catch((error) => {
+                        // Nastala chyba
+                        // ...
+                    });
+                });
+            }
+        );
     }
 
 
@@ -117,7 +153,12 @@
         </div>
 
         <div class="user-section">
-            <img class="profile-photo" src="{loggedUser.photoURL}">
+            <img on:click={() => {isChangingPhoto = true}} class="profile-photo" src="{loggedUser.photoURL}">
+            {#if isChangingPhoto}
+                <input id="profile-picture-input" type="file"> <!--TODO styles-->
+                <button on:click={updateProfilePicture}>DO</button>
+                <button on:click={() => {isChangingPhoto = false}}>X</button>
+            {/if}
             <button on:click={changingStatus} class="status-circle" style="background: {statusColor}"></button>
             {#if isChangingStatus}
                 <div class="mdc-list">
@@ -229,6 +270,11 @@
         width: 64px;
         height: 64px;
         border-radius: 50%;
+    }
+
+    .profile-photo:hover{
+      cursor: pointer;
+      transform: scale(1.02);
     }
 
     .status-circle{
