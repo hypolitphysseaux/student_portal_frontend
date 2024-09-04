@@ -19,6 +19,7 @@
   import {onMount} from "svelte";
   import {getAuth} from "firebase/auth";
   import firebaseApp from "./firebase";
+  import Settings from "./lib/Settings.svelte";
   //import firestore = firebase.firestore;
   //----------------------------
 
@@ -29,6 +30,7 @@
   let loggedUser;
   let isDarkModeEnabled = false;
   let isProfileInfoCardOpen = false;
+  let isSettingsOpen = false;
   //----------------------------
 
   // Functions
@@ -99,13 +101,17 @@
 
     <!-- Hlavny distribucny uzol , zoznam aplikacii -->
 
-    {#if loggedIn}
+    {#if
+            loggedIn &&
+            !isSettingsOpen
+    }
       <!-- Navbar -->
       <Navbar
               bind:loggedIn={loggedIn}
               bind:loggedUser={loggedUser}
               bind:isDarkModeEnabled={isDarkModeEnabled}
               bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
+              bind:isSettingsOpen={isSettingsOpen}
       ></Navbar>
 
       <!-- Welcome section -->
@@ -138,6 +144,23 @@
         ></ProfileInfoCard>
       {/if}
     {/if}
+
+    <!-- Nastavenia -->
+    {#if isSettingsOpen}
+      <Navbar
+              bind:loggedIn={loggedIn}
+              bind:loggedUser={loggedUser}
+              bind:isDarkModeEnabled={isDarkModeEnabled}
+              bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
+              bind:isSettingsOpen={isSettingsOpen}
+      ></Navbar>
+
+      <Settings
+              bind:isSettingsOpen={isSettingsOpen}
+              bind:isDarkModeEnabled={isDarkModeEnabled}
+      ></Settings>
+    {/if}
+
   </div>
 
 

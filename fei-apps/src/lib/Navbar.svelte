@@ -1,6 +1,6 @@
 <script lang="ts">
-    import '@material/web/iconbutton/icon-button.js'
-    import '@material/web/fab/fab.js'
+    import '@material/web/iconbutton/icon-button.js';
+    import '@material/web/fab/fab.js';
 
     import firebaseApp from "../firebase";
     import {getAuth, signOut} from "firebase/auth";
@@ -11,6 +11,7 @@
     export let isDarkModeEnabled = false;
     export let loggedUser;
     export let isProfileInfoCardOpen = false;
+    export let isSettingsOpen = false;
 
     let isNavbarOpen = false;
 
@@ -42,6 +43,7 @@
             .then(() =>{
                 decrementActiveUsers();
                 isProfileInfoCardOpen = false;
+                isSettingsOpen = false;
                 loggedUser = "";
                 loggedIn = false;
             })
@@ -121,11 +123,16 @@
                 </div>
             {/if}
 
+            <!-- Tlacidlo na otvorenie nastaveni -->
             <div
                     class="my-button"
                     data-tooltip="Nastavenia"
             >
-                <md-icon-button>
+                <md-icon-button
+                        on:click={() => {
+                            isSettingsOpen = true;
+                        }}
+                >
                     <i class='bx bx-cog'></i>
                 </md-icon-button>
             </div>
