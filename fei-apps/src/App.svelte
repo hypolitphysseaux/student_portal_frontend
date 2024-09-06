@@ -158,6 +158,7 @@
       <Settings
               bind:isSettingsOpen={isSettingsOpen}
               bind:isDarkModeEnabled={isDarkModeEnabled}
+              bind:loggedUser={loggedUser}
       ></Settings>
     {/if}
 
@@ -173,5 +174,4 @@
 
 
 <style>
-
 </style>

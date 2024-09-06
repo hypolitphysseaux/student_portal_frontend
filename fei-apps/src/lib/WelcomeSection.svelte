@@ -5,6 +5,7 @@
     import firebaseApp from "../firebase";
     import {getAuth, updateProfile} from "firebase/auth";
     import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+    import { fade } from 'svelte/transition';
 
     const auth = getAuth(firebaseApp);
     const db = getFirestore(firebaseApp);
@@ -143,6 +144,7 @@
 <div
         class="welcome-section-container"
         class:dark-mode={isDarkModeEnabled}
+        in:fade={{ delay: 100 , duration: 250 }}
 >
     <div class="user-left">
         {#if loggedUser.status == "busy"}
