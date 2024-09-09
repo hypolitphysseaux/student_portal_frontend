@@ -1,7 +1,20 @@
 <script lang="ts">
     import { fade } from 'svelte/transition';
+
     async function startFeiConnections(){
-        console.log("Starting FEI Connections...")
+        console.log("Starting FEI Connections...");
+    }
+
+    async function startFeiResources(){
+        console.log("Starting FEI Resources...");
+    }
+
+    async function startFeiQuizzes(){
+        console.log("Starting FEI Quizzes...");
+    }
+
+    async function startFeiChess(){
+        console.log("Starting FEI Chess...");
     }
 
     export let isDarkModeEnabled = false;
@@ -28,7 +41,7 @@
             <i class='bx bxs-network-chart'></i>
             <h3>CONNECTIONS</h3>
             <p>Vyhľadajte kohokoľvek na FEIke. Súkromné správy, hromadné informácie v skupinových chatoch.</p>
-            <a on:click={startFeiConnections} href="http://localhost:5174/" target="_blank" class="btn">SPUSTIŤ</a>
+            <a on:click={startFeiConnections} href="http://localhost:5175/" target="_blank" class="btn">SPUSTIŤ</a>
         </div>
 
         <div class="box" in:fade={{ delay: 150 , duration: 250 }}>
@@ -42,21 +55,21 @@
             <i class='bx bxs-chess'></i>
             <h3>CHESS</h3>
             <p>Chceš si zahrať šach so spolužiakmi alebo prednášajúcimi? Na tomto mieste, iba proti FEIkárom. </p>
-            <a href="#" class="btn">SPUSTIŤ</a>
+            <a on:click={startFeiChess} href="http://localhost:5177/" class="btn">SPUSTIŤ</a>
         </div>
 
         <div class="box" in:fade={{ delay: 250 , duration: 250 }}>
             <i class='bx bx-chalkboard'></i>
             <h3>QUIZZES</h3>
             <p>Blíži sa zápočet alebo skúška? Otestujte svoje vedomosti z daného predmetu v kvízoch</p>
-            <a href="http://localhost:5175/" target="_blank" class="btn">SPUSTIŤ</a>
+            <a on:click={startFeiQuizzes} href="http://localhost:5176/" target="_blank" class="btn">SPUSTIŤ</a>
         </div>
 
         <div class="box" in:fade={{ delay: 300 , duration: 250 }}>
             <i class='bx bx-file'></i>
             <h3>RESOURCES</h3>
             <p>Portál študijných materiálov...</p>
-            <a target="_blank" class="btn">SPUSTIŤ</a>
+            <a on:click={startFeiResources} href="http://localhost:5174/" target="_blank" class="btn">SPUSTIŤ</a>
         </div>
     </div>
 </div>
