@@ -8,16 +8,18 @@ import { getAuth, GoogleAuthProvider,signInWithPopup } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyCRMaVlK3fnrhO1DOU7sDbKkWWL6imrcmE",
-    authDomain: "fei-apps.firebaseapp.com",
-    projectId: "fei-apps",
-    storageBucket: "fei-apps.appspot.com",
-    messagingSenderId: "360166082859",
-    appId: "1:360166082859:web:247449fb777c18cec01d6e",
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
+
+//TODO Pridat aj auth a db?
 
 export default firebaseApp
 ///FIREBASE
