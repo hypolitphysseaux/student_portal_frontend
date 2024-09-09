@@ -2,6 +2,8 @@
     import {onMount} from "svelte";
     import { fade } from 'svelte/transition';
 
+    import {isDarkModeEnabled, statusColor} from "../stores";
+
     onMount(() => {
         const allLinks = document.querySelectorAll(".tabs a");
         const allTabs = document.querySelectorAll(".tab-content");
@@ -20,7 +22,6 @@
         isProfileInfoCardOpen = false;
     };
 
-    export let isDarkModeEnabled;
     export let loggedUser;
 
     export let isProfileInfoCardOpen = false;
@@ -28,7 +29,7 @@
 
 <div
         class="profile-card-container"
-        class:dark-mode={isDarkModeEnabled}
+        class:dark-mode={$isDarkModeEnabled}
         in:fade={{ delay: 100 , duration: 250 }}
         out:fade={{ duration: 100 }}
 >
@@ -43,7 +44,7 @@
 
             <div class="profile">
                 <img src="{loggedUser.photoURL}">
-                <button class="status-circle" disabled></button>
+                <button class="status-circle" style="background: {$statusColor}"></button>
             </div>
 
             <div class="info">
@@ -201,7 +202,6 @@
 
     .status-circle{
         position: absolute;
-        background: green; /* TODO */
         bottom: 15px;
         right: 10px;
         width: 22px;

@@ -8,7 +8,9 @@
     const auth = getAuth(firebaseApp);
     const db = getFirestore(firebaseApp);
     export let loggedIn = true;
-    export let isDarkModeEnabled = false;
+
+    //export let isDarkModeEnabled = false;
+    import {isDarkModeEnabled} from "../stores";
     export let loggedUser;
     export let isProfileInfoCardOpen = false;
     export let isSettingsOpen = false;
@@ -20,7 +22,7 @@
 
         await updateDoc(docRef, {
             status: "offline",
-            prefersDarkTheme: isDarkModeEnabled
+            prefersDarkTheme: $isDarkModeEnabled
         });
     } //po odhlaseni (teda status offline)
 
@@ -57,7 +59,8 @@
     } // Otvorenie / Zatvorenie navbaru
 
     const toggleDarkMode = () => {
-        isDarkModeEnabled = !isDarkModeEnabled;
+        isDarkModeEnabled.set(!$isDarkModeEnabled);
+        //isDarkModeEnabled = !isDarkModeEnabled;
     } // Prepinanie modu
 
     const showProfileInfoCard = () => {
@@ -68,7 +71,7 @@
 
 <div
         class="my-button burger"
-        class:dark-mode={isDarkModeEnabled}
+        class:dark-mode={$isDarkModeEnabled}
 >
     <md-icon-button on:click={toggleNavbarOpen}>
         {#if !isNavbarOpen}
@@ -83,10 +86,10 @@
 
     <nav id="my-navbar" class="navbar"
          class:open={isNavbarOpen}
-         class:dark-mode={isDarkModeEnabled}
+         class:dark-mode={$isDarkModeEnabled}
     >
         <div class="logo">
-            {#if !isDarkModeEnabled}
+            {#if !$isDarkModeEnabled}
                 <img src="logo.svg">
             {:else}
                 <img src="logo-dark-mode.svg">
@@ -102,7 +105,7 @@
 
         <nav>
             <!-- Tlacidlo na prepinanie darkmode -->
-            {#if !isDarkModeEnabled}
+            {#if !$isDarkModeEnabled}
                 <div
                         class="my-button"
                         data-tooltip="Tmavý režim"

@@ -15,6 +15,8 @@
     const googleProvider = new GoogleAuthProvider();
     const facebookProvider = new FacebookAuthProvider();
 
+    import {isDarkModeEnabled} from "../stores";
+
     async function facebookPopUpSignIn(){
         alert("Momentálne nie je k dispozícií.");
         /*
@@ -86,7 +88,7 @@
         if (docSnap.exists())
         {
             loggedUser.aisId = docSnap.data().aisId;
-            isDarkModeEnabled = docSnap.data().prefersDarkTheme;
+            isDarkModeEnabled.set(docSnap.data().prefersDarkTheme);
         }
         else {
             loggedUser.aisId = "";
@@ -158,7 +160,6 @@
     export let loggedUser;
     export let isSigningUp;
     export let isResetingPassword;
-    export let isDarkModeEnabled;
 
     let errorLabel = null;
 </script>

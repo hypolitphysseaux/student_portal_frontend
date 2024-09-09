@@ -1,7 +1,7 @@
 <script lang="ts">
 
   //Routing
-  import { Router, Link, Route } from "svelte-routing";
+  //import { Router, Link, Route } from "svelte-routing";
   //export let url = "";
   //----------------------------
 
@@ -24,13 +24,16 @@
   //----------------------------
 
   // State control
+  import {isDarkModeEnabled} from "./stores";
+
   let loggedIn = false;
   let isSigningUp = false;
   let isResetingPassword = false;
   let loggedUser;
-  let isDarkModeEnabled = false;
   let isProfileInfoCardOpen = false;
   let isSettingsOpen = false;
+
+
   //----------------------------
 
   // Functions
@@ -71,7 +74,6 @@
               bind:loggedUser={loggedUser}
               bind:isSigningUp={isSigningUp}
               bind:isResetingPassword={isResetingPassword}
-              bind:isDarkModeEnabled={isDarkModeEnabled}
       ></LoginForm>
     {/if}
 
@@ -109,14 +111,12 @@
       <Navbar
               bind:loggedIn={loggedIn}
               bind:loggedUser={loggedUser}
-              bind:isDarkModeEnabled={isDarkModeEnabled}
               bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
               bind:isSettingsOpen={isSettingsOpen}
       ></Navbar>
 
       <!-- Welcome section -->
       <WelcomeSection
-              bind:isDarkModeEnabled={isDarkModeEnabled}
               bind:loggedUser={loggedUser}
       ></WelcomeSection>
 
@@ -124,21 +124,14 @@
       <!-- Info section -->
 
       <!-- App section -->
-      <AppWidgets
-              bind:isDarkModeEnabled={isDarkModeEnabled}
-      ></AppWidgets>
+      <AppWidgets></AppWidgets>
 
       <!-- Notes section -->
-      <Notes
-              bind:isDarkModeEnabled={isDarkModeEnabled}
-              bind:loggedUser={loggedUser}
-      >
-      </Notes>
+      <Notes bind:loggedUser={loggedUser}></Notes>
 
       <!-- Profile Info Card -->
       {#if isProfileInfoCardOpen}
         <ProfileInfoCard
-                bind:isDarkModeEnabled={isDarkModeEnabled}
                 bind:loggedUser={loggedUser}
                 bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
         ></ProfileInfoCard>
@@ -150,14 +143,12 @@
       <Navbar
               bind:loggedIn={loggedIn}
               bind:loggedUser={loggedUser}
-              bind:isDarkModeEnabled={isDarkModeEnabled}
               bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
               bind:isSettingsOpen={isSettingsOpen}
       ></Navbar>
 
       <Settings
               bind:isSettingsOpen={isSettingsOpen}
-              bind:isDarkModeEnabled={isDarkModeEnabled}
               bind:loggedUser={loggedUser}
       ></Settings>
     {/if}
@@ -167,7 +158,7 @@
 
   <div class="app-footer">
     <!-- App Footer -->
-    <AppFooter bind:isDarkModeEnabled={isDarkModeEnabled}></AppFooter>
+    <AppFooter bind:isDarkModeEnabled={$isDarkModeEnabled}></AppFooter>
   </div>
 </div>
 

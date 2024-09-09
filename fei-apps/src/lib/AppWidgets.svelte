@@ -1,6 +1,6 @@
 <script lang="ts">
     import { fade } from 'svelte/transition';
-
+    import {isDarkModeEnabled} from "../stores";
     async function startFeiConnections(){
         console.log("Starting FEI Connections...");
     }
@@ -16,14 +16,11 @@
     async function startFeiChess(){
         console.log("Starting FEI Chess...");
     }
-
-    export let isDarkModeEnabled = false;
-
 </script>
 
 <div
         class="widgets-container"
-        class:dark-mode={isDarkModeEnabled}
+        class:dark-mode={$isDarkModeEnabled}
 >
     <div class="heading">
         <h2>Zoznam aplikácií</h2>

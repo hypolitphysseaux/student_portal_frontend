@@ -2,6 +2,8 @@
     import '@material/web/iconbutton/icon-button.js';
     import '@material/web/fab/fab.js';
 
+    import {isDarkModeEnabled} from "../stores";
+
     import { fade } from 'svelte/transition';
     import {onMount} from "svelte";
 
@@ -26,14 +28,13 @@
 
     export let loggedUser;
     export let isSettingsOpen;
-    export let isDarkModeEnabled;
 
     let isProfileInfoCardOpen = true;
 </script>
 
 <div
         class="settings-container"
-        class:dark-mode={isDarkModeEnabled}
+        class:dark-mode={$isDarkModeEnabled}
         in:fade={{ delay: 100 , duration: 250 }}
 >
 
@@ -65,7 +66,7 @@
                 <!-- Profile info card / editable TODO-->
                 <div
                         class="profile-card-container"
-                        class:dark-mode={isDarkModeEnabled}
+                        class:dark-mode={$isDarkModeEnabled}
                         in:fade={{ delay: 100 , duration: 250 }}
                         out:fade={{ duration: 100 }}
                 >

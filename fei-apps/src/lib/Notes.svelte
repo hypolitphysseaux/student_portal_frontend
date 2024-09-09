@@ -6,6 +6,8 @@
     import {doc, getFirestore, onSnapshot, updateDoc, getDoc, arrayUnion, setDoc} from "firebase/firestore";
     import firebaseApp from "../firebase";
 
+    import {isDarkModeEnabled} from "../stores";
+
     import '@material/web/iconbutton/icon-button.js'
     import '@material/web/fab/fab.js'
 
@@ -189,19 +191,16 @@
                 'notes': notes
             });
 
-            console.log("Note star toggled successfully!");
         } catch (error) {
             console.error("Error toggling note star:", error);
         }
     }
-
-    export let isDarkModeEnabled;
     export let loggedUser;
 </script>
 
 <div
         class="notes-container"
-        class:dark-mode={isDarkModeEnabled}
+        class:dark-mode={$isDarkModeEnabled}
 >
     <div class="heading">
         <h2>Poznámky</h2>
