@@ -7,10 +7,9 @@
     import {doc, getFirestore, increment, updateDoc} from "firebase/firestore";
     const auth = getAuth(firebaseApp);
     const db = getFirestore(firebaseApp);
-    export let loggedIn = true;
 
-    //export let isDarkModeEnabled = false;
-    import {isDarkModeEnabled} from "../stores";
+
+    import {isDarkModeEnabled , loggedIn} from "../stores";
     export let loggedUser;
     export let isProfileInfoCardOpen = false;
     export let isSettingsOpen = false;
@@ -47,7 +46,7 @@
                 isProfileInfoCardOpen = false;
                 isSettingsOpen = false;
                 loggedUser = "";
-                loggedIn = false;
+                loggedIn.set(false);
             })
             .catch((error) => {
                 console.log("Error when signing out.", error);

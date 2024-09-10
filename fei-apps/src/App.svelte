@@ -59,8 +59,8 @@
 
 
   // State control
-  import {isDarkModeEnabled} from "./stores";
-  let loggedIn = false;
+  import {isDarkModeEnabled, loggedIn} from "./stores";
+  //let loggedIn = false;
   let loggedUser;
 
 
@@ -89,12 +89,11 @@
 
     <!-- Prihlasovanie -->
     {#if
-            !loggedIn &&
+            !($loggedIn) &&
             !isSigningUp &&
             !isResetingPassword
     }
       <LoginForm
-              bind:loggedIn={loggedIn}
               bind:loggedUser={loggedUser}
               bind:isSigningUp={isSigningUp}
               bind:isResetingPassword={isResetingPassword}
@@ -104,7 +103,7 @@
 
     <!-- Registracia -->
     {#if
-            !loggedIn &&
+            !($loggedIn) &&
             !isResetingPassword &&
             isSigningUp
     }
@@ -115,7 +114,7 @@
 
     <!-- Resetovanie hesla -->
     {#if
-            !loggedIn &&
+            !($loggedIn) &&
             !isSigningUp &&
             isResetingPassword
     }
@@ -124,7 +123,6 @@
       ></ResetPasswordForm>
     {/if}
 
-    <!-- TODO Nacitavanie komponentov po prihlaseni -->
     {#if isLoadingComponents}
       <div class="spinner-wrapper">
         <div class="logo">
@@ -180,14 +178,13 @@
 
     <!-- Hlavny distribucny uzol , zoznam aplikacii -->
     {#if
-            loggedIn &&
+            $loggedIn &&
             !isSettingsOpen
     }
       <!-- Navbar -->
       {#if Navbar}
         <svelte:component
                 this={Navbar}
-                bind:loggedIn={loggedIn}
                 bind:loggedUser={loggedUser}
                 bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
                 bind:isSettingsOpen={isSettingsOpen}
@@ -238,7 +235,6 @@
         {#if Navbar}
           <svelte:component
                   this={Navbar}
-                  bind:loggedIn={loggedIn}
                   bind:loggedUser={loggedUser}
                   bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
                   bind:isSettingsOpen={isSettingsOpen}

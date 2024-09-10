@@ -15,7 +15,7 @@
     const googleProvider = new GoogleAuthProvider();
     const facebookProvider = new FacebookAuthProvider();
 
-    import {isDarkModeEnabled} from "../stores";
+    import {isDarkModeEnabled , loggedIn} from "../stores";
 
     async function facebookPopUpSignIn(){
         alert("Momentálne nie je k dispozícií.");
@@ -58,7 +58,7 @@
             //loggedUser = user.toJSON();
             //console.log(loggedUser);
 
-            loggedIn = true;
+            loggedIn.set(true);
         } catch (error) {
 
             // Step 2: User's email already exists.
@@ -131,7 +131,7 @@
                 setOnlineStatus(loggedUser.uid);
                 getUserDetails(loggedUser.uid);
 
-                loggedIn = true;
+                loggedIn.set(true);
                 incrementActiveUsers();
             })
             .catch((error) => {
@@ -156,7 +156,7 @@
 
     } // Prihlasenie cez email a heslo
 
-    export let loggedIn = false;
+
     export let loggedUser;
     export let isSigningUp;
     export let isResetingPassword;
