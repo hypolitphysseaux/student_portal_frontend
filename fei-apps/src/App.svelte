@@ -60,7 +60,7 @@
 
   // State control
   import {isDarkModeEnabled, loggedIn} from "./stores";
-  //let loggedIn = false;
+
   let loggedUser;
 
 
@@ -290,11 +290,12 @@
   }
 
   .spinner-wrapper{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: relative;
 
-    background: radial-gradient(circle, rgb(0, 0, 0, .85) 2px, #414247 0px);;
+    width: 100vw;
+    height: 100vh;
+
+    background: radial-gradient(circle, rgba(210, 210, 210, .5) 2px, #fafafa 0px);
     background-size: 10px 10px;
   }
 
@@ -303,11 +304,12 @@
       opacity: 1;
     }
     50% {
-      opacity: 0.5;
+      opacity: 0.55;
     }
     100% {
       opacity: 1;
     }
   }
+
   //------------------------------------------------------
 </style>
