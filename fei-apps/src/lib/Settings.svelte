@@ -1,11 +1,11 @@
 <script lang="ts">
+    import { onMount } from "svelte";
+    import { fade } from 'svelte/transition';
+
+    import { isDarkModeEnabled, loggedUser, statusColor } from "../stores";
+
     import '@material/web/iconbutton/icon-button.js';
     import '@material/web/fab/fab.js';
-
-    import {isDarkModeEnabled} from "../stores";
-
-    import { fade } from 'svelte/transition';
-    import {onMount} from "svelte";
 
     onMount(() => {
         const allLinks = document.querySelectorAll(".tabs a");
@@ -21,15 +21,8 @@
         });
     });
 
-    //Functions
-    async function saveChanges(){
-        console.log("Saving settings.");
-    }
-
-    export let loggedUser;
     export let isSettingsOpen;
 
-    let isProfileInfoCardOpen = true;
 </script>
 
 <div
@@ -74,14 +67,14 @@
                         <header>
                             <div class="info">
                                 <div class="count">
-                                    <p>{loggedUser.aisId}</p>
+                                    <p>{$loggedUser.aisId}</p>
                                 </div>
                                 <p>AIS ID</p>
                             </div>
 
                             <div class="profile">
-                                <img src="{loggedUser.photoURL}">
-                                <button class="status-circle" disabled></button>
+                                <img src="{$loggedUser.photoURL}">
+                                <button class="status-circle" style="background: {$statusColor}"></button>
                                 <!-- TODO bindnutie statusu -->
                             </div>
 
@@ -94,7 +87,7 @@
                         </header>
 
                         <div class="about">
-                            <h2>{loggedUser.displayName}<i class='bx bxs-badge-check'></i></h2>
+                            <h2>{$loggedUser.displayName}<i class='bx bxs-badge-check'></i></h2>
                             <p>Informačné a komunikačné technológie</p> <!-- TODO integracia AIS -->
                         </div>
 
@@ -123,7 +116,7 @@
                         <div class="tab-content" id="tab-2">
                             <div class="contact">
                                 <div class="contact-type">Email:</div>
-                                <div class="contact-value">{loggedUser.email}</div>
+                                <div class="contact-value">{$loggedUser.email}</div>
                             </div>
 
                             <div class="contact">

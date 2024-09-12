@@ -1,17 +1,18 @@
 <script lang="ts">
-    import {onMount} from "svelte";
+    import { onMount } from "svelte";
     import { fade } from 'svelte/transition';
 
+    import { db } from "../firebase";
+    import { doc, onSnapshot, updateDoc, getDoc, arrayUnion, setDoc } from "firebase/firestore";
+
     import { v4 as uuidv4 } from 'uuid';
-    import {doc, getFirestore, onSnapshot, updateDoc, getDoc, arrayUnion, setDoc} from "firebase/firestore";
-    import firebaseApp from "../firebase";
 
-    import {isDarkModeEnabled} from "../stores";
+    import { isDarkModeEnabled , loggedUser } from "../stores";
 
-    import '@material/web/iconbutton/icon-button.js'
-    import '@material/web/fab/fab.js'
+    import '@material/web/iconbutton/icon-button.js';
+    import '@material/web/fab/fab.js';
 
-    const db = getFirestore(firebaseApp);
+
 
     //Nacitat moje poznamky z databazy
     var notes = [];
@@ -21,7 +22,7 @@
 
     onMount(async () => {
         //Listener pre notes
-        const myNotes = onSnapshot(doc(db, "notes", loggedUser.uid), (doc) => {
+        const myNotes = onSnapshot(doc(db, "notes", $loggedUser.uid), (doc) => {
             if (doc.exists()){
                 notes = [];
 
@@ -40,7 +41,7 @@
 
     async function addNote(){
         try {
-            const userNotesRef = doc(db, "notes", loggedUser.uid);
+            const userNotesRef = doc(db, "notes", $loggedUser.uid);
             const userNotesDoc = await getDoc(userNotesRef);
             const id = uuidv4();
 
@@ -78,7 +79,7 @@
         const content = document.getElementById("note-title-contentarea").value;
 
         try {
-            const userNotesRef = doc(db, "notes", loggedUser.uid);
+            const userNotesRef = doc(db, "notes", $loggedUser.uid);
             const userNotesDoc = await getDoc(userNotesRef);
 
             if (!userNotesDoc.exists()) {
@@ -111,7 +112,7 @@
     }
     async function deleteNote(noteId){
         try {
-            const userNotesRef = doc(db, "notes", loggedUser.uid);
+            const userNotesRef = doc(db, "notes", $loggedUser.uid);
 
             const userNotesDoc = await getDoc(userNotesRef);
 
@@ -142,7 +143,7 @@
 
     async function deleteAllNotes(){
         try {
-            const userNotesRef = doc(db, "notes", loggedUser.uid);
+            const userNotesRef = doc(db, "notes", $loggedUser.uid);
             const userNotesDoc = await getDoc(userNotesRef);
 
             if (!userNotesDoc.exists()) {
@@ -166,7 +167,7 @@
 
     async function toggleStar(noteId){
         try {
-            const userNotesRef = doc(db, "notes", loggedUser.uid);
+            const userNotesRef = doc(db, "notes", $loggedUser.uid);
             const userNotesDoc = await getDoc(userNotesRef);
 
             if (!userNotesDoc.exists()) {
@@ -195,7 +196,6 @@
             console.error("Error toggling note star:", error);
         }
     }
-    export let loggedUser;
 </script>
 
 <div

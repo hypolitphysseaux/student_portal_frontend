@@ -1,12 +1,12 @@
 //FIREBASE
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-
-// Add SDKs for Firebase products that you want to use
-import { getAuth, GoogleAuthProvider,signInWithPopup } from "firebase/auth";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
+import { initializeApp } from "firebase/app";
+
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+
+// CONFIG
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -16,11 +16,14 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
+// INIT FIREBASE
 const firebaseApp = initializeApp(firebaseConfig);
 
-//TODO Pridat aj auth a db?
 
-export default firebaseApp
+//EXPORTS
+export const auth = getAuth(firebaseApp);
+export const db = getFirestore(firebaseApp);
+
+
 ///FIREBASE
 //----------------------------------------------------------------------------------------

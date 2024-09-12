@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {onMount} from "svelte";
+  import { onMount } from "svelte";
 
   //Routing (dynamicky po prihlaseni?)
   //import { Router, Link, Route } from "svelte-routing";
@@ -52,17 +52,14 @@
     Settings = SettingsM.default;
   }
 
-  $: if (loggedUser) {
+  $: if ($loggedUser) {
     loadComponents();
   }
   //----------------------------
 
 
   // State control
-  import {isDarkModeEnabled, loggedIn} from "./stores";
-
-  let loggedUser;
-
+  import {isDarkModeEnabled, loggedIn, loggedUser} from "./stores";
 
   let isLoadingComponents = false;
   let isSigningUp = false;
@@ -76,6 +73,7 @@
   // Functions
   onMount(() => {
     console.log("App loaded.");
+
     // TODO skontrolujeme, ci je user v session? v local storage?
 
   });
@@ -94,7 +92,6 @@
             !isResetingPassword
     }
       <LoginForm
-              bind:loggedUser={loggedUser}
               bind:isSigningUp={isSigningUp}
               bind:isResetingPassword={isResetingPassword}
       ></LoginForm>
@@ -185,7 +182,6 @@
       {#if Navbar}
         <svelte:component
                 this={Navbar}
-                bind:loggedUser={loggedUser}
                 bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
                 bind:isSettingsOpen={isSettingsOpen}
         />
@@ -195,7 +191,6 @@
       {#if WelcomeSection}
         <svelte:component
                 this={WelcomeSection}
-                bind:loggedUser={loggedUser}
         />
       {/if}
 
@@ -211,7 +206,6 @@
       {#if Notes}
         <svelte:component
                 this={Notes}
-                bind:loggedUser={loggedUser}
         />
       {/if}
 
@@ -221,7 +215,6 @@
         {#if isProfileInfoCardOpen}
           <svelte:component
                   this={ProfileInfoCard}
-                  bind:loggedUser={loggedUser}
                   bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
           />
         {/if}
@@ -235,14 +228,12 @@
         {#if Navbar}
           <svelte:component
                   this={Navbar}
-                  bind:loggedUser={loggedUser}
                   bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
                   bind:isSettingsOpen={isSettingsOpen}
           />
         {/if}
         <svelte:component
                 this={Settings}
-                bind:loggedUser={loggedUser}
                 bind:isSettingsOpen={isSettingsOpen}
         />
       {/if}

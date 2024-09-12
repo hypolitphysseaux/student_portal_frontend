@@ -1,11 +1,11 @@
 <script lang="ts">
-    import firebaseApp from "../firebase";
-    import { getAuth, createUserWithEmailAndPassword, updateProfile,sendEmailVerification } from "firebase/auth";
-    import { getFirestore, setDoc , doc} from "firebase/firestore";
     import { fade } from 'svelte/transition';
 
-    const auth = getAuth(firebaseApp);
-    const db = getFirestore(firebaseApp);
+    import { db , auth } from "../firebase";
+
+    import { createUserWithEmailAndPassword, updateProfile,sendEmailVerification } from "firebase/auth";
+    import { setDoc , doc } from "firebase/firestore";
+
 
     function register() {
         // Credentials inputs

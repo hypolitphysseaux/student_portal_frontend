@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { getAuth, sendPasswordResetEmail } from "firebase/auth";
     import { fade } from 'svelte/transition';
-    import firebaseApp from "../firebase";
 
-    const auth = getAuth(firebaseApp);
+    import { auth } from "../firebase";
+    import { sendPasswordResetEmail } from "firebase/auth";
+
 
     async function sendResetEmail(){
         const email = document.getElementById('email') || new HTMLElement();

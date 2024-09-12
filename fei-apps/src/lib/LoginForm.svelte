@@ -1,21 +1,22 @@
 <script lang="ts">
-    import firebaseApp from "../firebase";
-    import {getAuth,
+    import { fade } from 'svelte/transition';
+
+    import { db , auth } from "../firebase";
+    import { doc, getDoc, increment, updateDoc } from "firebase/firestore";
+
+    import { isDarkModeEnabled , loggedIn, loggedUser } from "../stores";
+
+    import {
         GoogleAuthProvider,
-        FacebookAuthProvider,
         signInWithPopup,
         signInWithEmailAndPassword
     } from "firebase/auth";
-    import {doc, getDoc, getFirestore, increment, updateDoc} from "firebase/firestore";
 
-    import { fade } from 'svelte/transition';
 
-    const db = getFirestore(firebaseApp);
-    const auth = getAuth(firebaseApp);
     const googleProvider = new GoogleAuthProvider();
-    const facebookProvider = new FacebookAuthProvider();
+    //const facebookProvider = new FacebookAuthProvider();
 
-    import {isDarkModeEnabled , loggedIn} from "../stores";
+
 
     async function facebookPopUpSignIn(){
         alert("Momentálne nie je k dispozícií.");
@@ -53,8 +54,6 @@
             const user = result.user;
 
             incrementActiveUsers();
-            //TODO get user details [ais / theme ... , not implemented here yet]
-
             //loggedUser = user.toJSON();
             //console.log(loggedUser);
 
@@ -73,7 +72,7 @@
                 // sign-in method.
             }
         }
-    } // Google prihlasenie //TODO flow, overenie v databaze, ais
+    } // Google prihlasenie
 
     async function setOnlineStatus(uid){
         const docRef = doc(db, "userDetails", uid);
@@ -87,11 +86,11 @@
         const docSnap = await getDoc(doc(db, "userDetails", uid));
         if (docSnap.exists())
         {
-            loggedUser.aisId = docSnap.data().aisId;
+            $loggedUser.aisId = docSnap.data().aisId;
             isDarkModeEnabled.set(docSnap.data().prefersDarkTheme);
         }
         else {
-            loggedUser.aisId = "";
+            $loggedUser.aisId = "";
         }
     } // Ziskanie ais id a theme preference
 
@@ -122,14 +121,14 @@
             .then((userCredential) => {
                 // Signed in
                 const user = userCredential.user;
-                loggedUser = user;
+                loggedUser.set(user);
 
 
                 //TODO Store current user in a local storage ?
                 // Kvoli reloadu , pri signout vymazat
 
-                setOnlineStatus(loggedUser.uid);
-                getUserDetails(loggedUser.uid);
+                setOnlineStatus($loggedUser.uid);
+                getUserDetails($loggedUser.uid);
 
                 loggedIn.set(true);
                 incrementActiveUsers();
@@ -156,8 +155,6 @@
 
     } // Prihlasenie cez email a heslo
 
-
-    export let loggedUser;
     export let isSigningUp;
     export let isResetingPassword;
 

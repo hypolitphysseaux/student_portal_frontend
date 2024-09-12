@@ -1,6 +1,6 @@
 <script lang="ts">
     import { fade } from 'svelte/transition';
-    import {isDarkModeEnabled} from "../stores";
+    import { isDarkModeEnabled } from "../stores";
     async function startFeiConnections(){
         console.log("Starting FEI Connections...");
     }

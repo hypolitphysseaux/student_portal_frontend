@@ -1,20 +1,20 @@
 <script lang="ts">
+    import { db , auth } from "../firebase";
+
+    import { signOut } from "firebase/auth";
+    import { doc, increment, updateDoc } from "firebase/firestore";
+
     import '@material/web/iconbutton/icon-button.js';
     import '@material/web/fab/fab.js';
 
-    import firebaseApp from "../firebase";
-    import {getAuth, signOut} from "firebase/auth";
-    import {doc, getFirestore, increment, updateDoc} from "firebase/firestore";
-    const auth = getAuth(firebaseApp);
-    const db = getFirestore(firebaseApp);
+    import { isDarkModeEnabled , loggedIn, loggedUser } from "../stores";
 
 
-    import {isDarkModeEnabled , loggedIn} from "../stores";
-    export let loggedUser;
     export let isProfileInfoCardOpen = false;
     export let isSettingsOpen = false;
 
     let isNavbarOpen = false;
+
 
     async function setUserDetails(uid){
         const docRef = doc(db, "userDetails", uid);
@@ -45,8 +45,8 @@
                 decrementActiveUsers();
                 isProfileInfoCardOpen = false;
                 isSettingsOpen = false;
-                loggedUser = "";
                 loggedIn.set(false);
+                loggedUser.set("");
             })
             .catch((error) => {
                 console.log("Error when signing out.", error);
@@ -153,7 +153,7 @@
 
 
             <!-- Profilovka  -->
-            <img on:click={showProfileInfoCard} src="{loggedUser.photoURL}">
+            <img on:click={showProfileInfoCard} src="{$loggedUser.photoURL}">
         </nav>
     </nav>
 

@@ -1,21 +1,19 @@
 <script lang="ts">
-
-    import {onMount , onDestroy} from "svelte";
-    import {doc, getFirestore, onSnapshot, updateDoc} from "firebase/firestore";
-    import firebaseApp from "../firebase";
-    import {getAuth, updateProfile} from "firebase/auth";
-    import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+    import { onMount , onDestroy } from "svelte";
     import { fade } from 'svelte/transition';
 
-    const auth = getAuth(firebaseApp);
-    const db = getFirestore(firebaseApp);
-    const storage = getStorage();
+    import { db , auth } from "../firebase";
 
-    import {isDarkModeEnabled , userStatus, statusColor} from "../stores";
+    import { doc, onSnapshot, updateDoc } from "firebase/firestore";
+    import { updateProfile } from "firebase/auth";
+
+    import { isDarkModeEnabled , loggedUser , userStatus, statusColor } from "../stores";
+
+    import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+    const storage = getStorage();  // TODO Dynamicky?
 
     var activeUsers;
     var lastLogin;
-
 
     let isChangingStatus = false;
     let isChangingPhoto = false;
@@ -53,35 +51,38 @@
                     userStatus.set("online");
                     statusColor.set("#23b223");
 
-                    loggedUser.status = "online";
+                    //$loggedUser.status = "online";
                 }
                 if (doc.data().status == "away"){
                     userStatus.set("away");
                     statusColor.set("#ffea00");
 
-                    loggedUser.status = "away";
+                    //$loggedUser.status = "away";
                 }
                 if (doc.data().status == "busy"){
                     userStatus.set("busy");
                     statusColor.set("#f35353");
 
-                    loggedUser.status = "busy";
+                    //$loggedUser.status = "busy";
                 }
                 if (doc.data().status == "hidden"){
                     userStatus.set("hidden");
                     statusColor.set("gray");
 
-                    loggedUser.status = "hidden";
+                    //$loggedUser.status = "hidden";
                 }
             }
         });
 
+        /*
         //Lastlogin sa lisi pri Google Provider, treba osetrit
         if (loggedUser.metadata !== undefined){
             lastLogin = loggedUser.metadata.lastLoginAt;
         }else {
             lastLogin = loggedUser.lastLoginAt;
         }
+
+         */
     });
 
     onDestroy(() => {
@@ -127,7 +128,7 @@
                         //TODO label / push notifikacia <---
 
                         //Refresh loggedUser
-                        loggedUser = auth.currentUser;
+                        loggedUser.set(auth.currentUser);
 
                         isChangingPhoto = false;
                     }).catch((error) => {
@@ -147,12 +148,8 @@
             status: stat
         });
 
-        userStatus.set(stat);
-
         isChangingStatus = false;
     }
-    export let loggedUser;
-
 </script>
 
 <div
@@ -165,11 +162,11 @@
             <i class='bx bx-bell-off' style="font-size: 20px; color: var(--navbar-icon-color);"></i>
         {/if}
         <div class="welcome-heading">
-            <h1>Vitajte, <strong>{loggedUser.displayName}</strong> !</h1>
+            <h1>Vitajte, <strong>{$loggedUser.displayName}</strong> !</h1>
         </div>
 
         <div class="user-section">
-            <img on:click={() => {isChangingPhoto = true}} class="profile-photo" src="{loggedUser.photoURL}">
+            <img on:click={() => {isChangingPhoto = true}} class="profile-photo" src="{$loggedUser.photoURL}">
 
             {#if isChangingPhoto}
                 <input id="profile-picture-input" type="file"> <!--TODO styles-->
@@ -206,7 +203,7 @@
         </div>
 
         <div class="ais-id-label">
-            <label><strong>AIS:</strong>{" " + loggedUser.aisId}</label>
+            <label><strong>AIS:</strong>{" " + $loggedUser.aisId}</label>
         </div>
     </div>
 
