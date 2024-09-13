@@ -3,7 +3,7 @@
     import { fade } from 'svelte/transition';
 
     import { db , auth } from "../firebase";
-    import { onAuthStateChanged } from "firebase/auth";
+    import { onAuthStateChanged , setPersistence , browserSessionPersistence } from "firebase/auth";
     import { doc, getDoc, increment, updateDoc } from "firebase/firestore";
 
     import { isDarkModeEnabled , loggedIn, loggedUser } from "../stores";
@@ -123,14 +123,6 @@
     // ! limitacia, iba raz za sekundu
 
 
-    async function checkBeforeSignIn(uid){
-        const docSnap = await getDoc(doc(db, "userDetails", uid));
-        if (docSnap.exists())
-        {
-            return (docSnap.data().status);
-        }
-    }
-
     async function logIn(){
         const email = document.getElementById('email') || new HTMLElement();
         const password = document.getElementById('password') || new HTMLElement();
@@ -151,6 +143,10 @@
 
 
         //Check if the user is not signed in elsewhere //TODO
+        
+
+        //Set session persistence
+        setPersistence(auth , browserSessionPersistence);
 
         signInWithEmailAndPassword(auth, email.value, password.value)
             .then((userCredential) => {
