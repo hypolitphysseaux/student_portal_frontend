@@ -22,9 +22,6 @@
             });
         });
     });
-
-    export let isSettingsOpen;
-
 </script>
 
 <div
@@ -147,7 +144,6 @@
         -->
             <md-icon-button
                     on:click={() => {
-                isSettingsOpen = false;
                 navigate("/dashboard");
             }}
             >

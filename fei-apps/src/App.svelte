@@ -22,7 +22,7 @@
 
 
   async function loadComponents(){
-    navigate("/loading")
+    navigate("/loading" , { replace: true });
     isLoadingComponents = true;
 
     const [
@@ -51,7 +51,7 @@
     Settings = SettingsM.default;
 
     // Po skonceni nacitavania komponentov presmerujeme pouzivatela na dashboard
-    navigate("/dashboard");
+    navigate("/dashboard" , { replace: true });
   }
 
   $: if ($loggedUser) {
@@ -194,7 +194,6 @@
             <svelte:component
                     this={Navbar}
                     bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
-                    bind:isSettingsOpen={isSettingsOpen}
             />
           {/if}
 
@@ -237,19 +236,15 @@
       <Route path="/settings">
         <!-- Nastavenia -->
         {#if Settings}
-          {#if isSettingsOpen}
-            {#if Navbar}
-              <svelte:component
-                      this={Navbar}
-                      bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
-                      bind:isSettingsOpen={isSettingsOpen}
-              />
-            {/if}
+          {#if Navbar}
             <svelte:component
-                    this={Settings}
-                    bind:isSettingsOpen={isSettingsOpen}
+                    this={Navbar}
+                    bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
             />
           {/if}
+          <svelte:component
+                  this={Settings}
+          />
         {/if}
       </Route>
 

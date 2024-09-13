@@ -13,7 +13,6 @@
 
 
     export let isProfileInfoCardOpen = false;
-    export let isSettingsOpen = false;
 
     let isNavbarOpen = false;
 
@@ -46,7 +45,6 @@
             .then(() =>{
                 decrementActiveUsers();
                 isProfileInfoCardOpen = false;
-                isSettingsOpen = false;
                 loggedIn.set(false);
                 loggedUser.set("");
                 navigate("/login");
@@ -135,7 +133,6 @@
             >
                 <md-icon-button
                         on:click={() => {
-                            isSettingsOpen = true;
                             navigate("/settings");
                         }}
                 >
