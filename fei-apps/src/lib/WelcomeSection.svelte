@@ -74,15 +74,13 @@
             }
         });
 
-        /*
-        //Lastlogin sa lisi pri Google Provider, treba osetrit
-        if (loggedUser.metadata !== undefined){
-            lastLogin = loggedUser.metadata.lastLoginAt;
-        }else {
-            lastLogin = loggedUser.lastLoginAt;
-        }
 
-         */
+        //Lastlogin sa lisi pri Google Provider, treba osetrit
+        if ($loggedUser.metadata !== undefined){
+            lastLogin = $loggedUser.metadata.lastLoginAt;
+        }else {
+            lastLogin = $loggedUser.lastLoginAt;
+        }
     });
 
     onDestroy(() => {

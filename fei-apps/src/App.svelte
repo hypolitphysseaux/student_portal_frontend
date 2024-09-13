@@ -59,7 +59,7 @@
 
 
   // State control
-  import {isDarkModeEnabled, loggedIn, loggedUser} from "./stores";
+  import { isDarkModeEnabled, loggedIn, loggedUser } from "./stores";
 
   let isLoadingComponents = false;
   let isSigningUp = false;
@@ -73,9 +73,6 @@
   // Functions
   onMount(() => {
     console.log("App loaded.");
-
-    // TODO skontrolujeme, ci je user v session? v local storage?
-
   });
 
 

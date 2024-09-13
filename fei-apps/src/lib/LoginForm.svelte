@@ -1,7 +1,9 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import { fade } from 'svelte/transition';
 
     import { db , auth } from "../firebase";
+    import { onAuthStateChanged } from "firebase/auth";
     import { doc, getDoc, increment, updateDoc } from "firebase/firestore";
 
     import { isDarkModeEnabled , loggedIn, loggedUser } from "../stores";
@@ -17,6 +19,23 @@
     //const facebookProvider = new FacebookAuthProvider();
 
 
+    onMount(() => {
+        //Observer on the auth object
+        onAuthStateChanged( auth , (user) => {
+            if (user){
+                // User is signed in
+                loggedUser.set(user);
+                getUserDetails(user.uid);
+
+                loggedIn.set(true);
+            } else {
+                // User is signed out
+                loggedUser.set("");
+
+                loggedIn.set(false);
+            }
+        });
+    });
 
     async function facebookPopUpSignIn(){
         alert("Momentálne nie je k dispozícií.");
@@ -104,7 +123,13 @@
     // ! limitacia, iba raz za sekundu
 
 
-    //TODO onAuthStateChanged observer
+    async function checkBeforeSignIn(uid){
+        const docSnap = await getDoc(doc(db, "userDetails", uid));
+        if (docSnap.exists())
+        {
+            return (docSnap.data().status);
+        }
+    }
 
     async function logIn(){
         const email = document.getElementById('email') || new HTMLElement();
@@ -117,10 +142,20 @@
             return;
         }
 
+        if (!password.value)
+        {
+            errorLabel = "Zadajte heslo.";
+            password.focus();
+            return;
+        }
+
+
+        //Check if the user is not signed in elsewhere //TODO
+
         signInWithEmailAndPassword(auth, email.value, password.value)
             .then((userCredential) => {
-                // Signed in
                 const user = userCredential.user;
+                // Signed in
                 loggedUser.set(user);
 
 
@@ -143,13 +178,6 @@
 
                     //Focus email input
                     email.focus();
-                }
-
-                if (error.code == "auth/missing-password"){
-                    errorLabel = "Zadajte heslo.";
-
-                    //Focus password input
-                    password.focus();
                 }
             });
 

@@ -1,5 +1,11 @@
 
-<script>
+<script lang="ts">
+    import { onDestroy } from "svelte";
+
+
+    onDestroy(() => {
+        //TODO ,, Ked sa Footer destroyne, tak som zavrel okno alebo browser , alebo iba reloadol?
+    });
     export let isDarkModeEnabled;
 </script>
 
