@@ -1,6 +1,8 @@
 <script lang="ts">
     import { fade } from 'svelte/transition';
 
+    import { navigate } from "svelte-routing";
+
     import { db , auth } from "../firebase";
 
     import { createUserWithEmailAndPassword, updateProfile,sendEmailVerification } from "firebase/auth";
@@ -289,7 +291,7 @@
 
             <div class="links">
                 <a on:click={() => {alert("Momentálne nedostupné.");}} href="#">Napíšte nám</a>
-                <a on:click={() => {isSigningUp = false;}}>Už máte účet?</a>
+                <a on:click={() => {isSigningUp = false; navigate("/login")}}>Už máte účet?</a>
             </div>
         </div>
     </div>

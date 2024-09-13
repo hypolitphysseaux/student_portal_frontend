@@ -1,6 +1,8 @@
 <script lang="ts">
     import { fade } from 'svelte/transition';
 
+    import { navigate } from "svelte-routing";
+
     import { auth } from "../firebase";
     import { sendPasswordResetEmail } from "firebase/auth";
 
@@ -136,7 +138,7 @@
                     class="login">Poslať email</button>
 
             <div class="links">
-                <a on:click={ () => {isResetingPassword = false}}>Späť</a>
+                <a on:click={ () => {isResetingPassword = false; navigate("/login")}}>Späť</a>
             </div>
         </div>
     </div>

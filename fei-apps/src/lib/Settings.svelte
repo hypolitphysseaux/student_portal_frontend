@@ -2,6 +2,8 @@
     import { onMount } from "svelte";
     import { fade } from 'svelte/transition';
 
+    import { navigate } from "svelte-routing";
+
     import { isDarkModeEnabled, loggedUser, statusColor } from "../stores";
 
     import '@material/web/iconbutton/icon-button.js';
@@ -146,6 +148,7 @@
             <md-icon-button
                     on:click={() => {
                 isSettingsOpen = false;
+                navigate("/dashboard");
             }}
             >
                 <i class='bx bx-x'></i>

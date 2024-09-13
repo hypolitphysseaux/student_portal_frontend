@@ -2,6 +2,8 @@
     import { onMount } from "svelte";
     import { fade } from 'svelte/transition';
 
+    import { navigate } from "svelte-routing";
+
     import { db , auth } from "../firebase";
     import { onAuthStateChanged , setPersistence , browserSessionPersistence } from "firebase/auth";
     import { doc, getDoc, increment, updateDoc } from "firebase/firestore";
@@ -305,8 +307,8 @@
                     class="login">Prihlásiť sa</button>
 
             <div class="links">
-                <a on:click={ () => {isResetingPassword = true}}>Resetovať heslo</a>
-                <a on:click={ () => {isSigningUp = true}}>Nemáte účet?</a>
+                <a on:click={ () => {isResetingPassword = true; navigate("/reset")}}>Resetovať heslo</a>
+                <a on:click={ () => {isSigningUp = true; navigate("/register")}}>Nemáte účet?</a>
             </div>
         </div>
     </div>

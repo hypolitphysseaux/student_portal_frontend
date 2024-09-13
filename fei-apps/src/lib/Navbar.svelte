@@ -1,6 +1,8 @@
 <script lang="ts">
     import { db , auth } from "../firebase";
 
+    import { navigate } from "svelte-routing";
+
     import { signOut } from "firebase/auth";
     import { doc, increment, updateDoc } from "firebase/firestore";
 
@@ -47,6 +49,7 @@
                 isSettingsOpen = false;
                 loggedIn.set(false);
                 loggedUser.set("");
+                navigate("/login");
             })
             .catch((error) => {
                 console.log("Error when signing out.", error);
@@ -133,6 +136,7 @@
                 <md-icon-button
                         on:click={() => {
                             isSettingsOpen = true;
+                            navigate("/settings");
                         }}
                 >
                     <i class='bx bx-cog'></i>
