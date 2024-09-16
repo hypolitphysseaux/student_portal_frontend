@@ -138,7 +138,7 @@
                     class="login">Poslať email</button>
 
             <div class="links">
-                <a on:click={ () => {isResetingPassword = false; navigate("/login")}}>Späť</a>
+                <a on:click={ () => {isResetingPassword = false; navigate("/login" , { replace : true })}}>Späť</a>
             </div>
         </div>
     </div>

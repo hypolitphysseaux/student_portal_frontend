@@ -291,7 +291,7 @@
 
             <div class="links">
                 <a on:click={() => {alert("Momentálne nedostupné.");}} href="#">Napíšte nám</a>
-                <a on:click={() => {isSigningUp = false; navigate("/login")}}>Už máte účet?</a>
+                <a on:click={() => {isSigningUp = false; navigate("/login" , { replace : true })}}>Už máte účet?</a>
             </div>
         </div>
     </div>

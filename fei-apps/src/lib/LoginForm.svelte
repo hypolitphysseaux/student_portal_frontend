@@ -307,8 +307,8 @@
                     class="login">Prihlásiť sa</button>
 
             <div class="links">
-                <a on:click={ () => {isResetingPassword = true; navigate("/reset")}}>Resetovať heslo</a>
-                <a on:click={ () => {isSigningUp = true; navigate("/register")}}>Nemáte účet?</a>
+                <a on:click={ () => {isResetingPassword = true; navigate("/reset" , { replace : true })}}>Resetovať heslo</a>
+                <a on:click={ () => {isSigningUp = true; navigate("/register" , { replace : true })}}>Nemáte účet?</a>
             </div>
         </div>
     </div>

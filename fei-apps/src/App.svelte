@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
 
   //Routing
-  import {Router, Route, navigate} from "svelte-routing";
+  import { Router, Route, navigate } from "svelte-routing";
 
   //Import initial komponentov
   import LoginForm from "./lib/LoginForm.svelte";
@@ -77,7 +77,7 @@
     console.log("App loaded.");
 
     //Nastavenie default Route na /login
-    navigate("/login");
+    navigate("/login" , { replace : true });
   });
 
   //----------------------------

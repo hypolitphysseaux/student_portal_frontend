@@ -47,7 +47,7 @@
                 isProfileInfoCardOpen = false;
                 loggedIn.set(false);
                 loggedUser.set("");
-                navigate("/login");
+                navigate("/login" , { replace : true });
             })
             .catch((error) => {
                 console.log("Error when signing out.", error);
@@ -133,7 +133,7 @@
             >
                 <md-icon-button
                         on:click={() => {
-                            navigate("/settings");
+                            navigate("/settings" , { replace : true });
                         }}
                 >
                     <i class='bx bx-cog'></i>

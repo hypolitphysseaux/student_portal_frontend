@@ -144,7 +144,7 @@
         -->
             <md-icon-button
                     on:click={() => {
-                navigate("/dashboard");
+                navigate("/dashboard" , { replace : true });
             }}
             >
                 <i class='bx bx-x'></i>
