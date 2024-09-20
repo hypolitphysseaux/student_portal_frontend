@@ -52,7 +52,7 @@
             <i class='bx bxs-chess'></i>
             <h3>CHESS</h3>
             <p>Chceš si zahrať šach so spolužiakmi alebo prednášajúcimi? Na tomto mieste, iba proti FEIkárom. </p>
-            <a on:click={startFeiChess} href="http://localhost:5177/" class="btn">SPUSTIŤ</a>
+            <a on:click={startFeiChess} href="http://localhost:5177/" target="_blank" class="btn">SPUSTIŤ</a>
         </div>
 
         <div class="box" in:fade={{ delay: 250 , duration: 250 }}>
