@@ -1,6 +1,10 @@
 <script lang="ts">
     import { fade } from 'svelte/transition';
-    import { isDarkModeEnabled } from "../stores";
+    import { isDarkModeEnabled , currentApp } from "../stores";
+
+    async function startStudentPortal(){
+        currentApp.set("portal");
+    }
     async function startFeiConnections(){
         console.log("Starting FEI Connections...");
     }
@@ -31,7 +35,7 @@
             <i class='bx bxs-school'></i>
             <h3>STUDENT PORTAL</h3>
             <p>Prehľad známok, účasť na cvičeniach, miesta odovzdania, termíny skúšok. Všetko dôležité na jednom mieste.</p>
-            <a href="#" class="btn">SPUSTIŤ</a>
+            <a on:click={startStudentPortal} class="btn">SPUSTIŤ</a>
         </div>
 
         <div class="box" in:fade={{ delay: 100 , duration: 250 }}>
@@ -144,6 +148,7 @@
         font-size: 17px;
         border-radius: 8px;
         padding: 8px 15px;
+        cursor: pointer;
     }
 
 

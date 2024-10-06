@@ -10,16 +10,21 @@
   import ResetPasswordForm from "./lib/ResetPasswordForm.svelte";
   import AppFooter from "./lib/AppFooter.svelte";
 
+  //Stores
+  import { currentApp } from "./stores";
 
   //Dynamicke nacitanie komponentov po prihlaseni
   let
+          // Apps
           Navbar :any,
           WelcomeSection :any,
           AppWidgets :any,
           ProfileInfoCard :any,
           Notes :any,
-          Settings :any;
+          Settings :any,
 
+          // Portal
+          PortalAIChat :any;
 
   async function loadComponents(){
     navigate("/loading" , { replace: true });
@@ -54,8 +59,33 @@
     navigate("/dashboard" , { replace: true });
   }
 
+  async function loadAppComponents(){
+
+    if ($currentApp == "portal"){
+      //TODO start loading animation
+
+      const [
+        PortalAIChatM,
+      ] = await Promise.all([
+        import('./lib/PortalAIChat.svelte'),
+      ]);
+
+      //TODO stop loading animation
+
+      PortalAIChat = PortalAIChatM.default;
+    }
+
+    // Po skonceni nacitavania komponentov presmerujeme pouzivatela na prislusnu aplikaciu
+    navigate(("/" + $currentApp) , { replace: true });
+  }
+
+  // Po prihlaseni sa dynamicky nacitaju komponenty
   $: if ($loggedUser) {
     loadComponents();
+  }
+
+  $: if ($currentApp){
+    loadAppComponents();
   }
   //----------------------------
 
@@ -128,6 +158,7 @@
         {/if}
       </Route>
 
+      <!-- Loader po prihlaseni -->
       <Route path="/loading">
         {#if isLoadingComponents}
           <div class="spinner-wrapper">
@@ -248,6 +279,28 @@
         {/if}
       </Route>
 
+
+
+      <!-- Spustena ina aplikacia -->
+
+      <Route path="/portal">
+        <!-- Student Portal -->
+
+        <!-- Navbar -->
+        {#if (Navbar)}
+          <svelte:component
+                  this={Navbar}
+                  bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
+          />
+        {/if}
+
+        <!-- AI Chat -->
+        {#if (PortalAIChat)}
+          <svelte:component
+                  this={PortalAIChat}
+          />
+        {/if}
+      </Route>
     </Router>
   </div>
 

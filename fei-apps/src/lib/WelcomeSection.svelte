@@ -84,8 +84,7 @@
     });
 
     onDestroy(() => {
-        console.log("Welcome section destroyed.");
-        //TODO dispose listeners
+        //TODO dispose
     });
 
     async function changingStatus(){

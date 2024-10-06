@@ -9,7 +9,7 @@
     import '@material/web/iconbutton/icon-button.js';
     import '@material/web/fab/fab.js';
 
-    import { isDarkModeEnabled , loggedIn, loggedUser } from "../stores";
+    import { isDarkModeEnabled , loggedIn, loggedUser , currentApp } from "../stores";
 
 
     export let isProfileInfoCardOpen = false;
@@ -36,6 +36,15 @@
     // ! limitacia, iba raz za sekundu
 
     async function logOut(){
+
+        //Ak je spustená aplikácia, neodhlasujeme - iba presmerujeme na dashboard
+        if ($currentApp){
+            currentApp.set("");
+            navigate("/dashboard" , { replace: true });
+            return;
+        }
+
+        //Inak odhlasujeme usera z hlavnej aplikacie
         const user = auth.currentUser;
 
         //Nastavenie user details pred odhlasenim
@@ -45,8 +54,9 @@
             .then(() =>{
                 decrementActiveUsers();
                 isProfileInfoCardOpen = false;
-                loggedIn.set(false);
                 loggedUser.set("");
+                currentApp.set("");
+                loggedIn.set(false);
                 navigate("/login" , { replace : true });
             })
             .catch((error) => {
@@ -95,7 +105,13 @@
                 <img src="logo-dark-mode.svg">
             {/if}
 
-            <span>APPS</span>
+            {#if (!$currentApp)}
+                <span>APPS</span>
+            {:else}
+                <!-- Ak je spustena ina appka, zobrazim jej nazov -->
+                <span>{$currentApp.toUpperCase()}</span>
+            {/if}
+
         </div>
 
         <div class="search">
@@ -127,30 +143,45 @@
             {/if}
 
             <!-- Tlacidlo na otvorenie nastaveni -->
-            <div
-                    class="my-button"
-                    data-tooltip="Nastavenia"
-            >
-                <md-icon-button
-                        on:click={() => {
+            {#if !$currentApp}  <!-- Nastavenia chcem iba v hlavnej aplikacii -->
+                <div
+                        class="my-button"
+                        data-tooltip="Nastavenia"
+                >
+                    <md-icon-button
+                            on:click={() => {
                             navigate("/settings" , { replace : true });
                         }}
-                >
-                    <i class='bx bx-cog'></i>
-                </md-icon-button>
-            </div>
+                    >
+                        <i class='bx bx-cog'></i>
+                    </md-icon-button>
+                </div>
+            {/if}
+
 
 
             <!-- Odhlasenie  -->
+            {#if (!$currentApp)}
+                <div
+                        class="my-button"
+                        data-tooltip="Odhlásiť sa"
+                >
+                    <md-icon-button on:click={logOut}>
+                        <i class='bx bx-log-out'></i>
+                    </md-icon-button>
+                </div>
 
-            <div
-                    class="my-button"
-                    data-tooltip="Odhlásiť sa"
-            >
-                <md-icon-button on:click={logOut}>
-                    <i class='bx bx-log-out'></i>
-                </md-icon-button>
-            </div>
+            {:else} <!-- Iba presmerovanie do hlavnej aplikacie namiesto odhlasenia -->
+                <div
+                        class="my-button"
+                        data-tooltip="Odísť z aplikácie"
+                >
+                    <md-icon-button on:click={logOut}>
+                        <i class='bx bx-x-circle'></i>
+                    </md-icon-button>
+                </div>
+            {/if}
+
 
 
             <!-- Profilovka  -->
