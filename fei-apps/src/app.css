@@ -9,7 +9,7 @@
 
   /* Css variables */
   --primary-button: #0039A6;
-  --primary-button--hover: #3160b8;
+  --primary-button--hover: rgba(49, 96, 184);
   --primary-color-heading: #0039A6;
   --navbar-icon-color: #000;
   --search-background: #eff1f2;
@@ -47,7 +47,7 @@
 /* Dark mode variables */
 .dark-mode {
   --primary-button: #0039A6;
-  --primary-button--hover: #3160b8;
+  --primary-button--hover: rgba(49, 96, 184);
   --primary-color-heading: #64bfe3;
   --navbar-icon-color: #fff;
   --search-background: #414247;

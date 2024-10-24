@@ -95,9 +95,10 @@
 
         const fileInput = document.getElementById("profile-picture-input");
         const file = fileInput.files[0];
+        const label = document.getElementById("custom-file-upload");
 
         if (!file){
-            console.log("Provide your photo."); //TODO label
+            label.focus();
             return;
         }
 
@@ -165,10 +166,40 @@
         <div class="user-section">
             <img on:click={() => {isChangingPhoto = true}} class="profile-photo" src="{$loggedUser.photoURL}">
 
+            <!-- Profile picture input -->
             {#if isChangingPhoto}
-                <input id="profile-picture-input" type="file"> <!--TODO styles-->
-                <button on:click={updateProfilePicture}>DO</button>
-                <button on:click={() => {isChangingPhoto = false}}>X</button>
+                <div class="file-upload-wrapper">
+                    <label
+                            id="custom-file-upload"
+                            for="profile-picture-input"
+                            class="custom-file-upload"
+                            tabindex="0"
+                    >
+                        <i class='bx bx-upload'></i>
+                        Nahrajte fotku
+                    </label>
+                    <input id="profile-picture-input" class="profile-picture-input" type="file">
+                </div>
+
+                <!-- Proceed button -->
+                <div
+                        class="my-button proceed"
+                        data-tooltip="Zmeniť profilovú fotku"
+                >
+                    <md-icon-button on:click={updateProfilePicture}>
+                        <i class='bx bxs-right-arrow-circle'></i>
+                    </md-icon-button>
+                </div>
+
+                <!-- Close button -->
+                <div
+                        class="my-button close"
+                        data-tooltip="Zavrieť"
+                >
+                    <md-icon-button on:click={() => {isChangingPhoto = false}}>
+                        <i class='bx bxs-x-circle'></i>
+                    </md-icon-button>
+                </div>
             {/if}
 
             <button on:click={changingStatus} class="status-circle" style="background: {$statusColor}"></button>
@@ -277,6 +308,8 @@
         position: relative;
         display: flex;
         flex-direction: row;
+
+        gap: 10px;
     }
 
     .profile-photo{
@@ -450,8 +483,80 @@
         color: white;
     }
 
-    .stat{
+    //Profile picture input
+    .user-section .file-upload-wrapper{
+        position: relative;
+        display: inline-block;
 
+        margin-left: 20px;
+    }
+
+    .user-section .file-upload-wrapper .custom-file-upload{
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: var(--primary-button);
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        border: 1px solid var(--primary-button);
+        border-radius: 5px;
+        text-align: center;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .user-section .file-upload-wrapper .custom-file-upload:hover{
+        background-color: var(--primary-button--hover);
+        border-color: var(--primary-button--hover);
+    }
+
+    .user-section .file-upload-wrapper .custom-file-upload:focus{
+        background-color: var(--primary-button--hover);
+        border-color: white;
+    }
+
+    .user-section .file-upload-wrapper .profile-picture-input{
+        display: none;
+    }
+
+    .proceed i{
+      color: rgba(43, 98, 9);
+    }
+
+    .close i{
+      color: indianred;
+    }
+
+    .proceed::before{
+      left: 80%;
+    }
+
+    .close::before{
+      left: 94.5%;
+    }
+
+    .my-button::before {
+      --scale: 0;
+
+      --translate-y: 160%;
+
+      position: absolute;
+
+      transform: translateX(-50%) translateY(var(--translate-y, 0)) scale(var(--scale));
+      transition: 300ms transform;
+      transform-origin: top center;
+      //left: 20%;
+      content: attr(data-tooltip);
+      color: white;
+      padding: .5rem;
+      border-radius: 8px;
+      text-align: center;
+      width: max-content;
+      background: var(--tooltip-color);
+    }
+
+    .my-button:hover::before {
+      --scale: 1;
     }
 
     @media (width >=600px){
