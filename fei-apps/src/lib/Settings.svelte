@@ -22,6 +22,11 @@
             });
         });
     });
+
+    const toggleDarkMode = () => {
+        isDarkModeEnabled.set(!$isDarkModeEnabled);
+        //isDarkModeEnabled = !isDarkModeEnabled;
+    }
 </script>
 
 <div
@@ -42,7 +47,23 @@
             <div class="setting-title">
                 <label>Tmavý režim</label>
             </div>
-            <div class="setting-option"></div>
+            <div class="setting-option">
+                <!-- Tlacidlo na prepinanie darkmode -->
+                {#if !$isDarkModeEnabled}
+                    <div class="my-button">
+                        <md-icon-button on:click={toggleDarkMode}>
+                            <i class='bx bx-toggle-left'></i>
+                        </md-icon-button>
+                    </div>
+
+                {:else}
+                    <div class="my-button">
+                        <md-icon-button on:click={toggleDarkMode}>
+                            <i class='bx bxs-toggle-right' ></i>
+                        </md-icon-button>
+                    </div>
+                {/if}
+            </div>
         </div>
 
         <div class="setting">
@@ -240,11 +261,28 @@
     }
 
     .settings-container .settings .setting .setting-option{
+      position: relative;
       width: 50%;
       height: 30px;
 
+      text-align: center;
+
       background: rgba(255, 255, 255, 0.2);
     }
+
+    .settings-container .settings .setting .setting-option .my-button{
+      --md-icon-button-hover-state-layer-color: none;
+      transform: translateY(-5px);
+    }
+
+    .settings-container .settings .setting .setting-option .my-button i{
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-size: 40px;
+      color: var(--navbar-icon-color);
+    }
+
 
     /*
     .settings-container .settings .save-btn {
