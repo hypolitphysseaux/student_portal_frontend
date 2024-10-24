@@ -24,7 +24,9 @@
           Settings :any,
 
           // Portal
-          PortalAIChat :any;
+          Portal :any,
+          PortalTutorial :any
+  ;
 
   async function loadComponents(){
     navigate("/loading" , { replace: true });
@@ -65,14 +67,17 @@
       //TODO start loading animation
 
       const [
-        PortalAIChatM,
+        PortalM,
+        PortalTutorialM
       ] = await Promise.all([
-        import('./lib/PortalAIChat.svelte'),
+        import('./lib/Portal.svelte'),
+        import('./lib/PortalTutorial.svelte'),
       ]);
 
       //TODO stop loading animation
 
-      PortalAIChat = PortalAIChatM.default;
+      Portal = PortalM.default;
+      PortalTutorial = PortalTutorialM.default;
     }
 
     // Po skonceni nacitavania komponentov presmerujeme pouzivatela na prislusnu aplikaciu
@@ -284,8 +289,6 @@
       <!-- Spustena ina aplikacia -->
 
       <Route path="/portal">
-        <!-- Student Portal -->
-
         <!-- Navbar -->
         {#if (Navbar)}
           <svelte:component
@@ -294,12 +297,28 @@
           />
         {/if}
 
-        <!-- AI Chat -->
-        {#if (PortalAIChat)}
+        <!-- Profile Info Card -->
+        {#if ProfileInfoCard}
+          {#if isProfileInfoCardOpen}
+            <svelte:component
+                    this={ProfileInfoCard}
+                    bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
+            />
+          {/if}
+        {/if}
+
+        <!-- Portal Tutorial -->
+        {#if PortalTutorial}
           <svelte:component
-                  this={PortalAIChat}
+                  this={PortalTutorial}
           />
         {/if}
+
+        <!-- Portal -->
+        {#if Portal}
+          <svelte:component this={Portal}/>
+        {/if}
+
       </Route>
     </Router>
   </div>

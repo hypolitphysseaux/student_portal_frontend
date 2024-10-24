@@ -114,10 +114,20 @@
 
         </div>
 
-        <div class="search">
-            <i class='bx bx-search'></i>
-            <input type="text" spellcheck="false" class="search" id="search" placeholder="Zadajte hľadaný výraz">
-        </div>
+        {#if (!$currentApp)}
+            <div class="search">
+                <i class='bx bx-search'></i>
+                <input type="text" spellcheck="false" class="search" id="search" placeholder="Zadajte hľadaný výraz">
+            </div>
+        {/if}
+
+        {#if ($currentApp === "portal")}
+            <div class="search">
+                <i class='bx bx-search'></i>
+                <input type="text" spellcheck="false" class="search" id="search" placeholder="Opýtajte sa ma na čokoľvek.">
+            </div>
+        {/if}
+
 
         <nav>
             <!-- Tlacidlo na prepinanie darkmode -->

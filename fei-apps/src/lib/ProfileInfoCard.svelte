@@ -137,6 +137,7 @@
         flex-direction: column;
         /*height: 100vh;*/
         /*width: fit-content;*/
+        z-index: 3;
     }
 
     .container {
