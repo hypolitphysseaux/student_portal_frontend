@@ -122,9 +122,22 @@
         {/if}
 
         {#if ($currentApp === "portal")}
+            <!-- Portal search -->
+
             <div class="search">
                 <i class='bx bx-search'></i>
                 <input type="text" spellcheck="false" class="search" id="search" placeholder="Opýtajte sa ma na čokoľvek.">
+
+                <!-- Send Query Button -->
+                <div
+                        class="my-button"
+                        data-tooltip="..."
+                >
+                    <md-icon-button>
+                        <i class='bx bxs-up-arrow-circle'></i>
+                    </md-icon-button>
+                </div>
+
             </div>
         {/if}
 
@@ -200,7 +213,7 @@
     </nav>
 
 
-<style>
+<style lang="scss">
     button {
         display: grid;
         place-items: center;
@@ -305,6 +318,20 @@
         outline: none;
     }
 
+    .search .my-button{
+        position: absolute;
+        top: 50%;
+        right: 0px;
+        translate: 45px -50%;
+        display: none;
+    }
+
+    .search .my-button i{
+        z-index: 1;
+        font-size: 25px;
+        left: 8px;
+    }
+
     .navbar nav {
         display: flex;
         align-items: center;
@@ -395,7 +422,9 @@
             opacity: 1;
             visibility: visible;
         }
-
+        .search .my-button{
+            display: flex;
+        }
 
     }
 
