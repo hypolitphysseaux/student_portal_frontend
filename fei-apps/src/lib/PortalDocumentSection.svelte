@@ -107,12 +107,15 @@
             </md-icon-button>
         </div>
 
-        <!-- Close button -->
+        <!-- Delete button -->
         <div
                 class="my-button close"
                 data-tooltip="Zmazať dokument"
         >
-            <md-icon-button>
+            <md-icon-button on:click={() => {
+                documentInput.value = "";
+                fileName = "";
+            }}>
                 <i class='bx bxs-x-circle'></i>
             </md-icon-button>
         </div>
