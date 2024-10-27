@@ -7,8 +7,10 @@
 
     const storage = getStorage();
 
-    let fileName;
     let documentInput;
+    let fileName;
+    let progress;
+
 
     onMount(() => {
         console.log("Portal document section loaded.");
@@ -49,17 +51,16 @@
         // 3. Sledujte priebeh nahrávania
         uploadTask.on('state_changed',
             (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log(`Nahrávanie: ${progress}%`); //TODO animacia?
+                progress = Math.trunc((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
             },
             (error) => {
-                console.error('Chyba pri nahrávaní:', error); //TODO label
+                console.error('Chyba pri nahrávaní dokumentu:', error); //TODO label
             },
             () => {
-                // 4. Získajte URL nahratého obrázka
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    console.log(downloadURL);
-                });
+                progress = "";
+                documentInput.value = "";
+                fileName = "";
+                alert("Dokument bol úspešne nahratý.");
             }
         );
     }
@@ -119,6 +120,13 @@
                 <i class='bx bxs-x-circle'></i>
             </md-icon-button>
         </div>
+
+        <!-- Progress -->
+        {#if progress}
+            <div class="progress">
+                {progress}%
+            </div>
+        {/if}
 
     </div>
 
