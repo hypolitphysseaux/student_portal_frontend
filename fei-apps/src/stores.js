@@ -8,3 +8,7 @@ export const loggedUser = writable("");
 
 // Aktualne spustena aplikacia
 export const currentApp = writable("");
+
+
+//Portal
+export const isChatModalOpen = writable(false);

@@ -9,7 +9,7 @@
     import '@material/web/iconbutton/icon-button.js';
     import '@material/web/fab/fab.js';
 
-    import { isDarkModeEnabled , loggedIn, loggedUser , currentApp } from "../stores";
+    import { isDarkModeEnabled , loggedIn, loggedUser , currentApp , isChatModalOpen } from "../stores";
 
 
     export let isProfileInfoCardOpen = false;
@@ -41,6 +41,7 @@
         //Ak je spustená aplikácia, neodhlasujeme - iba presmerujeme na dashboard
         if ($currentApp){
             currentApp.set("");
+            isChatModalOpen.set(false);
             navigate("/dashboard" , { replace: true });
             return;
         }
@@ -80,7 +81,6 @@
 
 
     //Portal functions
-
     async function sendQuery() {
         const query_input = document.getElementById('query') || new HTMLElement();
 
@@ -88,6 +88,10 @@
             query_input.focus();
             return;
         }
+
+        //TODO zistit, ci to nie je prikaz
+
+        isChatModalOpen.set(true);
 
         const response = await fetch('http://localhost:8000/generateResponse', {
             method: 'POST',
@@ -163,6 +167,13 @@
             <!-- Portal search -->
 
             <div class="search">
+                <!-- Chat history button -->
+                <div class="my-button history">
+                    <md-icon-button on:click={() => { isChatModalOpen.set(true) }}>
+                        <i class='bx bx-history'></i>
+                    </md-icon-button>
+                </div>
+
                 <i class='bx bx-search'></i>
                 <input
                         type="text"
@@ -374,6 +385,11 @@
         z-index: 1;
         font-size: 25px;
         left: 8px;
+    }
+
+    .search .history{
+      left: 0px;
+      translate: -45px -50%;
     }
 
     .navbar nav {

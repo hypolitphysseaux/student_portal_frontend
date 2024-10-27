@@ -160,6 +160,11 @@
     color: var(--color-info);
   }
 
+  .documents-wrapper .info i{
+    font-size: 25px;
+    transform: translateY(3.5px);
+  }
+
   .file-upload-wrapper{
     position: relative;
     display: flex;
