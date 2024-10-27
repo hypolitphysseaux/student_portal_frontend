@@ -25,7 +25,8 @@
 
           // Portal
           Portal :any,
-          PortalTutorial :any
+          PortalTutorial :any,
+          PortalDocumentSection :any
   ;
 
   async function loadComponents(){
@@ -68,16 +69,19 @@
 
       const [
         PortalM,
-        PortalTutorialM
+        PortalTutorialM,
+        PortalDocumentSectionM
       ] = await Promise.all([
         import('./lib/Portal.svelte'),
         import('./lib/PortalTutorial.svelte'),
+        import('./lib/PortalDocumentSection.svelte')
       ]);
 
       //TODO stop loading animation
 
       Portal = PortalM.default;
       PortalTutorial = PortalTutorialM.default;
+      PortalDocumentSection = PortalDocumentSectionM.default;
     }
 
     // Po skonceni nacitavania komponentov presmerujeme pouzivatela na prislusnu aplikaciu
@@ -317,6 +321,11 @@
         <!-- Portal -->
         {#if Portal}
           <svelte:component this={Portal}/>
+        {/if}
+
+        <!-- Portal Document Section -->
+        {#if PortalDocumentSection}
+          <svelte:component this={PortalDocumentSection}/>
         {/if}
 
       </Route>

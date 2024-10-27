@@ -84,6 +84,11 @@
     async function sendQuery() {
         const query_input = document.getElementById('query') || new HTMLElement();
 
+        if (!query_input.value){
+            query_input.focus();
+            return;
+        }
+
         const response = await fetch('http://localhost:8000/generateResponse', {
             method: 'POST',
             headers: {
