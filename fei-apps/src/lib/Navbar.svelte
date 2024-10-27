@@ -17,6 +17,7 @@
     let isNavbarOpen = false;
 
 
+    //General functions
     async function setUserDetails(uid){
         const docRef = doc(db, "userDetails", uid);
 
@@ -77,6 +78,38 @@
         isProfileInfoCardOpen = true;
     } // Otvorenie
 
+
+    //Portal functions
+
+    async function sendQuery() {
+        const query_input = document.getElementById('query') || new HTMLElement();
+
+        const response = await fetch('http://localhost:8000/generateResponse', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ query: query_input.value })
+        });
+
+        const data = await response.json();
+
+        console.log(data);
+
+        /* //TODO streamovanie odpovedi z backendu
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let resultText = '';
+
+        // Čítanie streamovaných dát
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            resultText += decoder.decode(value, { stream: true });
+            document.getElementById('response').innerText = resultText;
+        }
+         */
+    }
 </script>
 
 <div
@@ -126,14 +159,20 @@
 
             <div class="search">
                 <i class='bx bx-search'></i>
-                <input type="text" spellcheck="false" class="search" id="search" placeholder="Opýtajte sa ma na čokoľvek.">
+                <input
+                        type="text"
+                        spellcheck="false"
+                        class="search"
+                        id="query"
+                        placeholder="Opýtajte sa ma na čokoľvek."
+                        on:keydown={(e) => {
+                            if (e.key === 'Enter') sendQuery();
+                        }}
+                />
 
                 <!-- Send Query Button -->
-                <div
-                        class="my-button"
-                        data-tooltip="..."
-                >
-                    <md-icon-button>
+                <div class="my-button">
+                    <md-icon-button on:click={sendQuery}>
                         <i class='bx bxs-up-arrow-circle'></i>
                     </md-icon-button>
                 </div>
