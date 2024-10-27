@@ -1,11 +1,69 @@
 
 <script lang="ts">
     import { onMount } from "svelte";
-    import { isDarkModeEnabled } from "../stores";
+    import { isDarkModeEnabled, loggedUser } from "../stores";
+    import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+    import { auth } from "../firebase";
+
+    const storage = getStorage();
+
+    let fileName;
+    let documentInput;
 
     onMount(() => {
         console.log("Portal document section loaded.");
+
+        //Listener pre document input
+        documentInput = document.getElementById("document-input");
+
+        documentInput.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (file){
+                fileName = file.name;
+            }
+        });
+
     });
+
+
+
+
+    function uploadDocument(){
+        const file = documentInput.files[0];
+        const label = document.getElementById("document-file-upload");
+
+        if (!file){
+            label.focus();
+            return;
+        }
+
+        fileName = file.name;
+        //TODO pripony??
+
+        // 1. Vytvorte referenciu na umiestnenie dokumentu v Storage
+        const storageRef = ref(storage, `users/${auth.currentUser.uid}/${fileName}`);
+
+        // 2. Vytvorte úlohu na nahratie súboru
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        // 3. Sledujte priebeh nahrávania
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log(`Nahrávanie: ${progress}%`); //TODO animacia?
+            },
+            (error) => {
+                console.error('Chyba pri nahrávaní:', error); //TODO label
+            },
+            () => {
+                // 4. Získajte URL nahratého obrázka
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    console.log(downloadURL);
+                });
+            }
+        );
+    }
+
 </script>
 
 <div
@@ -16,7 +74,10 @@
         Nahratie dokumentov
     </div>
 
-    <div class="info"></div>
+    <div class="info">
+        <i class='bx bx-info-circle'></i>
+        V portáli môžete nahrať vlastné dokumenty, na ktoré sa môžete spýtať svojho AI pomocníka.
+    </div>
 
 
     <div class="file-upload-wrapper">
@@ -27,24 +88,29 @@
                 tabindex="0"
         >
             <i class='bx bx-upload'></i>
-            Nahrajte dokument
+            {#if !(fileName)}
+                Nahrajte dokument
+            {:else}
+                {fileName}
+            {/if}
+
         </label>
         <input id="document-input" class="document-input" type="file">
 
         <!-- Proceed button -->
         <div
                 class="my-button proceed"
-                data-tooltip="Zmeniť profilovú fotku"
+                data-tooltip="Pokračovať"
         >
-            <md-icon-button>
+            <md-icon-button on:click={uploadDocument}>
                 <i class='bx bxs-right-arrow-circle'></i>
             </md-icon-button>
         </div>
 
-        <!-- Close button //TODO mozno nebude treba -->
+        <!-- Close button -->
         <div
                 class="my-button close"
-                data-tooltip="Zavrieť"
+                data-tooltip="Zmazať dokument"
         >
             <md-icon-button>
                 <i class='bx bxs-x-circle'></i>
@@ -66,7 +132,7 @@
 
 
     width: 100%;
-    height: 200px;
+    height: 250px;
     box-shadow: var(--box-shadow);
   }
 
@@ -76,6 +142,11 @@
     color: var(--navbar-icon-color);
     font-size: 25px;
     margin-top: 50px;
+  }
+
+  .documents-wrapper .info{
+    margin-top: 10px;
+    color: var(--color-info);
   }
 
   .file-upload-wrapper{
@@ -122,25 +193,18 @@
     color: indianred;
   }
 
-  .proceed::before{
-    left: 80%;
-  }
-
-  .close::before{
-    left: 94.5%;
-  }
 
   .my-button::before {
     --scale: 0;
 
-    --translate-y: 160%;
+    --translate-y: 130%;
 
     position: absolute;
 
-    transform: translateX(-50%) translateY(var(--translate-y, 0)) scale(var(--scale));
+    transform: translateX(-35%) translateY(var(--translate-y, 0)) scale(var(--scale));
     transition: 300ms transform;
     transform-origin: top center;
-    //left: 20%;
+    //left: 15%;
     content: attr(data-tooltip);
     color: white;
     padding: .5rem;

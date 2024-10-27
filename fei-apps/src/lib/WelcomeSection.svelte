@@ -10,7 +10,7 @@
     import { isDarkModeEnabled , loggedUser , userStatus, statusColor } from "../stores";
 
     import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-    const storage = getStorage();  // TODO Dynamicky?
+    const storage = getStorage();
 
     var activeUsers;
     var lastLogin;
