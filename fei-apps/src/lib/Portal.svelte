@@ -74,7 +74,7 @@
     .portal-wrapper .modal {
       display: flex;
       position: fixed;
-      top: 150px;
+      top: 110px;
       left: 50%;
       transform: translate(-50%, 0);
       width: 700px;
@@ -162,8 +162,8 @@
 
     /* Štýl pre správu od bota */
     .message.bot .message-content {
-      background-color: #e1f5fe;
-      color: #007acc;
+      background-color: var(--bot-message-background);
+      color: var(--bot-message-text-color);
     }
 
     /* Štýl pre správu od používateľa */
@@ -172,7 +172,7 @@
     }
 
     .message.user .message-content {
-      background-color: #dcf8c6;
-      color: #333;
+      background-color: var(--user-message-background);
+      color: var(--user-message-text-color);
     }
 </style>

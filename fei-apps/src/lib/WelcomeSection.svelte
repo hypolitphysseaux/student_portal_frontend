@@ -7,7 +7,14 @@
     import { doc, onSnapshot, updateDoc } from "firebase/firestore";
     import { updateProfile } from "firebase/auth";
 
-    import { isDarkModeEnabled , loggedUser , userStatus, statusColor } from "../stores";
+    import {
+        isDarkModeEnabled ,
+        loggedUser ,
+        userStatus,
+        statusColor ,
+        isNotificationVisible ,
+        notificationText
+    } from "../stores";
 
     import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
     const storage = getStorage();
@@ -17,6 +24,8 @@
 
     let isChangingStatus = false;
     let isChangingPhoto = false;
+
+    let progress;
 
     onMount(() => {
         const degree = 6;
@@ -111,22 +120,29 @@
         // 3. Sledujte priebeh nahrávania
         uploadTask.on('state_changed',
             (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log(`Nahrávanie: ${progress}%`); //TODO animacia?
+                progress = Math.trunc((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
             },
             (error) => {
                 console.error('Chyba pri nahrávaní:', error); //TODO label
             },
             () => {
+                progress = "";
                 // 4. Získajte URL nahratého obrázka
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                     updateProfile(auth.currentUser, {
                         photoURL: downloadURL
                     }).then(() => {
-                        //TODO label / push notifikacia <---
-
                         //Refresh loggedUser
                         loggedUser.set(auth.currentUser);
+
+                        //Notification
+                        notificationText.set("Profilová fotka bola úspešne zmenená.");
+                        isNotificationVisible.set(true);
+                        setTimeout(() => {
+                            notificationText.set("");
+                            isNotificationVisible.set(false);
+                        }, 3000);
+
 
                         isChangingPhoto = false;
                     }).catch((error) => {
@@ -200,6 +216,13 @@
                         <i class='bx bxs-x-circle'></i>
                     </md-icon-button>
                 </div>
+
+                <!-- Progress -->
+                {#if progress}
+                    <div class="progress">
+                        {progress}%
+                    </div>
+                {/if}
             {/if}
 
             <button on:click={changingStatus} class="status-circle" style="background: {$statusColor}"></button>
@@ -557,6 +580,10 @@
 
     .my-button:hover::before {
       --scale: 1;
+    }
+
+    .progress{
+      color: var(--navbar-icon-color);
     }
 
     @media (width >=600px){

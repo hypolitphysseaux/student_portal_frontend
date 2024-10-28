@@ -1,8 +1,14 @@
 
 <script lang="ts">
     import { onMount } from "svelte";
-    import { isDarkModeEnabled, loggedUser } from "../stores";
-    import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+    import {
+        isDarkModeEnabled,
+        isNotificationVisible,
+        currentApp,
+        notificationText
+    } from "../stores";
+
+    import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
     import { auth } from "../firebase";
 
     const storage = getStorage();
@@ -58,9 +64,19 @@
             },
             () => {
                 progress = "";
+
+                //Notification
+                requestAnimationFrame(() => {
+                    notificationText.set("Dokument bol úspešne nahratý.");
+                    isNotificationVisible.set(true);
+                    setTimeout(() => {
+                        notificationText.set("");
+                        isNotificationVisible.set(false);
+                    }, 3000);
+                });
+
                 documentInput.value = "";
                 fileName = "";
-                alert("Dokument bol úspešne nahratý.");
             }
         );
     }
@@ -209,6 +225,9 @@
     color: indianred;
   }
 
+  .progress{
+    color: var(--navbar-icon-color);
+  }
 
   .my-button::before {
     --scale: 0;

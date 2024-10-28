@@ -11,7 +11,7 @@
   import AppFooter from "./lib/AppFooter.svelte";
 
   //Stores
-  import { currentApp } from "./stores";
+  import { currentApp , isNotificationVisible } from "./stores";
 
   //Dynamicke nacitanie komponentov po prihlaseni
   let
@@ -22,6 +22,7 @@
           ProfileInfoCard :any,
           Notes :any,
           Settings :any,
+          Notification :any,
 
           // Portal
           Portal :any,
@@ -39,14 +40,16 @@
             AppWidgetsM,
             ProfileInfoCardM,
             NotesM,
-            SettingsM
+            SettingsM,
+            NotificationM
     ] = await Promise.all([
       import('./lib/Navbar.svelte'),
       import('./lib/WelcomeSection.svelte'),
       import('./lib/AppWidgets.svelte'),
       import('./lib/ProfileInfoCard.svelte'),
       import('./lib/Notes.svelte'),
-      import('./lib/Settings.svelte')
+      import('./lib/Settings.svelte'),
+      import('./lib/Notification.svelte')
     ]);
 
     isLoadingComponents = false;
@@ -57,6 +60,7 @@
     ProfileInfoCard = ProfileInfoCardM.default;
     Notes = NotesM.default;
     Settings = SettingsM.default;
+    Notification = NotificationM.default;
 
     // Po skonceni nacitavania komponentov presmerujeme pouzivatela na dashboard
     navigate("/dashboard" , { replace: true });
@@ -270,6 +274,13 @@
             {/if}
           {/if}
 
+          <!-- Notification -->
+          {#if $isNotificationVisible}
+            {#if Notification}
+              <svelte:component this={Notification}/>
+            {/if}
+          {/if}
+
         {/if}
       </Route>
 
@@ -285,6 +296,13 @@
           <svelte:component
                   this={Settings}
           />
+        {/if}
+
+        <!-- Notification -->
+        {#if $isNotificationVisible}
+          {#if Notification}
+            <svelte:component this={Notification}/>
+          {/if}
         {/if}
       </Route>
 
@@ -328,6 +346,12 @@
           <svelte:component this={PortalDocumentSection}/>
         {/if}
 
+        <!-- Notification -->
+        {#if $isNotificationVisible}
+          {#if Notification}
+            <svelte:component this={Notification}/>
+          {/if}
+        {/if}
       </Route>
     </Router>
   </div>
