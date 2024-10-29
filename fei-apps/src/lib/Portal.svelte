@@ -6,6 +6,9 @@
         console.log("Portal loaded.");
     });
 
+    //TODO Chat history listener
+    // pripadne viacero chatov,
+
 </script>
 
 <div
@@ -28,19 +31,22 @@
                 <div class="chat-container">
                     <div class="chat-history" id="chatHistory">
 
+                        <!-- each a historia vo firestore? podobne ako notes  -->
+
                         <div class="message bot">
                             <div class="profile-pic">
-                                <img src="avatar.png"/>  <!-- TODO dorobit -->
+                                <img src="avatar.png"/>
                             </div>
                             <div class="message-content">Ahoj {$loggedUser.displayName.split(" ")[0]}! Ako Ti môžem pomôcť?</div>
                         </div>
 
+                        <!--
                         <div class="message user">
                             <div class="profile-pic">
                                 <img src="{$loggedUser.photoURL}"/>
                             </div>
                             <div class="message-content">Potrebujem vytvoriť modálne chatovacie okno.</div>
-                        </div>
+                        </div> -->
 
                     </div>
                 </div>

@@ -11,7 +11,6 @@
 
     import { isDarkModeEnabled , loggedIn, loggedUser , currentApp , isChatModalOpen } from "../stores";
 
-
     export let isProfileInfoCardOpen = false;
 
     let isNavbarOpen = false;
@@ -91,6 +90,8 @@
 
         //TODO zistit, ci to nie je prikaz
 
+
+        //Otvorenie chatu a pridanie query do chatu
         isChatModalOpen.set(true);
 
         const response = await fetch('http://localhost:8000/generateResponse', {

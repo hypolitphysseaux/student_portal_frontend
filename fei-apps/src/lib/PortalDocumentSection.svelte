@@ -5,10 +5,10 @@
         isDarkModeEnabled,
         isNotificationVisible,
         currentApp,
-        notificationText
+        notificationText, loggedUser
     } from "../stores";
 
-    import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+    import { getStorage, ref, uploadBytesResumable , getDownloadURL } from "firebase/storage";
     import { auth } from "../firebase";
 
     const storage = getStorage();
@@ -34,9 +34,24 @@
     });
 
 
+    async function syncDocument( user , document ){
 
+        const response = await fetch('http://localhost:8000/syncDocument', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user: user.uid ,
+                document: document
+            })
+        });
 
-    function uploadDocument(){
+        const data = await response.json();
+        console.log(data);
+    }
+
+    async function uploadDocument(){
         const file = documentInput.files[0];
         const label = document.getElementById("document-file-upload");
 
@@ -62,13 +77,19 @@
             (error) => {
                 console.error('Chyba pri nahrávaní dokumentu:', error); //TODO label
             },
-            () => {
+            async () => {
                 progress = "";
+
+                const downloadUrl = await getDownloadURL(storageRef);
 
                 //Notification
                 requestAnimationFrame(() => {
                     notificationText.set("Dokument bol úspešne nahratý.");
                     isNotificationVisible.set(true);
+
+                    //Sync document with vector database
+                    syncDocument( $loggedUser , downloadUrl );
+
                     setTimeout(() => {
                         notificationText.set("");
                         isNotificationVisible.set(false);
