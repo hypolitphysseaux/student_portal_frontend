@@ -40,13 +40,13 @@
                             <div class="message-content">Ahoj {$loggedUser.displayName.split(" ")[0]}! Ako Ti môžem pomôcť?</div>
                         </div>
 
-                        <!--
+
                         <div class="message user">
                             <div class="profile-pic">
                                 <img src="{$loggedUser.photoURL}"/>
                             </div>
-                            <div class="message-content">Potrebujem vytvoriť modálne chatovacie okno.</div>
-                        </div> -->
+                            <div class="message-content">Potrebujem vytvoriť AI pomocníka</div>
+                        </div>
 
                     </div>
                 </div>

@@ -34,7 +34,7 @@
     });
 
 
-    async function syncDocument( user , document ){
+    async function syncDocument( user , document , type ){
 
         const response = await fetch('http://localhost:8000/syncDocument', {
             method: 'POST',
@@ -43,7 +43,8 @@
             },
             body: JSON.stringify({
                 user: user.uid ,
-                document: document
+                document: document ,
+                type: type
             })
         });
 
@@ -61,7 +62,7 @@
         }
 
         fileName = file.name;
-        //TODO pripony??
+        const fileType = fileName.split(".")[1];
 
         // 1. Vytvorte referenciu na umiestnenie dokumentu v Storage
         const storageRef = ref(storage, `users/${auth.currentUser.uid}/${fileName}`);
@@ -84,11 +85,11 @@
 
                 //Notification
                 requestAnimationFrame(() => {
-                    notificationText.set("Dokument bol úspešne nahratý.");
+                    notificationText.set("Dokument bol úspešne nahraný.");
                     isNotificationVisible.set(true);
 
                     //Sync document with vector database
-                    syncDocument( $loggedUser , downloadUrl );
+                    syncDocument( $loggedUser , downloadUrl , fileType );
 
                     setTimeout(() => {
                         notificationText.set("");
