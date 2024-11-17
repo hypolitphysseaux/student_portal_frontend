@@ -15,5 +15,6 @@ export const currentApp = writable("");
 
 //Portal
 export const isChatModalOpen = writable(false);
+export const isChatListOpen = writable(false);
 export const currentChat = writable("");
 export const isTutorialActive = writable(true);

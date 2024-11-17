@@ -1,9 +1,15 @@
 <script lang="ts">
     import { onMount , onDestroy } from "svelte";
-    import { isDarkModeEnabled, isChatModalOpen, loggedUser, currentChat } from "../stores";
+    import {
+        isDarkModeEnabled,
+        isChatModalOpen,
+        loggedUser,
+        currentChat,
+        isChatListOpen
+    } from "../stores";
 
     //FIRESTORE
-    import { doc, getDoc, onSnapshot, updateDoc, arrayUnion, increment, setDoc } from "firebase/firestore";
+    import { doc, getDoc, onSnapshot, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
     import { db } from "../firebase";
 
     import { v4 as uuidv4 } from 'uuid';
@@ -31,7 +37,8 @@
                                 message: "Ahoj "+ $loggedUser.displayName.split(" ")[0] +"! Ako Ti môžem pomôcť?",
                                 timestamp: new Date()
                             }
-                        ]
+                        ],
+                        name: "Nový chat"
                     }
             });
 
@@ -47,8 +54,8 @@
         //Set up message listener
         messageListener = onSnapshot(doc(db, "chats", $loggedUser.uid), (d) => {
             if (d.exists()){
+                listOfChats = d.data();
                 chatHistory = d.data()[$currentChat].history;
-                console.log(chatHistory);
             }
         });
 
@@ -61,6 +68,30 @@
         chatHistory = [];
         messageListener();
     });
+
+    async function addNewChat(){
+        await updateDoc(doc(db, "chats", $loggedUser.uid), {
+            [uuidv4()]:
+                {
+                    history: [
+                        {
+                            sender: "bot",
+                            message: "Ahoj "+ $loggedUser.displayName.split(" ")[0] +"! Ako Ti môžem pomôcť?",
+                            timestamp: new Date()
+                        }
+                    ],
+                    name: "Nový chat"
+                }
+        });
+    }
+
+    async function deleteChat(){
+        //TODO
+    }
+
+    async function renameChat(){
+        //TODO , tak ako addNewChat , iba zmenit uuid a neupdateovat history
+    }
 
     function scrollChatToBottom() {
         const chatHistory = document.getElementById("chatHistory");
@@ -88,7 +119,37 @@
         class:dark-mode={$isDarkModeEnabled}
 >
 
-    <!-- Chat -->
+    <!-- Chat List -->
+    {#if $isChatListOpen}
+        <div class="modal-list">
+            <div class="modal-content">
+                <!-- Close List button -->
+                <div class="my-button">
+                    <md-icon-button on:click={() => { isChatListOpen.set(false) }}>
+                        <i class='bx bx-x'></i>
+                    </md-icon-button>
+                </div>
+
+                <!-- Add new chat button -->
+                <button
+                        class="add-btn"
+                        on:click={addNewChat}
+                >
+                    <i class='bx bx-plus'></i>
+                    Nový chat
+                </button>
+
+                <div class="chat-list">
+                    {#each Object.keys(listOfChats) as key}
+                        <label>{listOfChats[key].name}</label>
+                    {/each}
+                </div>
+
+            </div>
+        </div>
+    {/if}
+
+    <!-- Chat Modal-->
     {#if $isChatModalOpen}
         <div class="modal" id="chatModal">
             <div class="modal-content">
@@ -157,6 +218,57 @@
 
       width: 100%;
       height: 100px;
+    }
+
+    //List of chats
+    .portal-wrapper .modal-list{
+      display: flex;
+      position: fixed;
+      top: 110px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      width: 400px;
+      max-width: 90%;
+      height: 300px;
+      background-color: rgba(0, 0, 0, 0.00001);
+      z-index: 999;
+      pointer-events: none;
+      box-shadow: var(--box-shadow);
+    }
+
+    .portal-wrapper .modal-list .modal-content {
+      width: 100%;
+      height: 100%;
+      background-color: var(--note-text-area-background);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      position: relative;
+      pointer-events: all;
+    }
+
+    .portal-wrapper .modal-list .modal-content .add-btn{
+      position: absolute;
+      top: 10px;
+      left: 10px;
+
+      display: inline-block;
+      background: #2b6209;
+      color: #fff;
+      font-size: 14px;
+      border-radius: 8px;
+      padding: 8px 15px;
+      border: none;
+    }
+
+    .portal-wrapper .modal-list .modal-content .add-btn i{
+      transform: translateY(1px);
+    }
+
+    .portal-wrapper .modal-list .modal-content .add-btn:hover{
+      background: rgba(43, 98, 9, 0.95);
+      transform: scale(1.02);
+      cursor: pointer;
     }
 
     //Modal CHAT

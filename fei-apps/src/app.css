@@ -34,7 +34,7 @@
   --card-status-border: #fff;
   --profile-card-background: linear-gradient(90deg, ghostwhite, #fff, ghostwhite);
   --note-hover: 0 10px 15px rgba(0, 0, 0, .3);
-  --note-text-area-background: #eff1f2;
+  --note-text-area-background: rgba(239, 241, 242, 0.5);
   --dotted-background-with-opacity: radial-gradient(circle, rgba(210, 210, 210, .5) 2px, rgba(250, 250, 250, 0.2) 0px);
   --setting-border: 1px solid rgba(29, 29, 29, 0.6);
 

@@ -9,7 +9,15 @@
     import '@material/web/iconbutton/icon-button.js';
     import '@material/web/fab/fab.js';
 
-    import { isDarkModeEnabled , loggedIn, loggedUser , currentApp , isChatModalOpen, currentChat, isTutorialActive } from "../stores";
+    import {
+        isDarkModeEnabled ,
+        loggedIn, loggedUser ,
+        currentApp ,
+        isChatModalOpen,
+        currentChat,
+        isTutorialActive,
+        isChatListOpen
+    } from "../stores";
 
     export let isProfileInfoCardOpen = false;
 
@@ -195,6 +203,13 @@
             <!-- Portal search -->
 
             <div class="search">
+                <!-- Chat list button -->
+                <div class="my-button list">
+                    <md-icon-button on:click={() => { isChatListOpen.set(true) }}>
+                        <i class='bx bx-list-ul'></i>
+                    </md-icon-button>
+                </div>
+
                 <!-- Chat history button -->
                 <div class="my-button history">
                     <md-icon-button on:click={() => { isChatModalOpen.set(true) }}>
@@ -418,6 +433,11 @@
     .search .history{
       left: 0px;
       translate: -45px -50%;
+    }
+
+    .search .list{
+      left: 0px;
+      translate: -85px -50%;
     }
 
     .navbar nav {
