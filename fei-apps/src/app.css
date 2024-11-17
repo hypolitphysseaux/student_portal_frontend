@@ -43,6 +43,8 @@
   --bot-message-text-color: #000;
   --user-message-background: rgba(49, 96, 184);
   --user-message-text-color: #fff;
+  --timestamp-color-bot: rgba(75, 74, 74, 0.75);
+  --timestamp-color-user: rgba(255, 255, 255, 0.75);
 
   /* Not used */
   --color-gradient: linear-gradient(90deg, #eee, #f9f9f9, #eee);
@@ -87,6 +89,8 @@
   --bot-message-text-color: #fff;
   --user-message-background: #063183;
   --user-message-text-color: #fff;
+  --timestamp-color-bot: rgba(245, 245, 245, 0.5);
+  --timestamp-color-user: rgba(245, 245, 245, 0.5);
 
   /* Not used */
   --color-gradient: linear-gradient(to right, #656871 0%, #888b94 20%, #414247, #656871 100%);

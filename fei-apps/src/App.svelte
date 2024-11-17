@@ -11,7 +11,7 @@
   import AppFooter from "./lib/AppFooter.svelte";
 
   //Stores
-  import { currentApp , isNotificationVisible } from "./stores";
+  import { currentApp , isNotificationVisible , isTutorialActive } from "./stores";
 
   //Dynamicke nacitanie komponentov po prihlaseni
   let
@@ -330,10 +330,12 @@
         {/if}
 
         <!-- Portal Tutorial -->
-        {#if PortalTutorial}
-          <svelte:component
-                  this={PortalTutorial}
-          />
+        {#if $isTutorialActive}
+          {#if PortalTutorial}
+            <svelte:component
+                    this={PortalTutorial}
+            />
+          {/if}
         {/if}
 
         <!-- Portal -->

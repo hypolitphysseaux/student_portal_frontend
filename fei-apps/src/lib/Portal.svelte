@@ -1,14 +1,86 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-    import { isDarkModeEnabled, isChatModalOpen, loggedUser } from "../stores";
+    import { onMount , onDestroy } from "svelte";
+    import { isDarkModeEnabled, isChatModalOpen, loggedUser, currentChat } from "../stores";
 
-    onMount(() => {
+    //FIRESTORE
+    import { doc, getDoc, onSnapshot, updateDoc, arrayUnion, increment, setDoc } from "firebase/firestore";
+    import { db } from "../firebase";
+
+    import { v4 as uuidv4 } from 'uuid';
+
+    let listOfChats :any;
+    let chatHistory :any;
+    let messageListener :any;
+
+    onMount(async () => {
         console.log("Portal loaded.");
+
+        //Get my chats
+        const myChats = await getDoc(doc(db, "chats", $loggedUser.uid));
+        if (myChats.exists()){
+            listOfChats = myChats.data();
+        }
+
+        if (!myChats.exists()){
+            await setDoc(doc(db, "chats", $loggedUser.uid), {
+                [uuidv4()]:
+                    {
+                        history: [
+                            {
+                                sender: "bot",
+                                message: "Ahoj "+ $loggedUser.displayName.split(" ")[0] +"! Ako Ti môžem pomôcť?",
+                                timestamp: new Date()
+                            }
+                        ]
+                    }
+            });
+
+            const newChat = await getDoc(doc(db, "chats", $loggedUser.uid));
+            listOfChats = newChat.data();
+        }
+
+
+        //Set currentChat
+        currentChat.set(Object.keys(listOfChats)[0]);
+
+
+        //Set up message listener
+        messageListener = onSnapshot(doc(db, "chats", $loggedUser.uid), (d) => {
+            if (d.exists()){
+                chatHistory = d.data()[$currentChat].history;
+                console.log(chatHistory);
+            }
+        });
+
+
+
     });
 
-    //TODO Chat history listener
-    // pripadne viacero chatov,
+    onDestroy(async () => {
+        listOfChats = {};
+        chatHistory = [];
+        messageListener();
+    });
 
+    function scrollChatToBottom() {
+        const chatHistory = document.getElementById("chatHistory");
+
+        if (chatHistory){
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+    }
+
+    function formatTimestamp(timestamp) {
+        const date = new Date(timestamp.seconds * 1000);
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    // Automatically scroll chat to bottom after opening
+    $: if ($isChatModalOpen) {
+        setTimeout(() => {
+            scrollChatToBottom();
+        }, 50);
+    }
 </script>
 
 <div
@@ -30,23 +102,34 @@
 
                 <div class="chat-container">
                     <div class="chat-history" id="chatHistory">
+                        {#each chatHistory as message}
+                            <!-- Bot messages -->
+                            {#if (message.sender == "bot")}
+                                <div class="message bot">
+                                    <div class="profile-pic">
+                                        <img src="avatar.png"/>
+                                    </div>
+                                    <div class="message-content">
+                                        <div class="timestamp others">{formatTimestamp(message.timestamp)}</div>
+                                        {message.message}
+                                    </div>
+                                </div>
+                            {/if}
 
-                        <!-- each a historia vo firestore? podobne ako notes  -->
+                            <!-- User messages -->
+                            {#if (message.sender == "user")}
+                                <div class="message user">
 
-                        <div class="message bot">
-                            <div class="profile-pic">
-                                <img src="avatar.png"/>
-                            </div>
-                            <div class="message-content">Ahoj {$loggedUser.displayName.split(" ")[0]}! Ako Ti môžem pomôcť?</div>
-                        </div>
-
-
-                        <div class="message user">
-                            <div class="profile-pic">
-                                <img src="{$loggedUser.photoURL}"/>
-                            </div>
-                            <div class="message-content">Potrebujem vytvoriť AI pomocníka</div>
-                        </div>
+                                    <div class="profile-pic">
+                                        <img src="{$loggedUser.photoURL}"/>
+                                    </div>
+                                    <div class="message-content">
+                                        <div class="timestamp me">{formatTimestamp(message.timestamp)}</div>
+                                        {message.message}
+                                    </div>
+                                </div>
+                            {/if}
+                        {/each}
 
                     </div>
                 </div>
@@ -57,7 +140,7 @@
 
 
     <div class="info-section">
-
+        <!-- TODO predmety, rozvrh a podobne -->
     </div>
 </div>
 
@@ -83,7 +166,7 @@
       top: 110px;
       left: 50%;
       transform: translate(-50%, 0);
-      width: 700px;
+      width: 1200px;
       max-width: 90%;
       height: 400px;
       background-color: rgba(0, 0, 0, 0.00001);
@@ -137,11 +220,13 @@
     .message {
       display: flex;
       align-items: flex-start;
+      //flex-direction: column;
       gap: 10px;
       padding: 10px 15px;
       border-radius: 8px;
       max-width: 70%;
       word-wrap: break-word;
+      word-break: break-word;
       font-size: 16px;
     }
 
@@ -180,5 +265,19 @@
     .message.user .message-content {
       background-color: var(--user-message-background);
       color: var(--user-message-text-color);
+    }
+
+    // Timestamp styles
+    .timestamp.me {
+      font-size: 11px;
+      color: var(--timestamp-color-user);
+      align-self: flex-end;
+
+    }
+
+    .timestamp.others {
+      font-size: 11px;
+      color: var(--timestamp-color-bot);
+      align-self: flex-end;
     }
 </style>

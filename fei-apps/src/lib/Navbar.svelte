@@ -4,12 +4,12 @@
     import { navigate } from "svelte-routing";
 
     import { signOut } from "firebase/auth";
-    import { doc, increment, updateDoc } from "firebase/firestore";
+    import {arrayUnion, doc, increment, updateDoc} from "firebase/firestore";
 
     import '@material/web/iconbutton/icon-button.js';
     import '@material/web/fab/fab.js';
 
-    import { isDarkModeEnabled , loggedIn, loggedUser , currentApp , isChatModalOpen } from "../stores";
+    import { isDarkModeEnabled , loggedIn, loggedUser , currentApp , isChatModalOpen, currentChat, isTutorialActive } from "../stores";
 
     export let isProfileInfoCardOpen = false;
 
@@ -35,12 +35,23 @@
     } // Znizi pocet online userov o 1
     // ! limitacia, iba raz za sekundu
 
+    function scrollChatToBottom() {
+        const chatHistory = document.getElementById("chatHistory");
+
+        if (chatHistory){
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+    }
+
     async function logOut(){
 
         //Ak je spustená aplikácia, neodhlasujeme - iba presmerujeme na dashboard
         if ($currentApp){
             currentApp.set("");
             isChatModalOpen.set(false);
+
+            isTutorialActive.set(true); // TODO Prerobit na preference
+
             navigate("/dashboard" , { replace: true });
             return;
         }
@@ -93,13 +104,29 @@
 
         //Otvorenie chatu a pridanie query do chatu
         isChatModalOpen.set(true);
+        await updateDoc(doc(db, "chats", $loggedUser.uid), {
+            [`${$currentChat}.history`]: arrayUnion({
+                    sender: "user",
+                    message: query_input.value,
+                    timestamp: new Date()
+                })
+        });
+
+        setTimeout(() => {
+            scrollChatToBottom();
+            query_input.value = "";
+        }, 50);
 
         const response = await fetch('http://localhost:8000/generateResponse', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ query: query_input.value })
+            body: JSON.stringify(
+                {
+                    query: query_input.value,
+                    user: $loggedUser.uid
+                })
         });
 
         const data = await response.json();

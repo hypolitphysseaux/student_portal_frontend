@@ -1,10 +1,17 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { isDarkModeEnabled } from "../stores";
+    import { isDarkModeEnabled, isTutorialActive } from "../stores";
 
     onMount(() => {
         console.log("Portal tutorial loaded.");
     });
+
+
+    async function closeTutorial(){
+        //TODO remember me option
+
+        isTutorialActive.set(false);
+    }
 </script>
 
 <div
@@ -16,7 +23,10 @@
 
     <div class="tutorial-buttons">
         <!-- Close Tutorial -->
-        <button class="close-tutorial">
+        <button
+                class="close-tutorial"
+                on:click={closeTutorial}
+        >
             Rozumiem
         </button>
 
