@@ -9,12 +9,12 @@
     } from "../stores";
 
     //FIRESTORE
-    import { doc, getDoc, onSnapshot, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
+    import { doc, getDoc, onSnapshot, updateDoc, arrayUnion, setDoc, deleteField } from "firebase/firestore";
     import { db } from "../firebase";
 
     import { v4 as uuidv4 } from 'uuid';
 
-    let listOfChats :any;
+    let listOfChats = {};
     let chatHistory :any;
     let messageListener :any;
 
@@ -24,7 +24,7 @@
         //Get my chats
         const myChats = await getDoc(doc(db, "chats", $loggedUser.uid));
         if (myChats.exists()){
-            listOfChats = myChats.data();
+            listOfChats = myChats.data() || {};
         }
 
         if (!myChats.exists()){
@@ -85,8 +85,20 @@
         });
     }
 
-    async function deleteChat(){
-        //TODO
+    async function deleteChat(key){
+        //Odstranujem aktualny chat
+        if (key == $currentChat){
+            //TODO ak odstranim aktualny, tak treba zmenit currentChat store
+            return;
+        }
+
+        try {
+            await updateDoc(doc(db, "chats", $loggedUser.uid), {
+                [key]: deleteField()
+            });
+        } catch (e){
+            console.error("Error deleting chat: ", e);
+        }
     }
 
     async function renameChat(){
@@ -141,7 +153,31 @@
 
                 <div class="chat-list">
                     {#each Object.keys(listOfChats) as key}
-                        <label>{listOfChats[key].name}</label>
+                        <div class="chat-item">
+                            <div class="chat-timestamp">
+                                {
+                                    formatTimestamp(
+                                        listOfChats[key].history[listOfChats[key].history.length - 1].timestamp
+                                    )
+                                }
+                            </div>
+                            <label>{listOfChats[key].name}</label>
+
+                            <!-- Rename chat button -->
+                            <div class="rename-button">
+                                <md-icon-button on:click={() => { renameChat() }}>
+                                    <i class='bx bxs-pencil'></i>
+                                </md-icon-button>
+                            </div>
+
+                            <!-- Delete chat button -->
+                            <div class="delete-chat-button">
+                                <md-icon-button on:click={() => { deleteChat(key) }}>
+                                    <i class='bx bxs-trash' ></i>
+                                </md-icon-button>
+                            </div>
+
+                        </div>
                     {/each}
                 </div>
 
@@ -269,6 +305,47 @@
       background: rgba(43, 98, 9, 0.95);
       transform: scale(1.02);
       cursor: pointer;
+    }
+
+    .portal-wrapper .modal-list .modal-content .chat-list{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+
+      margin-top: 70px;
+    }
+
+    .portal-wrapper .modal-list .modal-content .chat-list .chat-item{
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      padding: 2px 45px;
+    }
+
+    .portal-wrapper .modal-list .modal-content .chat-list .chat-item:hover{
+      border: 1px solid var(--timestamp-color-bot);
+    }
+
+    .portal-wrapper .modal-list .modal-content .chat-list .chat-item .chat-timestamp{
+      font-size: 11px;
+      color: var(--navbar-icon-color);
+    }
+
+    .portal-wrapper .modal-list .modal-content .chat-list .chat-item label{
+      color: var(--navbar-icon-color);
+    }
+
+    .portal-wrapper .modal-list .modal-content .chat-list .chat-item .rename-button i{
+      color: var(--navbar-icon-color);
+    }
+
+    .portal-wrapper .modal-list .modal-content .chat-list .chat-item .delete-chat-button{
+      --md-icon-button-hover-state-layer-color: red;
+    }
+    .portal-wrapper .modal-list .modal-content .chat-list .chat-item .delete-chat-button i{
+      color: indianred;
     }
 
     //Modal CHAT
