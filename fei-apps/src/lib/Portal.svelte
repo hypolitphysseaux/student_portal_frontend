@@ -153,31 +153,62 @@
 
                 <div class="chat-list">
                     {#each Object.keys(listOfChats) as key}
-                        <div class="chat-item">
-                            <div class="chat-timestamp">
-                                {
-                                    formatTimestamp(
-                                        listOfChats[key].history[listOfChats[key].history.length - 1].timestamp
-                                    )
-                                }
-                            </div>
-                            <label>{listOfChats[key].name}</label>
+                        {#if (key == $currentChat)}
+                            <div class="chat-item active-chat">
+                                <div class="chat-timestamp">
+                                    {
+                                        formatTimestamp(
+                                            listOfChats[key].history[listOfChats[key].history.length - 1].timestamp
+                                        )
+                                    }
+                                </div>
+                                <label>{listOfChats[key].name}</label>
 
-                            <!-- Rename chat button -->
-                            <div class="rename-button">
-                                <md-icon-button on:click={() => { renameChat() }}>
-                                    <i class='bx bxs-pencil'></i>
-                                </md-icon-button>
-                            </div>
+                                <!-- Rename chat button -->
+                                <div class="rename-button">
+                                    <md-icon-button on:click={() => { renameChat() }}>
+                                        <i class='bx bxs-pencil'></i>
+                                    </md-icon-button>
+                                </div>
 
-                            <!-- Delete chat button -->
-                            <div class="delete-chat-button">
-                                <md-icon-button on:click={() => { deleteChat(key) }}>
-                                    <i class='bx bxs-trash' ></i>
-                                </md-icon-button>
-                            </div>
+                                <!-- Delete chat button -->
+                                <div class="delete-chat-button">
+                                    <md-icon-button on:click={() => { deleteChat(key) }}>
+                                        <i class='bx bxs-trash' ></i>
+                                    </md-icon-button>
+                                </div>
 
-                        </div>
+                            </div>
+                        {:else}
+                            <div
+                                    class="chat-item"
+                                    on:click={ () => { currentChat.set(key); }}
+                            >
+                                <div class="chat-timestamp">
+                                    {
+                                        formatTimestamp(
+                                            listOfChats[key].history[listOfChats[key].history.length - 1].timestamp
+                                        )
+                                    }
+                                </div>
+                                <label>{listOfChats[key].name}</label>
+
+                                <!-- Rename chat button -->
+                                <div class="rename-button">
+                                    <md-icon-button on:click={() => { renameChat() }}>
+                                        <i class='bx bxs-pencil'></i>
+                                    </md-icon-button>
+                                </div>
+
+                                <!-- Delete chat button -->
+                                <div class="delete-chat-button">
+                                    <md-icon-button on:click={() => { deleteChat(key) }}>
+                                        <i class='bx bxs-trash' ></i>
+                                    </md-icon-button>
+                                </div>
+
+                            </div>
+                        {/if}
                     {/each}
                 </div>
 
@@ -322,6 +353,11 @@
       gap: 20px;
 
       padding: 2px 45px;
+    }
+
+    .portal-wrapper .modal-list .modal-content .chat-list .chat-item.active-chat{
+      background-color: rgba(88, 92, 98, 0.15);
+      border: 1px solid green;
     }
 
     .portal-wrapper .modal-list .modal-content .chat-list .chat-item:hover{
