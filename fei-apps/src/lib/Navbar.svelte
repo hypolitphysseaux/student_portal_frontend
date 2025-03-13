@@ -178,9 +178,17 @@
     >
         <div class="logo">
             {#if !$isDarkModeEnabled}
-                <img src="logo.svg">
+                <!--  old FEI
+                <img src="logo.svg">-->
+
+                <!-- UMIKT logo -->
+                <img src="UMIKT-colour.svg">
             {:else}
-                <img src="logo-dark-mode.svg">
+                <!--
+                <img src="logo-dark-mode.svg">-->
+
+                <!-- UMIKT logo -->
+                <img src="UMIKT-colour.svg">
             {/if}
 
             {#if (!$currentApp)}

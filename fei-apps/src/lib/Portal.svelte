@@ -47,7 +47,7 @@
         }
 
 
-        //Set currentChat
+        //Set currentChat //TODO najmladsi chat?
         currentChat.set(Object.keys(listOfChats)[0]);
 
 
@@ -89,6 +89,7 @@
         //Odstranujem aktualny chat
         if (key == $currentChat){
             //TODO ak odstranim aktualny, tak treba zmenit currentChat store
+            // Pri zmene chatu je potreba aj zmena historie chatu
             return;
         }
 
@@ -103,6 +104,12 @@
 
     async function renameChat(){
         //TODO , tak ako addNewChat , iba zmenit uuid a neupdateovat history
+    }
+
+    async function setActiveChat(key){
+        currentChat.set(key);
+
+        //TODO potreba aktualizovat aj historiu, tj prepisat aktualnu historiu - historiou aktualneho chatu (nie je to to iste)
     }
 
     function scrollChatToBottom() {
@@ -182,7 +189,7 @@
                         {:else}
                             <div
                                     class="chat-item"
-                                    on:click={ () => { currentChat.set(key); }}
+                                    on:click={ () => { setActiveChat(key) }}
                             >
                                 <div class="chat-timestamp">
                                     {
