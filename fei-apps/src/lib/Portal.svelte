@@ -10,16 +10,40 @@
 
     //FIRESTORE
     import { doc, getDoc, onSnapshot, updateDoc, arrayUnion, setDoc, deleteField } from "firebase/firestore";
-    import { db } from "../firebase";
+    import { auth, db } from "../firebase";
 
     import { v4 as uuidv4 } from 'uuid';
+    import { getStorage, ref, listAll } from "firebase/storage";
 
+    //STORAGE
+    const storage = getStorage();
+
+    //LISTS
     let listOfChats = {};
+    let listOfMyDocs = {};
+    let listOfGeneralDocs = {};
+
     let chatHistory :any;
     let messageListener :any;
 
+    let isMyDocsShown = false;
+    let isGeneralDocsShown = false;
+
     onMount(async () => {
         console.log("Portal loaded.");
+
+        //Get general documents TODO listener
+        const storageRefGeneral = ref(storage, `documents/general`);
+        const resultGeneral = await listAll(storageRefGeneral);
+
+        listOfGeneralDocs = resultGeneral.items; // zatial iba pocet
+
+        //Get my documents TODO listener
+        const storageRefPersonal = ref(storage, `users/${auth.currentUser.uid}`);
+        const resultPersonal = await listAll(storageRefPersonal);
+
+        listOfMyDocs = resultPersonal.items; // zatial iba pocet
+
 
         //Get my chats
         const myChats = await getDoc(doc(db, "chats", $loggedUser.uid));
@@ -123,6 +147,14 @@
     function formatTimestamp(timestamp) {
         const date = new Date(timestamp.seconds * 1000);
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function showOrHideMyDocs(){
+        isMyDocsShown = !isMyDocsShown;
+    }
+
+    function showOrHideGeneralDocs(){
+        isGeneralDocsShown = !isGeneralDocsShown;
     }
 
     // Automatically scroll chat to bottom after opening
@@ -275,7 +307,85 @@
 
 
     <div class="info-section">
-        <!-- TODO predmety, rozvrh a podobne -->
+        <!-- List of global documents -->
+        <div class="personal-documents">
+            <div class="heading">
+                <i class='bx bx-globe'></i>
+                Zoznam všeobecných dokumentov
+            </div>
+            <div class="number">Počet nahratých dokumentov: <strong>{listOfGeneralDocs.length}</strong></div>
+
+            <!-- Show / Hide general docs button -->
+            {#if listOfGeneralDocs.length > 0}
+                <button
+                        class="show-docs-button"
+                        class:is-shown={isGeneralDocsShown}
+                        on:click={showOrHideGeneralDocs}
+                >
+                    {#if (isGeneralDocsShown)}
+                        <i class='bx bxs-show'></i>
+                    {:else}
+                        <i class='bx bxs-hide'></i>
+                    {/if}
+                </button>
+            {/if}
+
+            <!-- Table of general documents  //TODO dizajn-->
+            {#if (isGeneralDocsShown)}
+                {#each Object.keys(listOfGeneralDocs) as key}
+                    <div style="margin-top: 10px; margin-left: 70px">
+                        {listOfGeneralDocs[key]}
+                    </div>
+                {/each}
+            {/if}
+        </div>
+
+        <!-- List of personal documents -->
+        <div class="personal-documents">
+            <div class="heading">
+                <i class='bx bx-fingerprint'></i>
+                Zoznam osobných dokumentov
+            </div>
+            <div class="number">Počet nahratých dokumentov: <strong>{listOfMyDocs.length}</strong></div>
+
+            <!-- Show / Hide my docs button -->
+            {#if listOfMyDocs.length > 0}
+                <button
+                        class="show-docs-button"
+                        class:is-shown={isMyDocsShown}
+                        on:click={showOrHideMyDocs}
+                >
+                    {#if (isMyDocsShown)}
+                        <i class='bx bxs-show'></i>
+                    {:else}
+                        <i class='bx bxs-hide'></i>
+                    {/if}
+                </button>
+            {/if}
+
+
+            <!-- Table of my documents  //TODO dizajn-->
+            {#if (isMyDocsShown)}
+                {#each Object.keys(listOfMyDocs) as key}
+                    <div style="margin-top: 10px; margin-left: 70px">
+                        {listOfMyDocs[key]}
+                    </div>
+                {/each}
+            {/if}
+        </div>
+
+        <!-- Shared section  // TODO-->
+        <div class="personal-documents">
+            <!-- My shared documents -->
+
+            <div class="heading">
+                <i class='bx bx-share-alt'></i>
+                Vami zdieľané dokumenty
+            </div>
+            <div class="number">Počet zdieľaných dokumentov: <strong>0</strong></div>
+        </div>
+
+
     </div>
 </div>
 
@@ -283,16 +393,76 @@
     .portal-wrapper{
       background: var(--welcome-section-background);
 
+      position: relative;
       width: 100%;
-      height: 100vh;
+      height: 150vh;
     }
 
+    //Info Section
     .portal-wrapper .info-section{
-      ///background: rgba(100, 191, 227, 0.1);
+      background: rgba(100, 191, 227, 0.1);
+
+      width: 100%;
+      height: 500px;
+      padding: 15px 9%;
+
+      position: absolute;
+      top: 100px;
+    }
+
+    .portal-wrapper .info-section .personal-documents{
+      //background: rgba(227, 100, 134, 0.1);
+      position: relative;
 
       width: 100%;
       height: 100px;
     }
+
+    .portal-wrapper .info-section .personal-documents .heading{
+      //position: absolute;
+      text-align: left;
+      color: var(--navbar-icon-color);
+      font-size: 25px;
+      margin-top: 30px;
+      margin-left: 50px;
+    }
+
+    .portal-wrapper .info-section .personal-documents .number{
+      font-size: 15px;
+      margin-top: 5px;
+      margin-left: 80px;
+
+      color: var(--color-info);
+    }
+
+    .show-docs-button{
+      position: absolute;
+      top: 0px;
+      left: 10px;
+
+      display: inline-block;
+      background: rgba(193, 9, 49, 0.5);
+      color: #fff;
+      //font-size: 14px;
+      border-radius: 50%;
+      padding: 8px;
+      border: none;
+    }
+
+    .show-docs-button.is-shown{
+      background: rgba(43, 98, 9, 0.5);
+    }
+
+    .show-docs-button i{
+      transform: translateY(1px);
+      font-size: 15px;
+    }
+
+    .show-docs-button:hover{
+      transform: scale(1.02);
+      cursor: pointer;
+    }
+
 
     //List of chats
     .portal-wrapper .modal-list{
