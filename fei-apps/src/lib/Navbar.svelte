@@ -232,6 +232,7 @@
                         class="search"
                         id="query"
                         placeholder="Opýtajte sa ma na čokoľvek."
+                        on:click={() => { isChatModalOpen.set(true) }}
                         on:keydown={(e) => {
                             if (e.key === 'Enter') sendQuery();
                         }}

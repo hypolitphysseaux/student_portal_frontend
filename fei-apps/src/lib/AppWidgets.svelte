@@ -52,6 +52,7 @@
             <a href="https://ubytovanie.stuba.sk/new/sk/informacie/" target="_blank" class="btn">SPUSTIŤ</a>
         </div>
 
+        <!--
         <div class="box" in:fade={{ delay: 200 , duration: 250 }}>
             <i class='bx bxs-chess'></i>
             <h3>CHESS</h3>
@@ -72,6 +73,8 @@
             <p>Portál študijných materiálov...</p>
             <a on:click={startFeiResources} href="http://localhost:5174/" target="_blank" class="btn">SPUSTIŤ</a>
         </div>
+
+        -->
     </div>
 </div>
 
