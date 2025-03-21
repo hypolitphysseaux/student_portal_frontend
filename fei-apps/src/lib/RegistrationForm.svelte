@@ -113,6 +113,7 @@
             const docRef = await setDoc(doc(db, "userDetails", uid), {
                 aisId: aisId,
                 prefersDarkTheme: false,
+                role: "USER",
                 status: "offline"
             });
         } catch (e) {

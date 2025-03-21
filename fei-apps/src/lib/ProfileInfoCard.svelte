@@ -54,7 +54,14 @@
         </header>
 
         <div class="about">
-            <h2>{$loggedUser.displayName}<i class='bx bxs-badge-check'></i></h2>
+            <h2>
+                {$loggedUser.displayName}
+
+                <!-- Admin badge -->
+                {#if $loggedUser.role == "ADMIN"}
+                    <i class='bx bxs-badge-check'></i>
+                {/if}
+            </h2>
             <p>Informačné a komunikačné technológie</p>
         </div>
 
@@ -80,7 +87,7 @@
 
         <div class="tab-content active-tab-content" id="tab-1">
             <p>
-                Študent, admin pre API. 2 roc bc
+                Študent, admin pre IKT. 3 roc bc
             </p>
         </div>
 

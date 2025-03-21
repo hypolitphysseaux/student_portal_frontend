@@ -253,6 +253,10 @@
             {/if}
         </div>
 
+        <div class="role-label">
+            <label><strong>Vaša rola:</strong>{" "+ $loggedUser.role}</label>
+        </div>
+
         <div class="ais-id-label">
             <label><strong>AIS:</strong>{" " + $loggedUser.aisId}</label>
         </div>
@@ -374,6 +378,10 @@
 
     .ais-id-label{
         color: var(--navbar-icon-color);
+    }
+
+    .role-label{
+      color: var(--navbar-icon-color);
     }
 
     .time-center{
