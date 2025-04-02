@@ -108,6 +108,7 @@
 <div
         class="documents-wrapper"
         class:dark-mode={$isDarkModeEnabled}
+        class:admin-height={$loggedUser.role === "ADMIN"}
 >
     <div class="heading">
         Nahratie dokumentov
@@ -118,6 +119,20 @@
         V portáli môžete nahrať vlastné dokumenty, na ktoré sa môžete spýtať svojho AI pomocníka.
     </div>
 
+    <!-- Global document upload for admin -->
+    {#if $loggedUser.role == "ADMIN"}
+        <div class="document-pool-options">
+            <label for="storage-select" class="">
+                Vyberte úložisko:
+                <i class='bx bxs-badge-check'></i>
+            </label>
+            <select id="storage-select" class="">
+                <option value="Test">documents/general</option>
+                <option value="Test2">Option2</option>
+                <option value="Test2">Option3</option>
+            </select>
+        </div>
+    {/if}
 
     <div class="file-upload-wrapper">
         <label
@@ -135,6 +150,7 @@
 
         </label>
         <input id="document-input" class="document-input" type="file">
+
 
         <!-- Proceed button -->
         <div
@@ -165,7 +181,6 @@
                 {progress}%
             </div>
         {/if}
-
     </div>
 
 
@@ -183,6 +198,10 @@
     width: 100%;
     height: 250px;
     box-shadow: var(--box-shadow);
+  }
+
+  .admin-height{
+    height: 350px;
   }
 
   .documents-wrapper .heading {
@@ -209,6 +228,29 @@
     gap: 10px;
 
     margin-top: 20px;
+  }
+
+  //Document pool options
+  .document-pool-options{
+    //background-color: rgba(100, 191, 227, 0.5);
+    display: flex;
+    margin-top: 25px;
+  }
+
+  .document-pool-options label {
+    font-weight: bold;
+    width: 200px;
+    color: var(--navbar-icon-color);
+  }
+
+  .document-pool-options select {
+    width: 500px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: var(--search-background);
+    cursor: pointer;
+    color: var(--navbar-icon-color);
   }
 
   .file-upload-wrapper .custom-file-upload{
