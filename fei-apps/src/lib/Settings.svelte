@@ -27,6 +27,14 @@
         isDarkModeEnabled.set(!$isDarkModeEnabled);
         //isDarkModeEnabled = !isDarkModeEnabled;
     }
+
+    async function addNewRole(){
+        return; //TODO
+    }
+
+    async function deleteRole(){
+        return; //TODO
+    }
 </script>
 
 <div
@@ -66,13 +74,15 @@
             </div>
         </div>
 
+        <!-- Language (not supported) -->
         <div class="setting">
             <div class="setting-title">
                 <label>Jazyk</label>
             </div>
-            <div class="setting-option"></div>
+            <div class="setting-option">slovenský</div>
         </div>
 
+        <!-- Profile -->
         <div class="setting">
             <div class="setting-title">
                 <label>Profil</label>
@@ -158,6 +168,38 @@
             <div class="setting-option" style="background: rgba(0, 0, 0, 0.2);"></div>
         </div>
 
+        <!-- Roles -->
+        <div class="setting">
+            <div class="setting-title">
+                <label>Roly</label>
+            </div>
+
+            <!-- TODO zoznam roli -->
+
+            <div class="setting-option" style="background: rgba(0, 0, 0, 0.2);">
+
+                {#if $loggedUser.role == "ADMIN"}
+                    <!-- Add new role button -->
+                    <button
+                            class="add-btn"
+                            on:click={addNewRole}
+                    >
+                        <i class='bx bx-plus'></i>
+                        Pridať novú rolu
+                    </button>
+
+                    <!-- Delete role button -->
+                    <button
+                            class="delete-btn"
+                            on:click={deleteRole}
+                    >
+                        <i class='bx bx-minus'></i>
+                        Odstrániť rolu
+                    </button>
+                {/if}
+            </div>
+        </div>
+
 
         <div class="close-settings"> <!-- TODO lepsie buttony, na ulozenie a vratenie sa
             TODO doriesit pozadie, ktore prekryva Nastavenia label
@@ -174,6 +216,7 @@
 
         <!-- Save button
         <a on:click={saveChanges} href="#" class="save-btn">ULOŽIŤ</a>-->
+
     </div>
 </div>
 
@@ -213,8 +256,8 @@
     .settings-container .settings{
       background: var(--dotted-background-with-opacity);
       background-size: 10px 10px;
-      height: 100%;
-      border-radius: 50px;
+      height: 150vh;
+      //border-radius: 50px;
       border: 3px solid rgba(0, 0, 0, 0.2);
       margin-top: 40px;
 
@@ -240,7 +283,7 @@
       }
 
       &:nth-child(3){
-        height: 100vh;
+        height: 70vh;
         align-items: start;
         border-bottom: none;
       }
@@ -268,6 +311,50 @@
       text-align: center;
 
       background: rgba(255, 255, 255, 0.2);
+    }
+
+    .settings-container .settings .setting .setting-option .add-btn{
+      //transform: translateY(2px);
+
+      display: inline-block;
+      background: #2b6209;
+      color: #fff;
+      font-size: 11px;
+      border-radius: 8px;
+      padding: 8px 15px;
+      border: none;
+    }
+
+    .settings-container .settings .setting .setting-option .add-btn i{
+      transform: translateY(1px);
+    }
+
+    .settings-container .settings .setting .setting-option .add-btn:hover{
+      background: rgba(43, 98, 9, 0.95);
+      transform: scale(1.02);
+      cursor: pointer;
+    }
+
+    .settings-container .settings .setting .setting-option .delete-btn{
+      //transform: translateY(2px);
+
+      display: inline-block;
+      background: indianred;
+      color: #fff;
+      font-size: 11px;
+      border-radius: 8px;
+      padding: 8px 15px;
+      border: none;
+    }
+
+    .settings-container .settings .setting .setting-option .delete-btn i{
+      transform: translateY(1px);
+    }
+
+    .settings-container .settings .setting .setting-option .delete-btn:hover{
+      background: rgba(205, 92, 92, 0.95);
+      transform: scale(1.02);
+      cursor: pointer;
     }
 
     .settings-container .settings .setting .setting-option .my-button{

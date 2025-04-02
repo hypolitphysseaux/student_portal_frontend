@@ -28,21 +28,22 @@
 
     let isMyDocsShown = false;
     let isGeneralDocsShown = false;
+    let isSharingNewDoc = false;
 
     onMount(async () => {
         console.log("Portal loaded.");
 
         //Get general documents TODO listener
         const storageRefGeneral = ref(storage, `documents/general`);
-        const resultGeneral = await listAll(storageRefGeneral);
+        const resultGeneral = await listAll(storageRefGeneral);  // Mozno nie vsetky??
 
-        listOfGeneralDocs = resultGeneral.items; // zatial iba pocet
+        listOfGeneralDocs = resultGeneral.items.map((itemRef) => itemRef.name);
 
         //Get my documents TODO listener
         const storageRefPersonal = ref(storage, `users/${auth.currentUser.uid}`);
         const resultPersonal = await listAll(storageRefPersonal);
 
-        listOfMyDocs = resultPersonal.items; // zatial iba pocet
+        listOfMyDocs = resultPersonal.items.map((itemRef) => itemRef.name);
 
 
         //Get my chats
@@ -94,6 +95,8 @@
     });
 
     async function addNewChat(){
+        //TODO max 3 chaty
+
         await updateDoc(doc(db, "chats", $loggedUser.uid), {
             [uuidv4()]:
                 {
@@ -136,6 +139,10 @@
         //TODO potreba aktualizovat aj historiu, tj prepisat aktualnu historiu - historiou aktualneho chatu (nie je to to iste)
     }
 
+    async function confirmShare(){
+        return;
+    }
+
     function scrollChatToBottom() {
         const chatHistory = document.getElementById("chatHistory");
 
@@ -155,6 +162,10 @@
 
     function showOrHideGeneralDocs(){
         isGeneralDocsShown = !isGeneralDocsShown;
+    }
+
+    function showOrHideShareDocumentModal(){
+        isSharingNewDoc = !isSharingNewDoc;
     }
 
     // Automatically scroll chat to bottom after opening
@@ -305,7 +316,57 @@
         </div>
     {/if}
 
+    <!-- Share New Document Modal WTF -->
+    {#if (isSharingNewDoc)}
+        <div class="share-modal">
+            <div class="modal-content">
 
+                <!-- Close List button -->
+                <div class="my-button">
+                    <md-icon-button on:click={showOrHideShareDocumentModal}>
+                        <i class='bx bx-x'></i>
+                    </md-icon-button>
+                </div>
+
+                <!-- Heading -->
+                <div class="heading">
+                    <i class='bx bx-share-alt'></i>
+                    <strong>Vyberte dokument na zdieľanie</strong>
+                </div>
+
+                <!-- Documents to share list -->
+                {#each Object.keys(listOfMyDocs) as key}
+                    <div class="share-doc-option">
+                        <!-- Checkbox -->
+                        <input id="share-doc-option-{key}" type="checkbox" />
+
+                        <i class='bx bx-file'></i>
+                        {listOfMyDocs[key]}
+                    </div>
+                {/each}
+
+                <!-- User search -->
+                <div class="user-search-wrapper">
+                    <div class="user-search">
+                        <i class='bx bx-search'></i>
+                        <input type="text" spellcheck="false" class="search" id="user-search" placeholder="Vyhľadať osobu">
+                    </div>
+                </div>
+
+                <!-- Share button -->
+                <button
+                        class="share-confirm"
+                        on:click={confirmShare}
+                >
+                    <i class='bx bxs-share'></i>
+                    Zdieľať
+                </button>
+
+            </div>
+        </div>
+    {/if}
+
+    <!-- Info Section -->
     <div class="info-section">
         <!-- List of global documents -->
         <div class="personal-documents">
@@ -383,9 +444,18 @@
                 Vami zdieľané dokumenty
             </div>
             <div class="number">Počet zdieľaných dokumentov: <strong>0</strong></div>
+
+            <!-- Share your document button -->
+            {#if listOfMyDocs.length > 0}
+                <button
+                        class="share-doc-btn"
+                        on:click={() => {isSharingNewDoc = true;}}
+                >
+                    <i class='bx bxs-share'></i>
+                    Zdieľať dokument
+                </button>
+            {/if}
         </div>
-
-
     </div>
 </div>
 
@@ -463,6 +533,113 @@
       cursor: pointer;
     }
 
+    //Share new doc modal WTF
+    .portal-wrapper .share-modal{
+      display: flex;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 300px;
+      max-width: 90%;
+      background-color: rgba(0, 0, 0, 0.00001);
+      z-index: 999;
+      pointer-events: none;
+      box-shadow: var(--box-shadow);
+    }
+
+    .portal-wrapper .share-modal .modal-content{
+      width: 100%;
+      height: 100%;
+      background-color: var(--note-text-area-background);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      position: relative;
+      pointer-events: all;
+    }
+
+    .portal-wrapper .share-modal .modal-content .heading{
+      //position: absolute;
+      text-align: center;
+      color: var(--navbar-icon-color);
+      font-size: 18px;
+      margin-top: 30px;
+      //margin-left: 20px;
+    }
+
+    .portal-wrapper .share-modal .modal-content .share-doc-option{
+      margin-top: 15px;
+      margin-left: 20px;
+      text-align: left;
+      color: var(--navbar-icon-color);
+    }
+
+    .portal-wrapper .share-modal .modal-content .share-confirm{
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      translate: -50%;
+
+
+      display: inline-block;
+      background: #2b6209;
+      color: #fff;
+      font-size: 14px;
+      border-radius: 8px;
+      padding: 8px 15px;
+      border: none;
+    }
+
+    .portal-wrapper .share-modal .modal-content .share-confirm i{
+      transform: translateY(1px);
+    }
+
+    .portal-wrapper .share-modal .modal-content .share-confirm:hover{
+      background: rgba(43, 98, 9, 0.95);
+      transform: scale(1.02);
+      cursor: pointer;
+    }
+
+    .portal-wrapper .share-modal .modal-content .user-search-wrapper{
+      position: absolute;
+      width: 90%;
+
+      bottom: 20%;
+      left: 20px;
+    }
+
+    .portal-wrapper .share-modal .modal-content .user-search{
+      margin: 0 auto;
+      position: relative;
+      color: var(--search-text-color);
+      border: 1px solid var(--search-text-color);
+      border-radius: 8px;
+    }
+
+    .portal-wrapper .share-modal .modal-content .user-search i{
+      position: absolute;
+      top: 50%;
+      left: 16px;
+      translate: 0 -50%;
+      z-index: 1;
+      font-size: 20px;
+      color: var(--navbar-icon-color);
+    }
+
+    .portal-wrapper .share-modal .modal-content .user-search input{
+      width: 100%;
+      height: 34px;
+      padding-left: 46px;
+      font-size: 16px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--search-background);
+      color: inherit;
+      font-family: inherit;
+      outline: none;
+    }
 
     //List of chats
     .portal-wrapper .modal-list{
@@ -514,6 +691,32 @@
       transform: scale(1.02);
       cursor: pointer;
     }
+
+    //Share doc button
+    .share-doc-btn{
+      position: absolute;
+      top: 90px;
+      left: 50px;
+
+      display: inline-block;
+      background: #2b6209;
+      color: #fff;
+      font-size: 14px;
+      border-radius: 8px;
+      padding: 8px 15px;
+      border: none;
+    }
+
+    .share-doc-btn i{
+      transform: translateY(1px);
+    }
+
+    .share-doc-btn:hover{
+      background: rgba(43, 98, 9, 0.95);
+      transform: scale(1.02);
+      cursor: pointer;
+    }
+
 
     .portal-wrapper .modal-list .modal-content .chat-list{
       display: flex;
