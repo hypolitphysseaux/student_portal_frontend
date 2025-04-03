@@ -316,7 +316,7 @@
         </div>
     {/if}
 
-    <!-- Share New Document Modal WTF -->
+    <!-- Share New Document Modal -->
     {#if (isSharingNewDoc)}
         <div class="share-modal">
             <div class="modal-content">

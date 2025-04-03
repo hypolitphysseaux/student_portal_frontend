@@ -17,6 +17,8 @@
     let fileName;
     let progress;
 
+    let selectedStorage = `my-docs`;
+    let storageRef;
 
     onMount(() => {
         console.log("Portal document section loaded.");
@@ -64,8 +66,20 @@
         fileName = file.name;
         const fileType = fileName.split(".")[1];
 
-        // 1. Vytvorte referenciu na umiestnenie dokumentu v Storage
-        const storageRef = ref(storage, `users/${auth.currentUser.uid}/${fileName}`);
+        // Storage option for roles
+        if ($loggedUser.role == "ADMIN"){
+            if (selectedStorage == "my-docs"){
+                storageRef = ref(storage, `users/${auth.currentUser.uid}/${fileName}`);
+            }
+            else {
+                storageRef = ref(storage, `${selectedStorage}/${fileName}`);
+            }
+        }
+        else if ($loggedUser.role == "USER"){
+            storageRef = ref(storage, `users/${auth.currentUser.uid}/${fileName}`);
+        }
+
+
 
         // 2. Vytvorte úlohu na nahratie súboru
         const uploadTask = uploadBytesResumable(storageRef, file);
@@ -122,14 +136,13 @@
     <!-- Global document upload for admin -->
     {#if $loggedUser.role == "ADMIN"}
         <div class="document-pool-options">
-            <label for="storage-select" class="">
+            <label for="storage-select">
                 Vyberte úložisko:
                 <i class='bx bxs-badge-check'></i>
             </label>
-            <select id="storage-select" class="">
-                <option value="Test">documents/general</option>
-                <option value="Test2">Option2</option>
-                <option value="Test2">Option3</option>
+            <select id="storage-select" bind:value={selectedStorage}>
+                <option value="documents/general">documents/general</option>
+                <option value="my-docs">Moje dokumenty</option>
             </select>
         </div>
     {/if}
