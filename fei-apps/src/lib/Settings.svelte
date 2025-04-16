@@ -3,15 +3,29 @@
     import { fade } from 'svelte/transition';
 
     import { navigate } from "svelte-routing";
+    import { getStorage, ref, uploadBytes, listAll, deleteObject } from "firebase/storage";
 
-    import { isDarkModeEnabled, loggedUser, statusColor } from "../stores";
+    import { isDarkModeEnabled, loggedUser, statusColor, notificationText, isNotificationVisible,  storageOptions } from "../stores";
 
     import '@material/web/iconbutton/icon-button.js';
     import '@material/web/fab/fab.js';
 
-    onMount(() => {
+    const storage = getStorage();
+
+    let isAddingNewRole = false;
+    let isAddingNewStorage = false;
+
+    let isDeletingRole = false;
+    let isDeletingStorage = false;
+
+    let selectedStorage = "Moje dokumenty";
+
+    onMount( async () => {
         const allLinks = document.querySelectorAll(".tabs a");
         const allTabs = document.querySelectorAll(".tab-content");
+
+        // Load all document pools
+        loadDocumentPools();
 
         allLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -23,17 +37,118 @@
         });
     });
 
+    async function loadDocumentPools() {
+        const documentsRef = ref(storage, 'documents/');
+        try {
+            const result = await listAll(documentsRef);
+            const folders = result.prefixes.map((folderRef) => folderRef.fullPath);
+
+            // Add personal document pool
+            const updatedFolders = [
+                ...folders,
+                'Moje dokumenty'
+            ];
+
+            storageOptions.set(updatedFolders);
+        } catch (error) {
+            console.error("Chyba pri načítavaní úložísk:", error);
+        }
+    }
+
     const toggleDarkMode = () => {
         isDarkModeEnabled.set(!$isDarkModeEnabled);
         //isDarkModeEnabled = !isDarkModeEnabled;
     }
 
     async function addNewRole(){
+        const newRoleNameInput = document.getElementById("role-name");
+
         return; //TODO
     }
 
     async function deleteRole(){
         return; //TODO
+    }
+
+    async function addNewStorage(){
+        const newStorageNameInput = document.getElementById("storage-name");
+
+        if (!newStorageNameInput.value.trim()){
+            newStorageNameInput.focus();
+            return;
+        }
+
+        const initFile = new Blob([""], { type: "text/plain" });
+        const fileRef = ref(storage, `documents/${newStorageNameInput.value}/.keep`);
+
+        try {
+            await uploadBytes(fileRef, initFile);
+
+            isAddingNewStorage = false;
+
+            //Notification
+            requestAnimationFrame(() => {
+                notificationText.set(`Úložisko ${newStorageNameInput.value} bolo úspešne vytvorené.`);
+                isNotificationVisible.set(true);
+
+                setTimeout(() => {
+                    notificationText.set("");
+                    isNotificationVisible.set(false);
+                }, 3000);
+            });
+
+            //Update document pools
+            await loadDocumentPools();
+
+        } catch (error) {
+            console.error("Chyba pri vytváraní adresára:", error);
+        }
+    }
+
+    async function deleteExistingStorage(){
+        const folderRef = ref(storage, selectedStorage);
+
+        if (selectedStorage == "Moje dokumenty"){
+            //TODO notification
+        }
+
+        try {
+            const result = await listAll(folderRef);
+
+            // Odstrániť všetky súbory v adresári
+            for (const fileRef of result.items) {
+                await deleteObject(fileRef);
+                console.log(`Súbor '${fileRef.fullPath}' bol odstránený.`);
+            }
+
+            /*
+            // Rekurzívne odstrániť podadresáre
+            for (const prefixRef of result.prefixes) {
+                await deleteStorage(prefixRef.fullPath);
+            }*/
+
+            //TODO zmazat v chromadb
+
+            isDeletingStorage = false;
+
+            //Notification
+            requestAnimationFrame(() => {
+                notificationText.set(`Úložisko ${selectedStorage} bolo úspešne odstránené.`);
+                isNotificationVisible.set(true);
+
+                setTimeout(() => {
+                    notificationText.set("");
+                    isNotificationVisible.set(false);
+                }, 3000);
+            });
+
+            //Update document pools
+            await loadDocumentPools();
+            selectedStorage = "Moje dokumenty";
+
+        } catch (error) {
+            console.error("Chyba pri odstraňovaní adresára:", error);
+        }
     }
 </script>
 
@@ -168,38 +283,204 @@
             <div class="setting-option" style="background: rgba(0, 0, 0, 0.2);"></div>
         </div>
 
-        <!-- Roles -->
-        <div class="setting">
-            <div class="setting-title">
-                <label>Roly</label>
+        <!-- Admin settings -->
+        {#if $loggedUser.role == "ADMIN"}
+            <!-- Roles TODO -->
+            <div class="setting">
+                <div class="setting-title">
+                    <label>Roly</label>
+                </div>
+
+                <!-- TODO zoznam roli -->
+
+                <div class="setting-option" style="background: rgba(0, 0, 0, 0.2);">
+
+                    {#if $loggedUser.role == "ADMIN"}
+                        <!-- Add new role button -->
+                        <button
+                                class="add-btn"
+                                on:click={() => {isAddingNewRole = true;}}
+                        >
+                            <i class='bx bx-plus'></i>
+                            Pridať novú rolu
+                        </button>
+
+                        <!-- Delete role button -->
+                        <button
+                                class="delete-btn"
+                                on:click={() => {isDeletingRole = true;}}
+                        >
+                            <i class='bx bx-minus'></i>
+                            Odstrániť rolu
+                        </button>
+                    {/if}
+                </div>
             </div>
 
-            <!-- TODO zoznam roli -->
-
-            <div class="setting-option" style="background: rgba(0, 0, 0, 0.2);">
-
-                {#if $loggedUser.role == "ADMIN"}
-                    <!-- Add new role button -->
-                    <button
-                            class="add-btn"
-                            on:click={addNewRole}
-                    >
-                        <i class='bx bx-plus'></i>
-                        Pridať novú rolu
-                    </button>
-
-                    <!-- Delete role button -->
-                    <button
-                            class="delete-btn"
-                            on:click={deleteRole}
-                    >
-                        <i class='bx bx-minus'></i>
-                        Odstrániť rolu
-                    </button>
-                {/if}
+            <div class="document-pool-options">
+                <label for="storage-select">
+                    Zoznam rolí:
+                    <i class='bx bxs-badge-check'></i>
+                </label>
+                <select id="storage-select">
+                    <option value="documents/general">ADMIN</option>
+                    <option value="my-docs">USER</option>
+                </select>
             </div>
-        </div>
 
+            <!-- Storages -->
+            <div class="setting">
+                <div class="setting-title">
+                    <label>Úložiská</label>
+                </div>
+
+                <div class="setting-option" style="background: rgba(0, 0, 0, 0.2);">
+
+                    {#if $loggedUser.role == "ADMIN"}
+                        <!-- Add new storage button -->
+                        <button
+                                class="add-btn"
+                                on:click={() => {isAddingNewStorage = true;}}
+                        >
+                            <i class='bx bx-plus'></i>
+                            Pridať nové úložisko
+                        </button>
+
+                        <!-- Delete storage button -->
+                        <button
+                                class="delete-btn"
+                                on:click={() => {isDeletingStorage = true;}}
+                        >
+                            <i class='bx bx-minus'></i>
+                            Odstrániť úložisko
+                        </button>
+                    {/if}
+                </div>
+            </div>
+
+            <div class="document-pool-options">
+                <label for="storage-select">
+                    Zoznam úložisk:
+                    <i class='bx bxs-badge-check'></i>
+                </label>
+                <select id="storage-select" bind:value={selectedStorage}>
+                    {#each $storageOptions as option}
+                        <option value={option}>
+                            {option}
+                        </option>
+                    {/each}
+                </select>
+            </div>
+        {/if}
+
+        <!-- Admin modals -->
+        {#if ($loggedUser.role == "ADMIN")}
+
+            <!-- Adding new role modal TODO -->
+            {#if (isAddingNewRole)}
+                <div class="adding-modal">
+                    <div class="modal-content">
+
+                        <!-- Role name input -->
+                        <div class="storage-name">
+                            <i class='bx bx-chevrons-right'></i>
+                            <input type="text" spellcheck="false" class="search" id="role-name" placeholder="Zadajte názov role">
+                        </div>
+
+                        <!-- Add new role button TODO -->
+                        <button
+                                class="add-btn"
+                                on:click={addNewRole}
+                        >
+                            <i class='bx bx-plus'></i>
+                            Pridať rolu
+                        </button>
+
+                        <!-- Close Modal button -->
+                        <div class="close-modal-button">
+                            <md-icon-button on:click={() => {isAddingNewRole = false;}}>
+                                <i class='bx bx-x'></i>
+                            </md-icon-button>
+                        </div>
+                    </div>
+                </div>
+            {/if}
+
+            <!-- Deleting role modal TODO -->
+            {#if (isDeletingRole)}
+                <div class="adding-modal">
+                    <div class="modal-content">
+
+                        <!-- Close Modal button -->
+                        <div class="close-modal-button">
+                            <md-icon-button on:click={() => {isDeletingRole = false;}}>
+                                <i class='bx bx-x'></i>
+                            </md-icon-button>
+                        </div>
+                    </div>
+                </div>
+            {/if}
+
+            <!-- Adding new storage modal -->
+            {#if (isAddingNewStorage)}
+                <div class="adding-modal">
+                    <div class="modal-content">
+
+                        <!-- Storage name input -->
+                        <div class="storage-name">
+                            <i class='bx bx-chevrons-right'></i>
+                            <input type="text" spellcheck="false" class="search" id="storage-name" placeholder="Zadajte názov úložiska">
+                        </div>
+
+                        <!-- Add new storage button -->
+                        <button
+                                class="add-btn"
+                                on:click={addNewStorage}
+                        >
+                            <i class='bx bx-plus'></i>
+                            Pridať úložisko
+                        </button>
+
+                        <!-- Close Modal button -->
+                        <div class="close-modal-button">
+                            <md-icon-button on:click={() => {isAddingNewStorage = false;}}>
+                                <i class='bx bx-x'></i>
+                            </md-icon-button>
+                        </div>
+                    </div>
+                </div>
+            {/if}
+
+
+            <!-- Deleting storage modal -->
+            {#if (isDeletingStorage)}
+                <div class="deleting-modal">
+                    <div class="modal-content">
+
+                        <div class="confirmation-label">
+                            <i class='bx bxs-error-alt'></i>
+                            Naozaj chcete odstrániť <strong>{selectedStorage}</strong> úložisko spolu s celým jeho obsahom?
+                        </div>
+
+                        <!-- Delete existing storage button -->
+                        <button
+                                class="delete-btn"
+                                on:click={deleteExistingStorage}
+                        >
+                            <i class='bx bx-minus'></i>
+                            Odstrániť
+                        </button>
+
+                        <!-- Close Modal button -->
+                        <div class="close-modal-button">
+                            <md-icon-button on:click={() => {isDeletingStorage = false;}}>
+                                <i class='bx bx-x'></i>
+                            </md-icon-button>
+                        </div>
+                    </div>
+                </div>
+            {/if}
+        {/if}
 
         <div class="close-settings"> <!-- TODO lepsie buttony, na ulozenie a vratenie sa
             TODO doriesit pozadie, ktore prekryva Nastavenia label
@@ -215,7 +496,7 @@
         </div>
 
         <!-- Save button
-        <a on:click={saveChanges} href="#" class="save-btn">ULOŽIŤ</a>-->
+        <a on:click={saveChanges} href="#" class="save-btn">ULOŽIŤ</a> -->
 
     </div>
 </div>
@@ -392,6 +673,154 @@
       transform: scale(1.03);
     }
      */
+
+    //Document pool options
+    .document-pool-options{
+      //background-color: rgba(100, 191, 227, 0.5);
+      display: flex;
+      margin-top: 15px;
+      justify-content: center;
+    }
+
+    .document-pool-options label {
+      font-weight: bold;
+      width: 200px;
+      color: var(--navbar-icon-color);
+    }
+
+    .document-pool-options select {
+      width: 600px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: var(--search-background);
+      cursor: pointer;
+      color: var(--navbar-icon-color);
+    }
+
+    /* Tlačidlo na zatvorenie modálneho okna */
+    .close-modal-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      --md-icon-button-hover-state-layer-color: red;
+    }
+
+    .close-modal-button i{
+      color: var(--navbar-icon-color);
+    }
+
+    //Admin modals
+    .adding-modal{
+      display: flex;
+      position: fixed;
+      top: 110px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      width: 800px;
+      height: 100px;
+      max-width: 90%;
+      background-color: rgba(0, 0, 0, 0.00001);
+      z-index: 999;
+      pointer-events: none;
+      box-shadow: var(--box-shadow);
+    }
+
+    .adding-modal .modal-content{
+      width: 100%;
+      height: 100%;
+      background-color: var(--note-text-area-background);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      position: relative;
+      pointer-events: all;
+      position: relative;
+    }
+
+    .adding-modal .modal-content .add-btn{
+      display: inline-block;
+      background: #2b6209;
+      color: #fff;
+      font-size: 11px;
+      border-radius: 8px;
+      padding: 8px 15px;
+      border: none;
+      position: absolute;
+      right: 15%;
+      top: 50%;
+      translate: 0 -50%;
+    }
+
+    .adding-modal .modal-content .add-btn i{
+      transform: translateY(1px);
+    }
+
+    .adding-modal .modal-content .add-btn:hover{
+      background: rgba(43, 98, 9, 0.95);
+      transform: scale(1.02);
+      cursor: pointer;
+    }
+
+    .adding-modal .modal-content .storage-name{
+      margin: 0 auto;
+      position: relative;
+      width: 60%;
+      translate: -100px;
+      margin-top: 25px;
+      color: var(--search-text-color);
+      border: 1px solid var(--search-text-color);
+      border-radius: 8px;
+    }
+
+    .adding-modal .modal-content .storage-name i{
+      position: absolute;
+      top: 50%;
+      left: 16px;
+      translate: 0 -50%;
+      z-index: 1;
+      font-size: 20px;
+      color: var(--navbar-icon-color);
+    }
+
+    .adding-modal .modal-content .storage-name input{
+      width: 100%;
+      height: 44px;
+      padding-left: 46px;
+      font-size: 16px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--search-background);
+      color: inherit;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .deleting-modal{
+      display: flex;
+      position: fixed;
+      top: 110px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      width: 800px;
+      height: 100px;
+      max-width: 90%;
+      background-color: rgba(0, 0, 0, 0.00001);
+      z-index: 999;
+      pointer-events: none;
+      box-shadow: var(--box-shadow);
+    }
+
+    .deleting-modal .modal-content{
+      width: 100%;
+      height: 100%;
+      background-color: var(--note-text-area-background);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      position: relative;
+      pointer-events: all;
+    }
 
 
     // Profile info card styles ------------------------------------------------------------------

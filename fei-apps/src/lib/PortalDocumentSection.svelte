@@ -5,10 +5,11 @@
         isDarkModeEnabled,
         isNotificationVisible,
         currentApp,
-        notificationText, loggedUser
+        notificationText, loggedUser,
+        storageOptions
     } from "../stores";
 
-    import { getStorage, ref, uploadBytesResumable , getDownloadURL } from "firebase/storage";
+    import {getStorage, ref, uploadBytesResumable, getDownloadURL, listAll} from "firebase/storage";
     import { auth } from "../firebase";
 
     const storage = getStorage();
@@ -17,11 +18,16 @@
     let fileName;
     let progress;
 
-    let selectedStorage = `my-docs`;
+    let selectedStorage = "Moje dokumenty";
     let storageRef;
 
     onMount(() => {
         console.log("Portal document section loaded.");
+
+        // Load all document pools (admin only)
+        if ($loggedUser.role == "ADMIN"){
+            loadDocumentPools();
+        }
 
         //Listener pre document input
         documentInput = document.getElementById("document-input");
@@ -35,8 +41,25 @@
 
     });
 
+    async function loadDocumentPools() {
+        const documentsRef = ref(storage, 'documents/');
+        try {
+            const result = await listAll(documentsRef);
+            const folders = result.prefixes.map((folderRef) => folderRef.fullPath);
 
-    async function syncDocument( user , document , type ){
+            // Add personal document pool
+            const updatedFolders = [
+                ...folders,
+                'Moje dokumenty'
+            ];
+
+            storageOptions.set(updatedFolders);
+        } catch (error) {
+            console.error("Chyba pri načítavaní úložísk:", error);
+        }
+    }
+
+    async function syncDocument( user , storage, document , type ){
 
         const response = await fetch('http://localhost:8000/syncDocument', {
             method: 'POST',
@@ -44,13 +67,26 @@
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                user: user.uid ,
-                document: document ,
+                user: user.uid,
+                storage: storage,
+                document: document,
                 type: type
             })
         });
 
-        const data = await response.json(); //TODO push notifikacia, dokument bol uspesne spracovany
+        const data = await response.json();
+
+        //Notification
+        requestAnimationFrame(() => {
+            notificationText.set(`Nahraný dokument bol úspešne spracovaný.`);
+            isNotificationVisible.set(true);
+
+            setTimeout(() => {
+                notificationText.set("");
+                isNotificationVisible.set(false);
+            }, 3000);
+        });
+
         console.log(data);
     }
 
@@ -68,7 +104,7 @@
 
         // Storage option for roles
         if ($loggedUser.role == "ADMIN"){
-            if (selectedStorage == "my-docs"){
+            if (selectedStorage == "Moje dokumenty"){
                 storageRef = ref(storage, `users/${auth.currentUser.uid}/${fileName}`);
             }
             else {
@@ -99,11 +135,11 @@
 
                 //Notification
                 requestAnimationFrame(() => {
-                    notificationText.set("Dokument bol úspešne nahraný.");
+                    notificationText.set(`Dokument bol úspešne nahraný do ${selectedStorage}.`);
                     isNotificationVisible.set(true);
 
                     //Sync document with vector database
-                    syncDocument( $loggedUser , downloadUrl , fileType );
+                    syncDocument( $loggedUser , selectedStorage, downloadUrl , fileType );
 
                     setTimeout(() => {
                         notificationText.set("");
@@ -141,8 +177,11 @@
                 <i class='bx bxs-badge-check'></i>
             </label>
             <select id="storage-select" bind:value={selectedStorage}>
-                <option value="documents/general">documents/general</option>
-                <option value="my-docs">Moje dokumenty</option>
+                {#each $storageOptions as option}
+                    <option value={option}>
+                        {option}
+                    </option>
+                {/each}
             </select>
         </div>
     {/if}

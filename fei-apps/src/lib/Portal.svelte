@@ -5,7 +5,7 @@
         isChatModalOpen,
         loggedUser,
         currentChat,
-        isChatListOpen
+        isChatListOpen,
     } from "../stores";
 
     //FIRESTORE
@@ -533,7 +533,7 @@
       cursor: pointer;
     }
 
-    //Share new doc modal WTF
+    //Share new doc modal
     .portal-wrapper .share-modal{
       display: flex;
       position: fixed;

@@ -18,3 +18,6 @@ export const isChatModalOpen = writable(false);
 export const isChatListOpen = writable(false);
 export const currentChat = writable("");
 export const isTutorialActive = writable(true);
+
+//Settings
+export const storageOptions = writable([]);
