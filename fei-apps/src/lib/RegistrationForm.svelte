@@ -114,7 +114,8 @@
                 aisId: aisId,
                 prefersDarkTheme: false,
                 role: "USER",
-                status: "offline"
+                status: "offline",
+                lastSeen: Date.now()
             });
         } catch (e) {
             console.error("Error adding document: ", e);

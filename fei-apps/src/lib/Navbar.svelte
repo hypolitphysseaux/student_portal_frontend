@@ -30,7 +30,8 @@
 
         await updateDoc(docRef, {
             status: "offline",
-            prefersDarkTheme: $isDarkModeEnabled
+            prefersDarkTheme: $isDarkModeEnabled,
+            lastSeen: Date.now()
         });
     } //po odhlaseni (teda status offline)
 

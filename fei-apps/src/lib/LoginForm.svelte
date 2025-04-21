@@ -109,6 +109,7 @@
         {
             $loggedUser.aisId = docSnap.data().aisId;
             $loggedUser.role = docSnap.data().role;
+            $loggedUser.lastSeen = docSnap.data().lastSeen;
             isDarkModeEnabled.set(docSnap.data().prefersDarkTheme);
         }
         else {

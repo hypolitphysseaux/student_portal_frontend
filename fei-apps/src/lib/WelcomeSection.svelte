@@ -93,7 +93,7 @@
         }
 
         // Format lastlogin timestamp
-        const date = new Date(Number(lastLogin));
+        const date = new Date(Number($loggedUser.lastSeen));
         lastLoginFormatted = date.toLocaleString("sk-SK", {
             year: "numeric",
             month: "long",
@@ -102,6 +102,7 @@
             minute: "2-digit"
         });
 
+        console.log("Here>",$loggedUser.lastSeen);
     });
 
     onDestroy(() => {
