@@ -24,6 +24,7 @@
 
     let isChangingStatus = false;
     let isChangingPhoto = false;
+    let lastLoginFormatted = "";
 
     let progress;
 
@@ -90,6 +91,17 @@
         }else {
             lastLogin = $loggedUser.lastLoginAt;
         }
+
+        // Format lastlogin timestamp
+        const date = new Date(Number(lastLogin));
+        lastLoginFormatted = date.toLocaleString("sk-SK", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+
     });
 
     onDestroy(() => {
@@ -288,7 +300,7 @@
         <div class="stats-container">
             <div class="stat">Počet aktívnych uživateľov: <strong style="font-size: 20px">{activeUsers}</strong></div>
             <div class="stat">
-                Naposledy ste boli prihlásený/á: <strong>{lastLogin}</strong>
+                Naposledy ste boli prihlásený/á: <strong>{lastLoginFormatted}</strong>
             </div>
             <div class="stat">Počet nových správ: <strong style="font-size: 20px">0</strong></div>
         </div>
@@ -489,7 +501,7 @@
     .stats-right{
         display: none;
         position: relative;
-        width: 300px;
+        width: 270px;
         height: 220px;
         left: 50px;
         backdrop-filter: blur(15px);
