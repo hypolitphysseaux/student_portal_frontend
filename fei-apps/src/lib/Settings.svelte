@@ -12,11 +12,14 @@
         notificationText,
         isNotificationVisible,
         notificationType,
-        storageOptions
+        storageOptions,
+        roleOptions
     } from "../stores";
 
     import '@material/web/iconbutton/icon-button.js';
     import '@material/web/fab/fab.js';
+    import { doc, getDoc, setDoc } from "firebase/firestore";
+    import { db } from "../firebase";
 
     const storage = getStorage();
 
@@ -32,8 +35,9 @@
         const allLinks = document.querySelectorAll(".tabs a");
         const allTabs = document.querySelectorAll(".tab-content");
 
-        // Load all document pools
+        // Load all document pools and roles
         loadDocumentPools();
+        loadRoleOptions();
 
         allLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -63,6 +67,24 @@
         }
     }
 
+    async function loadRoleOptions(){
+        const rolesRef = doc(db, "userDetails", "roles");
+        const roleDoc = await getDoc(rolesRef);
+
+        if (roleDoc.exists()){
+            const data = roleDoc.data();
+
+            const result = Object.entries(data).map(([roleName, permissionArray]) => ({
+                role: roleName,
+                ...permissionArray[0]
+            }));
+
+            roleOptions.set(result);
+
+            console.log($roleOptions);
+        }
+    }
+
     const toggleDarkMode = () => {
         isDarkModeEnabled.set(!$isDarkModeEnabled);
         //isDarkModeEnabled = !isDarkModeEnabled;
@@ -71,7 +93,62 @@
     async function addNewRole(){
         const newRoleNameInput = document.getElementById("role-name");
 
-        return; //TODO
+        // Check input
+        if (!newRoleNameInput.value.trim()){
+            newRoleNameInput.focus();
+            return;
+        }
+
+        const newRoleName = newRoleNameInput.value.trim().toUpperCase();
+
+        const rolesRef = doc(db, "userDetails", "roles");
+        const docSnap = await getDoc(rolesRef);
+        const rolesData = docSnap.data();
+
+        // Check if role already exists
+        if (rolesData[newRoleName]) {
+            isAddingNewRole = false;
+
+            //Notification
+            requestAnimationFrame(() => {
+                notificationText.set(`Rola "${newRoleName}" už existuje.`);
+                notificationType.set("error");
+                isNotificationVisible.set(true);
+
+                setTimeout(() => {
+                    notificationText.set("");
+                    notificationType.set("");
+                    isNotificationVisible.set(false);
+                }, 3000);
+            });
+
+            return;
+        }
+
+        rolesData[newRoleName] = [
+            {
+                canManageDocumentPools: false,
+                canManageRoles: false
+            }
+        ];
+
+        await setDoc(rolesRef, rolesData);
+        isAddingNewRole = false;
+
+        //Notification
+        requestAnimationFrame(() => {
+            notificationText.set(`Rola "${newRoleName}" bola úspešne pridaná.`);
+            isNotificationVisible.set(true);
+
+            loadRoleOptions();
+
+            setTimeout(() => {
+                notificationText.set("");
+                isNotificationVisible.set(false);
+            }, 3000);
+        });
+
+
     }
 
     async function deleteRole(){
@@ -81,6 +158,7 @@
     async function addNewStorage(){
         const newStorageNameInput = document.getElementById("storage-name");
 
+        // Check input
         if (!newStorageNameInput.value.trim()){
             newStorageNameInput.focus();
             return;
@@ -88,6 +166,8 @@
 
         const initFile = new Blob([""], { type: "text/plain" });
         const fileRef = ref(storage, `documents/${newStorageNameInput.value}/.keep`);
+
+        //TODO Check if pool already exists
 
         try {
             await uploadBytes(fileRef, initFile);
@@ -347,8 +427,11 @@
                     <i class='bx bxs-badge-check'></i>
                 </label>
                 <select id="storage-select">
-                    <option value="documents/general">ADMIN</option>
-                    <option value="my-docs">USER</option>
+                    {#each $roleOptions as option}
+                        <option value={option.role}>
+                            {option.role}
+                        </option>
+                    {/each}
                 </select>
             </div>
 
