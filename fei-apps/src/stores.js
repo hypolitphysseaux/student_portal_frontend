@@ -6,8 +6,11 @@ export const statusColor = writable("");
 export const loggedIn = writable(false);
 export const loggedUser = writable("");
 
+
+//Notification
 export const isNotificationVisible = writable(false);
 export const notificationText = writable("");
+export const notificationType = writable("");
 
 // Aktualne spustena aplikacia
 export const currentApp = writable("");

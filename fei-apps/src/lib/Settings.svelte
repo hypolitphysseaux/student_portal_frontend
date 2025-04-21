@@ -5,7 +5,15 @@
     import { navigate } from "svelte-routing";
     import { getStorage, ref, uploadBytes, listAll, deleteObject } from "firebase/storage";
 
-    import { isDarkModeEnabled, loggedUser, statusColor, notificationText, isNotificationVisible,  storageOptions } from "../stores";
+    import {
+        isDarkModeEnabled,
+        loggedUser,
+        statusColor,
+        notificationText,
+        isNotificationVisible,
+        notificationType,
+        storageOptions
+    } from "../stores";
 
     import '@material/web/iconbutton/icon-button.js';
     import '@material/web/fab/fab.js';
@@ -109,7 +117,23 @@
         const folderRef = ref(storage, selectedStorage);
 
         if (selectedStorage == "Moje dokumenty"){
-            //TODO notification
+
+            isDeletingStorage = false;
+
+            //Notification
+            requestAnimationFrame(() => {
+                notificationText.set(`Úložisko ${selectedStorage} nie je možné odstrániť.`);
+                notificationType.set("error");
+                isNotificationVisible.set(true);
+
+                setTimeout(() => {
+                    notificationText.set("");
+                    notificationType.set("");
+                    isNotificationVisible.set(false);
+                }, 3000);
+            });
+
+            return;
         }
 
         try {
@@ -127,7 +151,7 @@
                 await deleteStorage(prefixRef.fullPath);
             }*/
 
-            //TODO zmazat v chromadb
+            //TODO zmazat v chromadb - chunky musia vediet ku ktoremu dokumentu patria
 
             isDeletingStorage = false;
 
@@ -194,7 +218,7 @@
             <div class="setting-title">
                 <label>Jazyk</label>
             </div>
-            <div class="setting-option">slovenský</div>
+            <div class="setting-option">slovenský</div>   <!-- Viacero jazykov ... -->
         </div>
 
         <!-- Profile -->
@@ -459,7 +483,7 @@
 
                         <div class="confirmation-label">
                             <i class='bx bxs-error-alt'></i>
-                            Naozaj chcete odstrániť <strong>{selectedStorage}</strong> úložisko spolu s celým jeho obsahom?
+                            <label>Naozaj chcete odstrániť <strong>{selectedStorage}</strong> úložisko spolu s celým jeho obsahom?</label>
                         </div>
 
                         <!-- Delete existing storage button -->
@@ -592,6 +616,7 @@
       text-align: center;
 
       background: rgba(255, 255, 255, 0.2);
+      color: var(--navbar-icon-color);
     }
 
     .settings-container .settings .setting .setting-option .add-btn{
@@ -803,7 +828,7 @@
       left: 50%;
       transform: translate(-50%, 0);
       width: 800px;
-      height: 100px;
+      height: 130px;
       max-width: 90%;
       background-color: rgba(0, 0, 0, 0.00001);
       z-index: 999;
@@ -820,8 +845,59 @@
       box-shadow: var(--box-shadow);
       position: relative;
       pointer-events: all;
+
+      display: flex;
+      flex-direction: column;
     }
 
+    .deleting-modal .modal-content .confirmation-label{
+      display: flex;
+      gap: 10px;
+
+      margin-top: 20px;
+      margin-bottom: 10px;
+      margin-left: 20px;
+
+      word-wrap: break-word;
+      white-space: normal;
+      overflow-wrap: break-word;
+      max-width: 80%;
+    }
+
+    .deleting-modal .modal-content .confirmation-label i{
+      color: indianred;
+      font-size: 25px;
+    }
+
+    .deleting-modal .modal-content .confirmation-label label{
+      color: var(--navbar-icon-color);
+      font-size: 18px;
+
+    }
+
+    .deleting-modal .modal-content .delete-btn{
+      //transform: translateY(2px);
+
+      display: inline-block;
+      background: indianred;
+      color: #fff;
+      font-size: 11px;
+      border-radius: 8px;
+      padding: 8px 15px;
+      border: none;
+      align-self: center;
+      width: 100px;
+    }
+
+    .deleting-modal .modal-content .delete-btn i{
+      transform: translateY(1px);
+    }
+
+    .deleting-modal .modal-content .delete-btn:hover{
+      background: rgba(205, 92, 92, 0.95);
+      transform: scale(1.02);
+      cursor: pointer;
+    }
 
     // Profile info card styles ------------------------------------------------------------------
     a {

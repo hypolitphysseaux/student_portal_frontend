@@ -1,9 +1,10 @@
 
 <script lang="ts">
     import {
-        isDarkModeEnabled ,
-        notificationText ,
-        isNotificationVisible
+        isDarkModeEnabled,
+        notificationText,
+        isNotificationVisible,
+        notificationType
     } from "../stores";
 
 
@@ -20,7 +21,7 @@
     }
 </script>
 
-<div class="notification {visibility}" id="notification">
+<div class="notification {visibility} {$notificationType}" id="notification">
     <p>{$notificationText}</p>
     <div class="progress-bar {progressActivity}" id="progress-bar"></div>
 
@@ -43,6 +44,10 @@
     text-align: center;
     opacity: 0;
     transition: top 0.5s ease, opacity 0.5s ease;
+  }
+
+  .notification.error{
+    background-color: indianred;
   }
 
   .notification.show {
