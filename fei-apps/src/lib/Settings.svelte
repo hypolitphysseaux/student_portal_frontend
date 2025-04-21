@@ -30,6 +30,7 @@
     let isDeletingStorage = false;
 
     let selectedStorage = "Moje dokumenty";
+    let selectedRole = "ADMIN";
 
     onMount( async () => {
         const allLinks = document.querySelectorAll(".tabs a");
@@ -141,6 +142,7 @@
             isNotificationVisible.set(true);
 
             loadRoleOptions();
+            selectedRole = newRoleName;
 
             setTimeout(() => {
                 notificationText.set("");
@@ -148,11 +150,54 @@
             }, 3000);
         });
 
-
     }
 
     async function deleteRole(){
-        return; //TODO
+
+        if (selectedRole == "ADMIN" || selectedRole == "USER"){
+            isDeletingRole = false;
+
+            //Notification
+            requestAnimationFrame(() => {
+                notificationText.set(`Rolu "${selectedRole}" nie je možné odstrániť.`);
+                notificationType.set("error");
+                isNotificationVisible.set(true);
+
+                setTimeout(() => {
+                    notificationText.set("");
+                    notificationType.set("");
+                    isNotificationVisible.set(false);
+                }, 3000);
+            });
+            return;
+        }
+
+        const rolesRef = doc(db, "userDetails", "roles");
+        const docSnap = await getDoc(rolesRef);
+
+        if (docSnap.exists()){
+            const rolesData = docSnap.data();
+
+            delete rolesData[selectedRole];
+            await setDoc(rolesRef, rolesData);
+
+            isDeletingRole = false;
+
+            // Notification
+            requestAnimationFrame(() => {
+                notificationText.set(`Rola "${selectedRole}" bola úspešne odstránená.`);
+                isNotificationVisible.set(true);
+
+                loadRoleOptions();
+                selectedRole = "ADMIN";
+
+                setTimeout(() => {
+                    notificationText.set("");
+                    isNotificationVisible.set(false);
+                }, 3000);
+            });
+        }
+
     }
 
     async function addNewStorage(){
@@ -389,13 +434,11 @@
 
         <!-- Admin settings -->
         {#if $loggedUser.role == "ADMIN"}
-            <!-- Roles TODO -->
+            <!-- Roles -->
             <div class="setting">
                 <div class="setting-title">
                     <label>Roly</label>
                 </div>
-
-                <!-- TODO zoznam roli -->
 
                 <div class="setting-option" style="background: rgba(0, 0, 0, 0.2);">
 
@@ -426,7 +469,7 @@
                     Zoznam rolí:
                     <i class='bx bxs-badge-check'></i>
                 </label>
-                <select id="storage-select">
+                <select id="storage-select" bind:value={selectedRole}>
                     {#each $roleOptions as option}
                         <option value={option.role}>
                             {option.role}
@@ -483,7 +526,7 @@
         <!-- Admin modals -->
         {#if ($loggedUser.role == "ADMIN")}
 
-            <!-- Adding new role modal TODO -->
+            <!-- Adding new role modal -->
             {#if (isAddingNewRole)}
                 <div class="adding-modal">
                     <div class="modal-content">
@@ -494,7 +537,7 @@
                             <input type="text" spellcheck="false" class="search" id="role-name" placeholder="Zadajte názov role">
                         </div>
 
-                        <!-- Add new role button TODO -->
+                        <!-- Add new role button -->
                         <button
                                 class="add-btn"
                                 on:click={addNewRole}
@@ -515,8 +558,22 @@
 
             <!-- Deleting role modal TODO -->
             {#if (isDeletingRole)}
-                <div class="adding-modal">
+                <div class="deleting-modal">
                     <div class="modal-content">
+
+                        <div class="confirmation-label">
+                            <i class='bx bxs-error-alt'></i>
+                            <label>Naozaj chcete odstrániť rolu "<strong>{selectedRole}</strong>"?</label>
+                        </div>
+
+                        <!-- Delete existing role button -->
+                        <button
+                                class="delete-btn"
+                                on:click={deleteRole}
+                        >
+                            <i class='bx bx-minus'></i>
+                            Odstrániť
+                        </button>
 
                         <!-- Close Modal button -->
                         <div class="close-modal-button">
