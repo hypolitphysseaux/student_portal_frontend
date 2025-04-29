@@ -101,8 +101,6 @@
             hour: "2-digit",
             minute: "2-digit"
         });
-
-        console.log("Here>",$loggedUser.lastSeen);
     });
 
     onDestroy(() => {

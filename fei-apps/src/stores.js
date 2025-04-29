@@ -25,3 +25,4 @@ export const isTutorialActive = writable(true);
 //Settings
 export const storageOptions = writable([]);
 export const roleOptions = writable([]);
+export const permissions = writable([]);

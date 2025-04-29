@@ -8,7 +8,7 @@
     import { onAuthStateChanged , setPersistence , browserSessionPersistence } from "firebase/auth";
     import { doc, getDoc, increment, updateDoc } from "firebase/firestore";
 
-    import { isDarkModeEnabled , loggedIn, loggedUser } from "../stores";
+    import {isDarkModeEnabled, loggedIn, loggedUser, permissions, roleOptions} from "../stores";
 
     import {
         GoogleAuthProvider,
@@ -38,6 +38,23 @@
             }
         });
     });
+
+    async function loadUserPermissions(role){
+        const rolesRef = doc(db, "userDetails", "roles");
+        const roleDoc = await getDoc(rolesRef);
+
+        if (roleDoc.exists()){
+            const data = roleDoc.data();
+
+            const rolePermissionArray = data[role];
+
+            if (Array.isArray(rolePermissionArray) && rolePermissionArray.length > 0){
+                permissions.set(rolePermissionArray[0]);
+            } else {
+                permissions.set([]);
+            }
+        }
+    }
 
     async function facebookPopUpSignIn(){
         alert("Momentálne nie je k dispozícií.");
@@ -111,9 +128,12 @@
             $loggedUser.role = docSnap.data().role;
             $loggedUser.lastSeen = docSnap.data().lastSeen;
             isDarkModeEnabled.set(docSnap.data().prefersDarkTheme);
+
+            //Load user permissions
+            loadUserPermissions(docSnap.data().role);
         }
         else {
-            $loggedUser.aisId = "";
+            $loggedUser.aisId = ""; //TODO this
         }
     } // Ziskanie ais id a theme preference
 
@@ -158,12 +178,9 @@
                 // Signed in
                 loggedUser.set(user);
 
-
-                //TODO Store current user in a local storage ?
-                // Kvoli reloadu , pri signout vymazat
-
                 setOnlineStatus($loggedUser.uid);
                 getUserDetails($loggedUser.uid);
+
 
                 loggedIn.set(true);
                 incrementActiveUsers();
