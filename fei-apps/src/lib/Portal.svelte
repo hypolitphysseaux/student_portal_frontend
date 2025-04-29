@@ -6,6 +6,9 @@
         loggedUser,
         currentChat,
         isChatListOpen,
+        notificationText,
+        isNotificationVisible,
+        notificationType
     } from "../stores";
 
     //FIRESTORE
@@ -14,6 +17,10 @@
 
     import { v4 as uuidv4 } from 'uuid';
     import { getStorage, ref, listAll } from "firebase/storage";
+
+
+
+
 
     //STORAGE
     const storage = getStorage();
@@ -72,7 +79,7 @@
         }
 
 
-        //Set currentChat //TODO najmladsi chat?
+        //Set currentChat
         currentChat.set(Object.keys(listOfChats)[0]);
 
 
@@ -95,7 +102,25 @@
     });
 
     async function addNewChat(){
-        //TODO max 3 chaty
+
+        //Max 3 chats per user for now
+        if (Object.keys(listOfChats).length == 3){
+            isChatListOpen.set(false);
+            //Notification
+            requestAnimationFrame(() => {
+                notificationText.set(`Momentálne nemôžete mať viac ako 3 chaty.`);
+                notificationType.set("error");
+                isNotificationVisible.set(true);
+
+                setTimeout(() => {
+                    notificationText.set("");
+                    notificationType.set("");
+                    isNotificationVisible.set(false);
+                }, 3000);
+            });
+
+            return;
+        }
 
         await updateDoc(doc(db, "chats", $loggedUser.uid), {
             [uuidv4()]:
