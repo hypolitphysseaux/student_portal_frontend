@@ -13,7 +13,8 @@
         isNotificationVisible,
         notificationType,
         storageOptions,
-        roleOptions
+        roleOptions,
+        permissions
     } from "../stores";
 
     import '@material/web/iconbutton/icon-button.js';
@@ -154,6 +155,7 @@
 
     async function deleteRole(){
 
+        // Cannot delete ADMIN and USER roles for now
         if (selectedRole == "ADMIN" || selectedRole == "USER"){
             isDeletingRole = false;
 
@@ -433,16 +435,16 @@
         </div>
 
         <!-- Admin settings -->
-        {#if $loggedUser.role == "ADMIN"}
+        {#if $loggedUser.role !== "USER"}
+
             <!-- Roles -->
-            <div class="setting">
-                <div class="setting-title">
-                    <label>Roly</label>
-                </div>
+            {#if $permissions.canManageRoles}
+                <div class="setting">
+                    <div class="setting-title">
+                        <label>Roly</label>
+                    </div>
 
-                <div class="setting-option" style="background: rgba(0, 0, 0, 0.2);">
-
-                    {#if $loggedUser.role == "ADMIN"}
+                    <div class="setting-option" style="background: rgba(0, 0, 0, 0.2);">
                         <!-- Add new role button -->
                         <button
                                 class="add-btn"
@@ -460,33 +462,33 @@
                             <i class='bx bx-minus'></i>
                             Odstrániť rolu
                         </button>
-                    {/if}
+                    </div>
                 </div>
-            </div>
 
-            <div class="document-pool-options">
-                <label for="storage-select">
-                    Zoznam rolí:
-                    <i class='bx bxs-badge-check'></i>
-                </label>
-                <select id="storage-select" bind:value={selectedRole}>
-                    {#each $roleOptions as option}
-                        <option value={option.role}>
-                            {option.role}
-                        </option>
-                    {/each}
-                </select>
-            </div>
+                <div class="document-pool-options">
+                    <label for="storage-select">
+                        Zoznam rolí:
+                        <i class='bx bxs-badge-check'></i>
+                    </label>
+                    <select id="storage-select" bind:value={selectedRole}>
+                        {#each $roleOptions as option}
+                            <option value={option.role}>
+                                {option.role}
+                            </option>
+                        {/each}
+                    </select>
+                </div>
+            {/if}
+
 
             <!-- Storages -->
-            <div class="setting">
-                <div class="setting-title">
-                    <label>Úložiská</label>
-                </div>
+            {#if $permissions.canManageDocumentPools}
+                <div class="setting">
+                    <div class="setting-title">
+                        <label>Úložiská</label>
+                    </div>
 
-                <div class="setting-option" style="background: rgba(0, 0, 0, 0.2);">
-
-                    {#if $loggedUser.role == "ADMIN"}
+                    <div class="setting-option" style="background: rgba(0, 0, 0, 0.2);">
                         <!-- Add new storage button -->
                         <button
                                 class="add-btn"
@@ -504,30 +506,31 @@
                             <i class='bx bx-minus'></i>
                             Odstrániť úložisko
                         </button>
-                    {/if}
+                    </div>
                 </div>
-            </div>
 
-            <div class="document-pool-options">
-                <label for="storage-select">
-                    Zoznam úložisk:
-                    <i class='bx bxs-badge-check'></i>
-                </label>
-                <select id="storage-select" bind:value={selectedStorage}>
-                    {#each $storageOptions as option}
-                        <option value={option}>
-                            {option}
-                        </option>
-                    {/each}
-                </select>
-            </div>
+                <div class="document-pool-options">
+                    <label for="storage-select">
+                        Zoznam úložisk:
+                        <i class='bx bxs-badge-check'></i>
+                    </label>
+                    <select id="storage-select" bind:value={selectedStorage}>
+                        {#each $storageOptions as option}
+                            <option value={option}>
+                                {option}
+                            </option>
+                        {/each}
+                    </select>
+                </div>
+            {/if}
+
         {/if}
 
         <!-- Admin modals -->
-        {#if ($loggedUser.role == "ADMIN")}
+        {#if ($loggedUser.role !== "USER")}
 
             <!-- Adding new role modal -->
-            {#if (isAddingNewRole)}
+            {#if (isAddingNewRole && $permissions.canManageRoles)}
                 <div class="adding-modal">
                     <div class="modal-content">
 
@@ -556,8 +559,8 @@
                 </div>
             {/if}
 
-            <!-- Deleting role modal TODO -->
-            {#if (isDeletingRole)}
+            <!-- Deleting role modal  -->
+            {#if (isDeletingRole && $permissions.canManageRoles)}
                 <div class="deleting-modal">
                     <div class="modal-content">
 
@@ -586,7 +589,7 @@
             {/if}
 
             <!-- Adding new storage modal -->
-            {#if (isAddingNewStorage)}
+            {#if (isAddingNewStorage && $permissions.canManageDocumentPools)}
                 <div class="adding-modal">
                     <div class="modal-content">
 
@@ -617,7 +620,7 @@
 
 
             <!-- Deleting storage modal -->
-            {#if (isDeletingStorage)}
+            {#if (isDeletingStorage && $permissions.canManageDocumentPools)}
                 <div class="deleting-modal">
                     <div class="modal-content">
 
@@ -647,8 +650,7 @@
         {/if}
 
         <div class="close-settings"> <!-- TODO lepsie buttony, na ulozenie a vratenie sa
-            TODO doriesit pozadie, ktore prekryva Nastavenia label
-            TODO porobit options, ukladanie do databazy pre jednotlivych userov
+            TODO ukladanie do databazy pre jednotlivych userov
         -->
             <md-icon-button
                     on:click={() => {
@@ -683,6 +685,7 @@
       font-size: 20px;
       margin-top: 100px;
       margin-left: 6.5rem;
+      z-index: 3;
     }
 
     .settings-container .heading i{

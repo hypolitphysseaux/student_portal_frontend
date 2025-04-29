@@ -6,10 +6,11 @@
         isNotificationVisible,
         currentApp,
         notificationText, loggedUser,
-        storageOptions
+        storageOptions,
+        permissions
     } from "../stores";
 
-    import {getStorage, ref, uploadBytesResumable, getDownloadURL, listAll} from "firebase/storage";
+    import { getStorage, ref, uploadBytesResumable, getDownloadURL, listAll } from "firebase/storage";
     import { auth } from "../firebase";
 
     const storage = getStorage();
@@ -24,8 +25,9 @@
     onMount(() => {
         console.log("Portal document section loaded.");
 
+
         // Load all document pools (admin only)
-        if ($loggedUser.role == "ADMIN"){
+        if ($loggedUser.role !== "USER" && $permissions.canManageDocumentPools){
             loadDocumentPools();
         }
 
@@ -103,7 +105,7 @@
         const fileType = fileName.split(".")[1];
 
         // Storage option for roles
-        if ($loggedUser.role == "ADMIN"){
+        if ($permissions.canManageDocumentPools){
             if (selectedStorage == "Moje dokumenty"){
                 storageRef = ref(storage, `users/${auth.currentUser.uid}/${fileName}`);
             }
@@ -111,7 +113,7 @@
                 storageRef = ref(storage, `${selectedStorage}/${fileName}`);
             }
         }
-        else if ($loggedUser.role == "USER"){
+        else if (!($permissions.canManageDocumentPools)){
             storageRef = ref(storage, `users/${auth.currentUser.uid}/${fileName}`);
         }
 
@@ -158,7 +160,7 @@
 <div
         class="documents-wrapper"
         class:dark-mode={$isDarkModeEnabled}
-        class:admin-height={$loggedUser.role === "ADMIN"}
+        class:admin-height={$loggedUser.role === "ADMIN" || $permissions.canManageDocumentPools}
 >
     <div class="heading">
         Nahratie dokumentov
@@ -170,7 +172,7 @@
     </div>
 
     <!-- Global document upload for admin -->
-    {#if $loggedUser.role == "ADMIN"}
+    {#if ($permissions.canManageDocumentPools && $loggedUser.role !== "USER")}
         <div class="document-pool-options">
             <label for="storage-select">
                 Vyberte úložisko:
