@@ -80,14 +80,21 @@
 
 
         //Set currentChat
-        currentChat.set(Object.keys(listOfChats)[0]);
+        if (Object.keys(listOfChats).length > 0){
+            currentChat.set(Object.keys(listOfChats)[0]);
+        }
 
 
         //Set up message listener
         messageListener = onSnapshot(doc(db, "chats", $loggedUser.uid), (d) => {
             if (d.exists()){
                 listOfChats = d.data();
-                chatHistory = d.data()[$currentChat].history;
+                if (Object.keys(listOfChats).length > 0){
+                    chatHistory = d.data()[$currentChat].history;
+                }
+                else {
+                    chatHistory = [];
+                }
             }
         });
 
@@ -138,16 +145,26 @@
     }
 
     async function deleteChat(key){
-        //Odstranujem aktualny chat
-        if (key == $currentChat){
-            //TODO ak odstranim aktualny, tak treba zmenit currentChat store
-            // Pri zmene chatu je potreba aj zmena historie chatu
-            return;
+        //Deleting last or current chat
+        if (Object.keys(listOfChats).length == 1 || key == $currentChat){
+            chatHistory = [];
         }
 
         try {
             await updateDoc(doc(db, "chats", $loggedUser.uid), {
                 [key]: deleteField()
+            });
+
+            isChatListOpen.set(false);
+            //Notification
+            requestAnimationFrame(() => {
+                notificationText.set(`Chat bol úspešne odstránený.`);
+                isNotificationVisible.set(true);
+
+                setTimeout(() => {
+                    notificationText.set("");
+                    isNotificationVisible.set(false);
+                }, 3000);
             });
         } catch (e){
             console.error("Error deleting chat: ", e);
@@ -161,7 +178,15 @@
     async function setActiveChat(key){
         currentChat.set(key);
 
-        //TODO potreba aktualizovat aj historiu, tj prepisat aktualnu historiu - historiou aktualneho chatu (nie je to to iste)
+        //Get history from Firestore
+        const chatDoc = await getDoc(doc(db, "chats", $loggedUser.uid));
+        if (chatDoc.exists()) {
+            const data = chatDoc.data();
+
+            chatHistory = data[key]?.history || [];
+        } else {
+            chatHistory = [];
+        }
     }
 
     async function confirmShare(){
