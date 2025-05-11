@@ -3,7 +3,7 @@
     import { fade } from 'svelte/transition';
 
     import { navigate } from "svelte-routing";
-    import { getStorage, ref, uploadBytes, listAll, deleteObject } from "firebase/storage";
+    import { getStorage, ref, uploadBytes, listAll, deleteObject, getMetadata } from "firebase/storage";
 
     import {
         isDarkModeEnabled,
@@ -214,7 +214,34 @@
         const initFile = new Blob([""], { type: "text/plain" });
         const fileRef = ref(storage, `documents/${newStorageNameInput.value}/.keep`);
 
-        //TODO Check if pool already exists
+        //Check if pool already exists
+        try {
+            await getMetadata(fileRef);
+
+            isAddingNewStorage = false;
+
+            //Notification
+            requestAnimationFrame(() => {
+                notificationText.set(`Úložisko "${newStorageNameInput.value}" už existuje.`);
+                isNotificationVisible.set(true);
+                notificationType.set("error");
+
+                setTimeout(() => {
+                    notificationText.set("");
+                    isNotificationVisible.set(false);
+                }, 3000);
+            });
+
+
+
+            return;
+        } catch (error) {
+            if (error.code !== "storage/object-not-found") {
+                // Iná chyba než že súbor neexistuje (napr. sieťová)
+                console.error("Chyba pri overovaní úložiska:", error);
+                return;
+            }
+        }
 
         try {
             await uploadBytes(fileRef, initFile);
@@ -286,6 +313,7 @@
             requestAnimationFrame(() => {
                 notificationText.set(`Úložisko ${selectedStorage} bolo úspešne odstránené.`);
                 isNotificationVisible.set(true);
+                notificationType.set("");
 
                 setTimeout(() => {
                     notificationText.set("");
