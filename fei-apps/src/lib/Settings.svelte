@@ -96,7 +96,10 @@
 
     async function saveAboutMe(){
         const newAboutMe = document.getElementById("about-me").value.trim();
-        if (!newAboutMe) return;
+        if (!newAboutMe || (newAboutMe == $loggedUser.aboutMe)){
+            isEditingAboutText = false;
+            return;
+        }
 
         const userDocRef = doc(db, "userDetails", $loggedUser.uid);
         try {
@@ -452,13 +455,16 @@
                             </ul>
                         </div>
 
+                        <!-- About me -->
                         <div
                                 class="tab-content active-tab-content"
                                 id="tab-1"
                         >
-                            <!-- About me -->
                             {#if !isEditingAboutText}
-                                <p on:click={() => {isEditingAboutText = !isEditingAboutText;}}>
+                                <p
+                                        class="about-me-paragraph"
+                                        on:click={() => {isEditingAboutText = true;}}
+                                >
                                     {$loggedUser.aboutMe}
                                 </p>
                             {/if}
@@ -470,14 +476,24 @@
                                         id="about-me"
                                 ></textarea>
 
-                                <div class="save-button">
-                                    <md-icon-button on:click|preventDefault={() => {saveAboutMe();}}>
-                                        <i class='bx bx-check-circle'></i>
-                                    </md-icon-button>
+                                <div class="about-me-buttons">
+                                    <div class="save-button">
+                                        <md-icon-button on:click|preventDefault={() => {saveAboutMe();}}>
+                                            <i class='bx bx-check-circle'></i>
+                                        </md-icon-button>
+                                    </div>
+
+                                    <div class="close-button">
+                                        <md-icon-button on:click|preventDefault={() => {isEditingAboutText = false;}}>
+                                            <i class='bx bx-x'></i>
+                                        </md-icon-button>
+                                    </div>
                                 </div>
+
                             {/if}
                         </div>
 
+                        <!-- Kontakt -->
                         <div class="tab-content" id="tab-2">
                             <div class="contact">
                                 <div class="contact-type">Email:</div>
@@ -888,6 +904,31 @@
       color: var(--navbar-icon-color);
     }
 
+    //About me section
+    .about-me-buttons{
+      display: flex;
+      justify-content: center;
+    }
+
+    .about-me-buttons .save-button{
+      //TODO
+    }
+
+    .about-me-buttons .close-button{
+      //TODO
+    }
+
+    .about-me-paragraph{
+      width: 300px;
+      padding: 20px;
+      cursor: pointer;
+    }
+
+    .about-me-paragraph:hover{
+      background-color: var(--search-background);
+      border-radius: 8px;
+      border: 1px solid var(--navbar-icon-color);
+    }
 
     /*
     .settings-container .settings .save-btn {

@@ -85,10 +85,16 @@
             </ul>
         </div>
 
-        <div class="tab-content active-tab-content" id="tab-1">
-            <p>
-                Študent, admin pre IKT. 3 roc bc
+        <div
+                class="tab-content active-tab-content"
+                id="tab-1"
+        >
+            <p
+                    class="about-me-paragraph"
+            >
+                {$loggedUser.aboutMe}
             </p>
+
         </div>
 
         <div class="tab-content" id="tab-2">
@@ -386,6 +392,10 @@
 
     .my-button:hover::before {
         --scale: 1;
+    }
+
+    .about-me-paragraph{
+        padding: 20px;
     }
 
     /*
