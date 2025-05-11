@@ -19,7 +19,7 @@
 
     import '@material/web/iconbutton/icon-button.js';
     import '@material/web/fab/fab.js';
-    import { doc, getDoc, setDoc } from "firebase/firestore";
+    import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
     import { db } from "../firebase";
 
     const storage = getStorage();
@@ -32,6 +32,8 @@
 
     let selectedStorage = "Moje dokumenty";
     let selectedRole = "ADMIN";
+
+    let isEditingAboutText = false;
 
     onMount( async () => {
         const allLinks = document.querySelectorAll(".tabs a");
@@ -90,6 +92,27 @@
     const toggleDarkMode = () => {
         isDarkModeEnabled.set(!$isDarkModeEnabled);
         //isDarkModeEnabled = !isDarkModeEnabled;
+    }
+
+    async function saveAboutMe(){
+        const newAboutMe = document.getElementById("about-me").value.trim();
+        if (!newAboutMe) return;
+
+        const userDocRef = doc(db, "userDetails", $loggedUser.uid);
+        try {
+            await updateDoc(userDocRef, {
+                aboutMe: newAboutMe
+            });
+
+            isEditingAboutText = false;
+            $loggedUser.aboutMe = newAboutMe;
+
+            setTimeout(() => {
+                navigate("/settings" , { replace: true });
+            }, 50);
+        } catch (error) {
+            console.error("Chyba pri ukladaní About Me:", error);
+        }
     }
 
     async function addNewRole(){
@@ -399,7 +422,6 @@
                             <div class="profile">
                                 <img src="{$loggedUser.photoURL}">
                                 <button class="status-circle" style="background: {$statusColor}"></button>
-                                <!-- TODO bindnutie statusu -->
                             </div>
 
                             <div class="info">
@@ -430,11 +452,30 @@
                             </ul>
                         </div>
 
-                        <div class="tab-content active-tab-content" id="tab-1">
-                            <p>
-                                TODO vlastny text
-                                <!-- TODO pridanie -->
-                            </p>
+                        <div
+                                class="tab-content active-tab-content"
+                                id="tab-1"
+                        >
+                            <!-- About me -->
+                            {#if !isEditingAboutText}
+                                <p on:click={() => {isEditingAboutText = !isEditingAboutText;}}>
+                                    {$loggedUser.aboutMe}
+                                </p>
+                            {/if}
+
+                            {#if isEditingAboutText}
+                                <textarea
+                                        class="about-me-textarea"
+                                        value={$loggedUser.aboutMe}
+                                        id="about-me"
+                                ></textarea>
+
+                                <div class="save-button">
+                                    <md-icon-button on:click|preventDefault={() => {saveAboutMe();}}>
+                                        <i class='bx bx-check-circle'></i>
+                                    </md-icon-button>
+                                </div>
+                            {/if}
                         </div>
 
                         <div class="tab-content" id="tab-2">

@@ -127,6 +127,7 @@
             $loggedUser.aisId = docSnap.data().aisId;
             $loggedUser.role = docSnap.data().role;
             $loggedUser.lastSeen = docSnap.data().lastSeen;
+            $loggedUser.aboutMe = docSnap.data().aboutMe;
             isDarkModeEnabled.set(docSnap.data().prefersDarkTheme);
 
             //Load user permissions

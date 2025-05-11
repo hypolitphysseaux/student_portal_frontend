@@ -115,7 +115,8 @@
                 prefersDarkTheme: false,
                 role: "USER",
                 status: "offline",
-                lastSeen: Date.now()
+                lastSeen: Date.now(),
+                aboutMe: "Napíšte niečo o sebe."
             });
         } catch (e) {
             console.error("Error adding document: ", e);
