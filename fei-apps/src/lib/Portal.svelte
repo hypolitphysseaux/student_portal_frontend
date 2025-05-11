@@ -36,6 +36,7 @@
     let isMyDocsShown = false;
     let isGeneralDocsShown = false;
     let isSharingNewDoc = false;
+    let isRenamingChat = false;
 
     onMount(async () => {
         console.log("Portal loaded.");
@@ -171,8 +172,27 @@
         }
     }
 
-    async function renameChat(){
-        //TODO , tak ako addNewChat , iba zmenit uuid a neupdateovat history
+    async function renameChat(key){
+        //TODO
+        const chatRef = doc(db, "chats", $loggedUser.uid);
+        const chatDoc = await getDoc(chatRef);
+
+        if (chatDoc.exists()) {
+            const allChats = chatDoc.data();
+            const selectedChat = allChats[key];
+
+            if (!selectedChat) return;
+
+
+            const updatedChat = {
+                ...selectedChat,
+                name: "TEST"
+            };
+
+            await updateDoc(chatRef, {
+                [key]: updatedChat
+            });
+        }
     }
 
     async function setActiveChat(key){
@@ -190,6 +210,7 @@
     }
 
     async function confirmShare(){
+        //TODO
         return;
     }
 
@@ -266,7 +287,7 @@
 
                                 <!-- Rename chat button -->
                                 <div class="rename-button">
-                                    <md-icon-button on:click={() => { renameChat() }}>
+                                    <md-icon-button on:click={() => { renameChat(key) }}>
                                         <i class='bx bxs-pencil'></i>
                                     </md-icon-button>
                                 </div>
@@ -295,7 +316,7 @@
 
                                 <!-- Rename chat button -->
                                 <div class="rename-button">
-                                    <md-icon-button on:click={() => { renameChat() }}>
+                                    <md-icon-button on:click={() => { renameChat(key) }}>
                                         <i class='bx bxs-pencil'></i>
                                     </md-icon-button>
                                 </div>

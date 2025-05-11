@@ -69,7 +69,6 @@
   async function loadAppComponents(){
 
     if ($currentApp == "portal"){
-      //TODO start loading animation
 
       const [
         PortalM,
@@ -81,7 +80,6 @@
         import('./lib/PortalDocumentSection.svelte')
       ]);
 
-      //TODO stop loading animation
 
       Portal = PortalM.default;
       PortalTutorial = PortalTutorialM.default;

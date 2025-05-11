@@ -99,6 +99,7 @@
     } // Otvorenie
 
 
+
     //Portal functions
     async function sendQuery() {
         const query_input = document.getElementById('query') || new HTMLElement();
@@ -108,11 +109,9 @@
             return;
         }
 
-        //TODO zistit, ci to nie je prikaz
-
-
         //Otvorenie chatu a pridanie query do chatu
         isChatModalOpen.set(true);
+
         await updateDoc(doc(db, "chats", $loggedUser.uid), {
             [`${$currentChat}.history`]: arrayUnion({
                     sender: "user",
@@ -140,9 +139,23 @@
 
         const data = await response.json();
 
-        console.log(data);
+        // Pridanie response do chatu -->
+        // TODO toto je mozno lepsie robit priamo na backende, streamovat to do firestore a tu mat listener
 
-        /* //TODO streamovanie odpovedi z backendu
+        await updateDoc(doc(db, "chats", $loggedUser.uid), {
+            [`${$currentChat}.history`]: arrayUnion({
+                sender: "bot",
+                message: data.response,
+                timestamp: new Date()
+            })
+        });
+
+        setTimeout(() => {
+            scrollChatToBottom();
+        }, 50);
+
+        /*
+        # streamovanie odpovedi z backendu ?
         const reader = response.body.getReader();
         const decoder = new TextDecoder("utf-8");
         let resultText = '';
@@ -350,7 +363,7 @@
 
     .navbar {
         position: fixed;
-        z-index: 1;
+        z-index: 100;
         top: 0;
         left: 0;
         height: 100%;

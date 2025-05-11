@@ -167,7 +167,6 @@
 
 
         //Check if the user is not signed in elsewhere //TODO
-        
 
         //Set session persistence
         setPersistence(auth , browserSessionPersistence);

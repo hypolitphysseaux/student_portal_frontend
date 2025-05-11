@@ -4,7 +4,7 @@
         isDarkModeEnabled,
         notificationText,
         isNotificationVisible,
-        notificationType
+        notificationType, isChatListOpen
     } from "../stores";
 
 
@@ -25,7 +25,12 @@
     <p>{$notificationText}</p>
     <div class="progress-bar {progressActivity}" id="progress-bar"></div>
 
-    <!-- TODO close notification button -->
+    <!-- Close Notification button -->
+    <div class="my-button">
+        <md-icon-button on:click={() => { visibility = "" }}>
+            <i class='bx bx-x'></i>
+        </md-icon-button>
+    </div>
 </div>
 
 
@@ -36,7 +41,7 @@
     left: 50%;
     transform: translateX(-50%);
     width: 300px;
-    padding: 20px;
+    padding: 30px;
     background-color: #4caf50;
     color: white;
     border-radius: 8px;
@@ -69,6 +74,17 @@
 
   .progress-bar.active {
     width: 100%;
+  }
+
+  .my-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    --md-icon-button-hover-state-layer-color: red;
+  }
+
+  .my-button i{
+    color: var(--navbar-icon-color);
   }
 </style>
 
