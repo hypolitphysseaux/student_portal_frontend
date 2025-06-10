@@ -22,7 +22,10 @@ export const isChatListOpen = writable(false);
 export const currentChat = writable("");
 export const isTutorialActive = writable(true);
 
+export const isAskingOnPersonalDocs = writable(false);
+
 //Settings
 export const storageOptions = writable([]);
 export const roleOptions = writable([]);
 export const permissions = writable([]);
+

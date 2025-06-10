@@ -8,7 +8,8 @@
         isChatListOpen,
         notificationText,
         isNotificationVisible,
-        notificationType
+        notificationType,
+        isAskingOnPersonalDocs
     } from "../stores";
 
     //FIRESTORE
@@ -37,6 +38,7 @@
     let isGeneralDocsShown = false;
     let isSharingNewDoc = false;
     let isRenamingChat = false;
+
 
     onMount(async () => {
         console.log("Portal loaded.");
@@ -341,6 +343,20 @@
     {#if $isChatModalOpen}
         <div class="modal" id="chatModal">
             <div class="modal-content">
+
+                <!-- Global/Personal switch -->
+                <div class="my-button-switch">
+                    <md-icon-button on:click={() => {
+                        isAskingOnPersonalDocs.set(!$isAskingOnPersonalDocs);
+                    }}>
+                        {#if $isAskingOnPersonalDocs}
+                            <i class='bx bx-fingerprint'></i>
+                        {/if}
+                        {#if !$isAskingOnPersonalDocs}
+                            <i class='bx bx-globe'></i>
+                        {/if}
+                    </md-icon-button>
+                </div>
 
                 <!-- Close Chat button -->
                 <div class="my-button">
@@ -871,6 +887,18 @@
     }
 
     .my-button i{
+      color: var(--navbar-icon-color);
+    }
+
+    /* Switch Global Personal */
+    .my-button-switch {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      --md-icon-button-hover-state-layer-color: green;
+    }
+
+    .my-button-switch i{
       color: var(--navbar-icon-color);
     }
 

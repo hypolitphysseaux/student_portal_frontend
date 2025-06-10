@@ -16,7 +16,8 @@
         isChatModalOpen,
         currentChat,
         isTutorialActive,
-        isChatListOpen
+        isChatListOpen,
+        isAskingOnPersonalDocs
     } from "../stores";
 
     export let isProfileInfoCardOpen = false;
@@ -133,7 +134,8 @@
             body: JSON.stringify(
                 {
                     query: query_input.value,
-                    user: $loggedUser.uid
+                    user: $loggedUser.uid,
+                    isAskingOnPersonalDocs: $isAskingOnPersonalDocs
                 })
         });
 
