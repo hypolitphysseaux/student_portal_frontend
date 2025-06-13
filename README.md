@@ -1,2 +1,2 @@
-# FEI-APPS-Main
-Hlavný repozitár frontendu, FEI APPS s loginom a hlavným dashboardom aplikácií
+# Bakalárska práca - Martin Petkeš
+Hlavný repozitár frontendu k bakalárskej práci Portál pre študentov s AI pomocníkom.  
