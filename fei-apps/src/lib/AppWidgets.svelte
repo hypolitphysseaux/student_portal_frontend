@@ -9,6 +9,9 @@
         currentApp.set("connections");
     }
 
+    async function startFunzone(){
+        currentApp.set("fun");
+    }
 </script>
 
 <div
@@ -41,14 +44,15 @@
             <a href="https://ubytovanie.stuba.sk/new/sk/informacie/" target="_blank" class="btn">SPUSTIŤ</a>
         </div>
 
-        <!--
+
         <div class="box" in:fade={{ delay: 200 , duration: 250 }}>
             <i class='bx bxs-chess'></i>
-            <h3>CHESS</h3>
+            <h3>FUN</h3>
             <p>Chceš si zahrať šach so spolužiakmi alebo prednášajúcimi? Na tomto mieste, iba proti FEIkárom. </p>
-            <a on:click={startFeiChess} href="http://localhost:5177/" target="_blank" class="btn">SPUSTIŤ</a>
+            <a on:click={startFunzone} class="btn">SPUSTIŤ</a>
         </div>
 
+        <!--
         <div class="box" in:fade={{ delay: 250 , duration: 250 }}>
             <i class='bx bx-chalkboard'></i>
             <h3>QUIZZES</h3>

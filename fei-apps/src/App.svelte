@@ -30,7 +30,10 @@
           PortalDocumentSection :any,
 
           // Connections
-          Connections :any
+          Connections :any,
+
+          //Funzone
+          Funzone :any
   ;
 
   async function loadComponents(){
@@ -99,6 +102,17 @@
       ]);
 
       Connections = ConnectionsM.default;
+    }
+
+    // Funzone components
+    if ($currentApp == "fun"){
+      const [
+        FunzoneM
+      ] = await Promise.all([
+        import('./lib/Funzone.svelte')
+      ]);
+
+      Funzone = FunzoneM.default;
     }
 
 
@@ -399,11 +413,29 @@
         {/if}
       </Route>
 
-      <!-- TODO Fun zone -->
       <Route path="/fun">
+        <!-- Navbar -->
+        {#if (Navbar)}
+          <svelte:component
+                  this={Navbar}
+                  bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
+          />
+        {/if}
+
+        <!-- Profile Info Card -->
+        {#if ProfileInfoCard}
+          {#if isProfileInfoCardOpen}
+            <svelte:component
+                    this={ProfileInfoCard}
+                    bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
+            />
+          {/if}
+        {/if}
 
         <!-- Funzone -->
-
+        {#if Funzone}
+          <svelte:component this={Funzone}/>
+        {/if}
       </Route>
 
     </Router>

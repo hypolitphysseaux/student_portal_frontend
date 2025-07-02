@@ -231,6 +231,14 @@
             </div>
         {/if}
 
+        {#if ($currentApp === "fun")}
+            <!-- Connections search -->
+            <div style="opacity: 0;" class="search">
+                <i class='bx bx-search'></i>
+                <input type="text" spellcheck="false" class="search" id="search" placeholder="Vyhľadajte osobu">
+            </div>
+        {/if}
+
         {#if ($currentApp === "portal")}
             <!-- Portal search -->
 
