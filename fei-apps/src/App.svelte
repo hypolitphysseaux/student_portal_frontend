@@ -27,7 +27,10 @@
           // Portal
           Portal :any,
           PortalTutorial :any,
-          PortalDocumentSection :any
+          PortalDocumentSection :any,
+
+          // Connections
+          Connections :any
   ;
 
   async function loadComponents(){
@@ -68,6 +71,7 @@
 
   async function loadAppComponents(){
 
+    // Portal components
     if ($currentApp == "portal"){
 
       const [
@@ -85,6 +89,18 @@
       PortalTutorial = PortalTutorialM.default;
       PortalDocumentSection = PortalDocumentSectionM.default;
     }
+
+    // Connections components
+    if ($currentApp == "connections"){
+      const [
+              ConnectionsM
+      ] = await Promise.all([
+        import('./lib/Connections.svelte')
+      ]);
+
+      Connections = ConnectionsM.default;
+    }
+
 
     // Po skonceni nacitavania komponentov presmerujeme pouzivatela na prislusnu aplikaciu
     navigate(("/" + $currentApp) , { replace: true });
@@ -312,7 +328,6 @@
 
 
       <!-- Spustena ina aplikacia -->
-
       <Route path="/portal">
         <!-- Navbar -->
         {#if (Navbar)}
@@ -358,6 +373,39 @@
           {/if}
         {/if}
       </Route>
+
+      <Route path="/connections">
+        <!-- Navbar -->
+        {#if (Navbar)}
+          <svelte:component
+                  this={Navbar}
+                  bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
+          />
+        {/if}
+
+        <!-- Profile Info Card -->
+        {#if ProfileInfoCard}
+          {#if isProfileInfoCardOpen}
+            <svelte:component
+                    this={ProfileInfoCard}
+                    bind:isProfileInfoCardOpen={isProfileInfoCardOpen}
+            />
+          {/if}
+        {/if}
+
+        <!-- Connections -->
+        {#if Connections}
+          <svelte:component this={Connections}/>
+        {/if}
+      </Route>
+
+      <!-- TODO Fun zone -->
+      <Route path="/fun">
+
+        <!-- Funzone -->
+
+      </Route>
+
     </Router>
   </div>
 

@@ -6,20 +6,9 @@
         currentApp.set("portal");
     }
     async function startFeiConnections(){
-        console.log("Starting FEI Connections...");
+        currentApp.set("connections");
     }
 
-    async function startFeiResources(){
-        console.log("Starting FEI Resources...");
-    }
-
-    async function startFeiQuizzes(){
-        console.log("Starting FEI Quizzes...");
-    }
-
-    async function startFeiChess(){
-        console.log("Starting FEI Chess...");
-    }
 </script>
 
 <div
@@ -42,7 +31,7 @@
             <i class='bx bxs-network-chart'></i>
             <h3>CONNECTIONS</h3>
             <p>Vyhľadajte kohokoľvek na FEIke. Súkromné správy, hromadné informácie v skupinových chatoch.</p>
-            <a on:click={startFeiConnections} href="http://localhost:5175/" target="_blank" class="btn">SPUSTIŤ</a>
+            <a on:click={startFeiConnections} class="btn">SPUSTIŤ</a>
         </div>
 
         <div class="box" in:fade={{ delay: 150 , duration: 250 }}>
