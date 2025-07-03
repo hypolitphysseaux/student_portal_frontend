@@ -10,9 +10,35 @@
     let grid: Grid = [];
     let highlighted: Set<string> = new Set();
 
+    let score = 0;
+
     onMount(() => {
         grid = generateGrid();
     });
+
+    function newGame(){
+        score = 0;
+        grid = generateGrid();
+        highlighted = new Set();
+    }
+
+    //TODO tak, aby sme nemuseli znova hladat, lebo uz musi byt hovernuta skupina
+    function handleClick(row: number, col: number) {
+        const group = findGroup(grid, row, col);
+        if (group.length < 2) return;
+
+        // Získaj skóre: napr. (n - 2)^2
+        score += (group.length - 2) ** 2;
+
+        // Zničiť kocky
+        for (const [r, c] of group) {
+            grid[r][c].color = null;
+        }
+
+        // Tu ešte neskôr doplníme pád kociek
+
+        highlighted = new Set(); // Vymaž zvýraznenie
+    }
 
     function findGroup(grid: Grid, row: number, col: number): [number, number][] {
         const targetColor = grid[row][col]?.color;
@@ -60,6 +86,13 @@
         class:dark-mode={$isDarkModeEnabled}
         on:mouseleave={clearHighlight}
 >
+    <button
+            on:click={newGame}
+            class="new-game-button"
+    >
+        Nová hra
+    </button>
+
     <div class="grid">
         {#each grid as row, rowIndex}
             {#each row as tile, colIndex}
@@ -72,6 +105,11 @@
             {/each}
         {/each}
     </div>
+
+    <div class="score-counter">🏆 Skóre: {score}</div>
+
+    <!-- TODO best score, time, best time, successful games, leaderboard // aj prepojit s firebase -->
+
 </div>
 
 
@@ -85,6 +123,35 @@
       height: 60vh;
 
       margin-top: 100px;
+    }
+
+    .game-wrapper .new-game-button{
+      position: absolute;
+      top: 50px;
+      left: 350px;
+
+      display: inline-block;
+      background: #2b6209;
+      color: #fff;
+      font-size: 28px;
+      border-radius: 8px;
+      padding: 8px 15px;
+      border: none;
+    }
+
+    .game-wrapper .new-game-button:hover{
+      background: rgba(43, 98, 9, 0.95);
+      transform: scale(1.02);
+      cursor: pointer;
+    }
+
+    .game-wrapper .score-counter{
+      position: absolute;
+      top: 50px;
+      right: 350px;
+
+      color: var(--navbar-icon-color);
+      font-size: 28px;
     }
 
     .game-wrapper .grid{
