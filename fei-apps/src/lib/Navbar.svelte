@@ -58,15 +58,21 @@
     async function logOut(){
 
         //Ak je spustená aplikácia, neodhlasujeme - iba presmerujeme na dashboard
-        if ($currentApp){
+        if ($currentApp && !$isPlayingGame){
             currentApp.set("");
             isChatModalOpen.set(false);
-            isPlayingGame.set(false);
-            playedGame.set("");
-
             isTutorialActive.set(true);
 
             navigate("/dashboard" , { replace: true });
+            return;
+        }
+
+        // Vypnut hru a vratit sa do funzone
+        if ($currentApp && $isPlayingGame){
+            isPlayingGame.set(false);
+            playedGame.set("");
+            currentApp.set("fun");
+
             return;
         }
 
