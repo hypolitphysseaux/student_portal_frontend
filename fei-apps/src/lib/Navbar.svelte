@@ -17,7 +17,9 @@
         currentChat,
         isTutorialActive,
         isChatListOpen,
-        isAskingOnPersonalDocs
+        isAskingOnPersonalDocs,
+        isPlayingGame,
+        playedGame
     } from "../stores";
 
     export let isProfileInfoCardOpen = false;
@@ -59,8 +61,10 @@
         if ($currentApp){
             currentApp.set("");
             isChatModalOpen.set(false);
+            isPlayingGame.set(false);
+            playedGame.set("");
 
-            isTutorialActive.set(true); // TODO Prerobit na preference
+            isTutorialActive.set(true);
 
             navigate("/dashboard" , { replace: true });
             return;

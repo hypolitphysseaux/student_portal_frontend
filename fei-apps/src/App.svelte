@@ -11,7 +11,12 @@
   import AppFooter from "./lib/AppFooter.svelte";
 
   //Stores
-  import { currentApp , isNotificationVisible , isTutorialActive } from "./stores";
+  import {
+    currentApp,
+    isNotificationVisible,
+    isTutorialActive,
+    isPlayingGame, playedGame
+  } from "./stores";
 
   //Dynamicke nacitanie komponentov po prihlaseni
   let
@@ -33,7 +38,8 @@
           Connections :any,
 
           //Funzone
-          Funzone :any
+          Funzone :any,
+          StoneDestructor :any
   ;
 
   async function loadComponents(){
@@ -107,12 +113,15 @@
     // Funzone components
     if ($currentApp == "fun"){
       const [
-        FunzoneM
+        FunzoneM,
+        StoneDestructorM
       ] = await Promise.all([
-        import('./lib/Funzone.svelte')
+        import('./lib/Funzone.svelte'),
+        import('./lib/StoneDestructor.svelte')
       ]);
 
       Funzone = FunzoneM.default;
+      StoneDestructor = StoneDestructorM.default;
     }
 
 
@@ -433,9 +442,18 @@
         {/if}
 
         <!-- Funzone -->
-        {#if Funzone}
-          <svelte:component this={Funzone}/>
+        {#if (!$isPlayingGame)}
+          {#if Funzone}
+            <svelte:component this={Funzone}/>
+          {/if}
         {/if}
+
+        {#if ($isPlayingGame && ($playedGame == "stone"))}  <!-- Stone singleplayer -->
+          {#if (StoneDestructor)}
+            <svelte:component this={StoneDestructor}/>
+          {/if}
+        {/if}
+
       </Route>
 
     </Router>

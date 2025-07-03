@@ -29,3 +29,7 @@ export const storageOptions = writable([]);
 export const roleOptions = writable([]);
 export const permissions = writable([]);
 
+// Funzone
+export const isPlayingGame = writable(false);
+export const playedGame = writable("");
+

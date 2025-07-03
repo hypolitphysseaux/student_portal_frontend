@@ -3,11 +3,8 @@
     import { fade } from 'svelte/transition';
     import {
         isDarkModeEnabled,
-        currentApp,
-        loggedUser,
-        notificationText,
-        isNotificationVisible,
-        notificationType, currentChat
+        isPlayingGame,
+        playedGame
     } from "../stores";
 
     //FIRESTORE
@@ -15,10 +12,6 @@
     import { auth, db } from "../firebase";
     import {listAll, ref} from "firebase/storage";
     import {v4 as uuidv4} from "uuid";
-
-
-    // Variables
-
 
     // Functions
     onMount(async () => {
@@ -29,6 +22,11 @@
         console.log("Funzone closed.");
     });
 
+    async function playSinglePlayerStone(){
+        isPlayingGame.set(true);
+        playedGame.set("stone");
+    }
+
 </script>
 
 
@@ -36,6 +34,7 @@
         class="funzone-wrapper"
         class:dark-mode={$isDarkModeEnabled}
 >
+
     <div
             class="widgets-container"
             class:dark-mode={$isDarkModeEnabled}
@@ -58,7 +57,7 @@
                 <i class='bx bxs-network-chart'></i>
                 <h3>STONE DESTRUCTOR</h3>
                 <p>Pridat popis.</p>
-                <a class="btn">SPUSTIŤ</a> <!-- TODO add on:click={}  pridat multiplayer button-->
+                <a on:click={playSinglePlayerStone} class="btn">SPUSTIŤ</a> <!-- TODO add on:click={}  pridat multiplayer button-->
             </div>
 
             <div class="box" in:fade={{ delay: 50 , duration: 250 }}>
