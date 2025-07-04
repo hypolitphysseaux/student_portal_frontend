@@ -11,10 +11,63 @@
     let highlighted: Set<string> = new Set();
 
     let score = 0;
+    let best_score = 1500;
+    let best_time = 0;
 
     onMount(() => {
         grid = generateGrid();
     });
+
+    function shiftColumnsLeft(grid: Grid){
+        const numRows = grid.length;
+        const numCols = grid[0].length;
+
+        const newCols: string[][] = [];
+
+        // Pre každý stĺpec zľava doprava
+        for (let col = 0; col < numCols; col++) {
+            const column = grid.map(row => row[col].color);
+
+            const isEmpty = column.every(color => color === null);
+            if (!isEmpty) {
+                newCols.push(column);
+            }
+        }
+
+        const missingCols = numCols - newCols.length;
+
+        // Pridaj prázdne stĺpce na koniec
+        for (let i = 0; i < missingCols; i++) {
+            newCols.push(Array(numRows).fill(null));
+        }
+
+        // Prepíš grid podľa newCols
+        for (let row = 0; row < numRows; row++) {
+            for (let col = 0; col < numCols; col++) {
+                grid[row][col].color = newCols[col][row];
+            }
+        }
+    }
+
+    function applyGravity(grid: Grid){
+        const numRows = grid.length;
+        const numCols = grid[0].length;
+
+        for (let col = 0; col < numCols; col++) {
+            const stack: (string | null)[] = [];
+
+            for (let row = numRows - 1; row >= 0; row--) {
+                const color = grid[row][col].color;
+                if (color !== null) {
+                    stack.push(color);
+                }
+            }
+
+            for (let row = numRows - 1; row >= 0; row--) {
+                grid[row][col].color = stack.length > 0 ? stack.shift()! : null;
+            }
+        }
+    }
 
     function newGame(){
         score = 0;
@@ -22,22 +75,20 @@
         highlighted = new Set();
     }
 
-    //TODO tak, aby sme nemuseli znova hladat, lebo uz musi byt hovernuta skupina
     function handleClick(row: number, col: number) {
         const group = findGroup(grid, row, col);
         if (group.length < 2) return;
 
-        // Získaj skóre: napr. (n - 2)^2
-        score += (group.length - 2) ** 2;
+        score += (group.length) ** 2;
 
-        // Zničiť kocky
         for (const [r, c] of group) {
             grid[r][c].color = null;
         }
 
-        // Tu ešte neskôr doplníme pád kociek
+        applyGravity(grid);
+        shiftColumnsLeft(grid);
 
-        highlighted = new Set(); // Vymaž zvýraznenie
+        highlighted = new Set();
     }
 
     function findGroup(grid: Grid, row: number, col: number): [number, number][] {
@@ -100,16 +151,23 @@
                         class="tile"
                         class:highlighted={highlighted.has(`${rowIndex},${colIndex}`)}
                         on:mouseenter={() => handleHover(rowIndex, colIndex)}
+                        on:click={() => handleClick(rowIndex, colIndex)}
                         style="background-color: {tile.color || 'white'};"
                 ></div>
             {/each}
         {/each}
     </div>
 
-    <div class="score-counter">🏆 Skóre: {score}</div>
+    <div class="stats-panel">
+        <div class="score-counter">🏆 Skóre: {score}</div>
+        <div class="best-score">🏆 Najlepšie skóre: {best_score}</div>
+        <div class="best-time">🕛 Najlepší čas: {best_time}</div>
+    </div>
 
-    <!-- TODO best score, time, best time, successful games, leaderboard // aj prepojit s firebase -->
 
+
+    <!-- TODO  time (asi do Navbaru), successful games, leaderboard // aj prepojit s firebase -->
+    <!-- TODO logika koncu hry (neuspesneho)-->
 </div>
 
 
@@ -121,7 +179,6 @@
       position: relative;
       width: 100%;
       height: 60vh;
-
       margin-top: 100px;
     }
 
@@ -145,11 +202,28 @@
       cursor: pointer;
     }
 
-    .game-wrapper .score-counter{
+    .game-wrapper .stats-panel{
       position: absolute;
       top: 50px;
-      right: 350px;
+      right: 200px;
 
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      //background: #009edb;
+    }
+
+    .game-wrapper .score-counter{
+      color: var(--navbar-icon-color);
+      font-size: 28px;
+    }
+
+    .game-wrapper .best-score{
+      color: var(--navbar-icon-color);
+      font-size: 28px;
+    }
+
+    .game-wrapper .best-time{
       color: var(--navbar-icon-color);
       font-size: 28px;
     }
