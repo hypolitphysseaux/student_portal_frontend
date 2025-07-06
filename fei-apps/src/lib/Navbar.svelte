@@ -220,8 +220,11 @@
             {#if (!$currentApp)}
                 <span>APPS</span>
             {:else}
-                <!-- Ak je spustena ina appka, zobrazim jej nazov -->
-                <span>{$currentApp.toUpperCase()}</span>
+                {#if $playedGame === ""}
+                    <span>{$currentApp.toUpperCase()}</span>
+                {:else if $playedGame === "stone"}
+                    <span>STONE DESTRUCTOR</span>
+                {/if}
             {/if}
 
         </div>
@@ -242,7 +245,6 @@
         {/if}
 
         {#if ($currentApp === "fun")}
-            <!-- Connections search -->
             <div style="opacity: 0;" class="search">
                 <i class='bx bx-search'></i>
                 <input type="text" spellcheck="false" class="search" id="search" placeholder="Vyhľadajte osobu">
