@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
 
-    import { generateGrid } from "../grid";
+    import { generateGrid , generateWinningGrid } from "../grid";
     import type { Grid, Tile } from "../types";
 
     // Stores
@@ -9,14 +9,55 @@
 
     let grid: Grid = [];
     let highlighted: Set<string> = new Set();
+    let gameState: 'ongoing' | 'win' | 'lose' = 'ongoing';
 
     let score = 0;
-    let best_score = 1500;
+    let best_score = 1500; // TODO nacitat z Firebase
     let best_time = 0;
 
     onMount(() => {
         grid = generateGrid();
     });
+
+    function checkGameOver(grid: Grid): 'win' | 'lose' | 'ongoing' {
+        const numRows = grid.length;
+        const numCols = grid[0].length;
+
+        let hasAnyGroup = false;
+        let hasAnyTile = false;
+
+        for (let row = 0; row < numRows; row++) {
+            for (let col = 0; col < numCols; col++) {
+                const color = grid[row][col].color;
+                if (color !== null) {
+                    hasAnyTile = true;
+
+                    // Susedia
+                    const neighbors = [
+                        [row - 1, col],
+                        [row + 1, col],
+                        [row, col - 1],
+                        [row, col + 1],
+                    ];
+
+                    for (const [nr, nc] of neighbors) {
+                        if (
+                            nr >= 0 && nr < numRows &&
+                            nc >= 0 && nc < numCols &&
+                            grid[nr][nc].color === color
+                        ) {
+                            hasAnyGroup = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!hasAnyTile) return 'win';
+        if (!hasAnyGroup) return 'lose';
+        return 'ongoing';
+    }
 
     function shiftColumnsLeft(grid: Grid){
         const numRows = grid.length;
@@ -73,9 +114,12 @@
         score = 0;
         grid = generateGrid();
         highlighted = new Set();
+        gameState = 'ongoing';
     }
 
     function handleClick(row: number, col: number) {
+        if (gameState !== 'ongoing') return;
+
         const group = findGroup(grid, row, col);
         if (group.length < 2) return;
 
@@ -87,8 +131,8 @@
 
         applyGravity(grid);
         shiftColumnsLeft(grid);
-
         highlighted = new Set();
+        gameState = checkGameOver(grid);
     }
 
     function findGroup(grid: Grid, row: number, col: number): [number, number][] {
@@ -164,10 +208,15 @@
         <div class="best-time">🕛 Najlepší čas: {best_time}</div>
     </div>
 
-
+    <!-- Game State -->
+    {#if gameState === 'win'}
+        <div class="game-state-label" style="color: green;"><strong>🎉 Vyhral si!</strong></div>
+    {:else if gameState === 'lose'}
+        <div class="game-state-label" style="color: red;"><strong>😞 Hra skončila – žiadne možné ťahy</strong></div>
+    {/if}
 
     <!-- TODO  time (asi do Navbaru), successful games, leaderboard // aj prepojit s firebase -->
-    <!-- TODO logika koncu hry (neuspesneho)-->
+    <!-- TODO  game label -->
 </div>
 
 
@@ -211,6 +260,14 @@
       flex-direction: column;
       gap: 20px;
       //background: #009edb;
+    }
+
+    .game-wrapper .game-state-label{
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%);
+
+      margin-top: 10px;
     }
 
     .game-wrapper .score-counter{
