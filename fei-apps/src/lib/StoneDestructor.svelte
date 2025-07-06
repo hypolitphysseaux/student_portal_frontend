@@ -251,4 +251,98 @@
       transition: all 0.1s ease;
       z-index: 2;
     }
+
+
+    @media (width <=1500px){
+      .game-wrapper{
+        height: 80vh;
+      }
+
+      .game-wrapper .new-game-button{
+        position: absolute;
+        top: 50px;
+        left: 150px;
+
+        font-size: 24px;
+      }
+
+      .game-wrapper .stats-panel{
+        position: absolute;
+        top: 50px;
+        right: 100px;
+      }
+
+      .game-wrapper .score-counter{
+        font-size: 20px;
+      }
+
+      .game-wrapper .best-score{
+        font-size: 20px;
+      }
+
+      .game-wrapper .best-time{
+        font-size: 20px;
+      }
+
+      .game-wrapper .grid{
+        grid-template-columns: repeat(20, 24px);
+        gap: 2px;
+      }
+
+      .game-wrapper .grid .tile{
+        width: 24px;
+        height: 24px;
+        border: 1px solid var(--navbar-icon-color);
+      }
+    }
+
+    @media (width <= 1200px){
+      .game-wrapper{
+        height: 110vh;
+      }
+
+      .game-wrapper .new-game-button{
+        position: absolute;
+        top: 50px;
+        left: 50%;
+        transform: translate(-50%);
+      }
+
+      .game-wrapper .stats-panel{
+        position: absolute;
+        top: 500px;
+        right: 50%;
+        transform: translate(50%);
+
+        //background: #009edb;
+      }
+
+      .game-wrapper .grid{
+        top: 150px;
+      }
+    }
+
+    @media (width <= 600px){
+      .game-wrapper .new-game-button{
+        font-size: 20px;
+      }
+
+      .game-wrapper .grid{
+        grid-template-columns: repeat(20, 20px);
+        gap: 2px;
+      }
+
+      .game-wrapper .grid .tile{
+        width: 20px;
+        height: 20px;
+        border: 1px solid var(--navbar-icon-color);
+      }
+
+      .game-wrapper .stats-panel{
+        right: 50%;
+        transform: translate(50%);
+        width: max-content;
+        //background: #009edb;
+      }
+    }
 </style>
