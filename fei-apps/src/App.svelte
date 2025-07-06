@@ -454,6 +454,12 @@
           {/if}
         {/if}
 
+        <!-- Notification -->
+        {#if $isNotificationVisible}
+          {#if Notification}
+            <svelte:component this={Notification}/>
+          {/if}
+        {/if}
       </Route>
 
     </Router>

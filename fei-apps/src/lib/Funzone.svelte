@@ -4,7 +4,10 @@
     import {
         isDarkModeEnabled,
         isPlayingGame,
-        playedGame
+        playedGame,
+        notificationText,
+        notificationType,
+        isNotificationVisible
     } from "../stores";
 
     //FIRESTORE
@@ -25,6 +28,38 @@
     async function playSinglePlayerStone(){
         isPlayingGame.set(true);
         playedGame.set("stone");
+    }
+
+    async function playChess(){
+        //Notification
+        requestAnimationFrame(() => {
+            notificationText.set(`Momentálne nie je k dispozícii.`);
+            notificationType.set("error");
+            isNotificationVisible.set(true);
+
+            setTimeout(() => {
+                notificationText.set("");
+                isNotificationVisible.set(false);
+            }, 3000);
+        });
+
+        return;
+    }
+
+    async function playSnake(){
+        //Notification
+        requestAnimationFrame(() => {
+            notificationText.set(`Momentálne nie je k dispozícii.`);
+            notificationType.set("error");
+            isNotificationVisible.set(true);
+
+            setTimeout(() => {
+                notificationText.set("");
+                isNotificationVisible.set(false);
+            }, 3000);
+        });
+
+        return;
     }
 
 </script>
@@ -50,21 +85,21 @@
                 <i class='bx bxs-school'></i>
                 <h3>CHESS</h3>
                 <p>Pridat popis.</p>
-                <a class="btn">SPUSTIŤ</a>
+                <a on:click={ playChess } class="btn">SPUSTIŤ</a>
             </div>
 
             <div class="box" in:fade={{ delay: 100 , duration: 250 }}>
                 <i class='bx bxs-network-chart'></i>
                 <h3>STONE DESTRUCTOR</h3>
                 <p>Pridat popis.</p>
-                <a on:click={playSinglePlayerStone} class="btn">SPUSTIŤ</a> <!-- TODO add on:click={}  pridat multiplayer button-->
+                <a on:click={ playSinglePlayerStone } class="btn">SPUSTIŤ</a> <!-- TODO add on:click={}  pridat multiplayer button-->
             </div>
 
             <div class="box" in:fade={{ delay: 50 , duration: 250 }}>
                 <i class='bx bxs-school'></i>
                 <h3>SNAKE</h3>
                 <p>Pridat popis.</p>
-                <a class="btn">SPUSTIŤ</a>
+                <a on:click={ playSnake }  class="btn">SPUSTIŤ</a>
             </div>
 
         </div>
