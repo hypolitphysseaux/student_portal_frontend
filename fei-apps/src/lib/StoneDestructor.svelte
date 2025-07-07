@@ -15,6 +15,7 @@
     let highlighted: Set<string> = new Set();
     let gameState: 'notStarted' | 'ongoing' | 'win' | 'lose' = 'notStarted';
     let gameTime = 0;
+    let startTime = 0;
     let timer: ReturnType<typeof setInterval> | null = null;
 
     let score = 0;
@@ -28,6 +29,10 @@
         best_score = stats.best_score ?? 0;
         best_time = stats.best_time ?? 0;
         successful_games = stats.successful_games ?? 0;
+
+        if (best_time == Infinity){
+            best_time = "-";
+        }
 
         grid = generateGrid();
     });
@@ -45,7 +50,6 @@
             await setDoc(ref, defaultStats);
             return defaultStats;
         }
-
         return snap.data();
     }
 
@@ -96,15 +100,18 @@
 
     function startTimer() {
         if (timer) return;
+
+        startTime = performance.now();
         timer = setInterval(() => {
-            gameTime += 1;
-        }, 1000);
+            gameTime = performance.now() - startTime;
+        }, 33); // cca 30 fps
     }
 
     function stopTimer() {
         if (timer) {
             clearInterval(timer);
             timer = null;
+            gameTime = performance.now() - startTime;
         }
     }
 
@@ -208,12 +215,22 @@
         stopTimer();
     }
 
-    function formatTime(seconds: number): string {
-        const mins = Math.floor(seconds / 60)
+    function formatTime(ms): string {
+        if (ms == "-") { return "-"};
+
+        const minutes = Math.floor(ms / 60000)
             .toString()
             .padStart(2, '0');
-        const secs = (seconds % 60).toString().padStart(2, '0');
-        return `${mins}:${secs}`;
+
+        const seconds = Math.floor((ms % 60000) / 1000)
+            .toString()
+            .padStart(2, '0');
+
+        const millis = Math.floor(ms % 1000)
+            .toString()
+            .padStart(3, '0');
+
+        return `${minutes}:${seconds}:${millis}`;
     }
 
     async function handleClick(row: number, col: number) {
@@ -328,10 +345,10 @@
     </div>
 
     <div class="stats-panel">
-        <div class="score-counter">🏆 Skóre: {score}</div>
-        <div class="best-score">🏆 Najlepšie skóre: {best_score}</div>
-        <div class="best-time">🕛 Najlepší čas: {best_time}</div>
-        <div class="successful-games">Počet vyhratých hier: {successful_games}</div>
+        <div class="score-counter"><strong>🏆 Skóre:</strong> {score}</div>
+        <div class="best-score"><strong>🏆 Najlepšie skóre:</strong> {best_score}</div>
+        <div class="best-time"><strong>🕛 Najlepší čas:</strong> {formatTime(best_time)}</div>
+        <div class="successful-games"><strong>Počet vyhratých hier:</strong> {successful_games}</div>
     </div>
 
     <!-- Game State -->
