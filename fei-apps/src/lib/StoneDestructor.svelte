@@ -9,7 +9,9 @@
 
     let grid: Grid = [];
     let highlighted: Set<string> = new Set();
-    let gameState: 'ongoing' | 'win' | 'lose' = 'ongoing';
+    let gameState: 'notStarted' | 'ongoing' | 'win' | 'lose' = 'notStarted';
+    let gameTime = 0;
+    let timer: ReturnType<typeof setInterval> | null = null;
 
     let score = 0;
     let best_score = 1500; // TODO nacitat z Firebase
@@ -18,6 +20,20 @@
     onMount(() => {
         grid = generateGrid();
     });
+
+    function startTimer() {
+        if (timer) return;
+        timer = setInterval(() => {
+            gameTime += 1;
+        }, 1000);
+    }
+
+    function stopTimer() {
+        if (timer) {
+            clearInterval(timer);
+            timer = null;
+        }
+    }
 
     function checkGameOver(grid: Grid): 'win' | 'lose' | 'ongoing' {
         const numRows = grid.length;
@@ -114,14 +130,29 @@
         score = 0;
         grid = generateGrid();
         highlighted = new Set();
-        gameState = 'ongoing';
+        gameState = 'notStarted';
+        gameTime = 0;
+        stopTimer();
+    }
+
+    function formatTime(seconds: number): string {
+        const mins = Math.floor(seconds / 60)
+            .toString()
+            .padStart(2, '0');
+        const secs = (seconds % 60).toString().padStart(2, '0');
+        return `${mins}:${secs}`;
     }
 
     function handleClick(row: number, col: number) {
-        if (gameState !== 'ongoing') return;
+        if (gameState === 'win' || gameState === 'lose') return;
 
         const group = findGroup(grid, row, col);
         if (group.length < 2) return;
+
+        if (gameState === 'notStarted') {
+            gameState = 'ongoing';
+            startTimer();
+        }
 
         score += (group.length) ** 2;
 
@@ -132,7 +163,12 @@
         applyGravity(grid);
         shiftColumnsLeft(grid);
         highlighted = new Set();
-        gameState = checkGameOver(grid);
+
+        const state = checkGameOver(grid);
+        if (state !== 'ongoing') {
+            stopTimer();
+        }
+        gameState = state;
     }
 
     function findGroup(grid: Grid, row: number, col: number): [number, number][] {
@@ -215,8 +251,11 @@
         <div class="game-state-label" style="color: red;"><strong>😞 Hra skončila – žiadne možné ťahy</strong></div>
     {/if}
 
-    <!-- TODO  time (asi do Navbaru), successful games, leaderboard // aj prepojit s firebase -->
-    <!-- TODO  game label -->
+    <!-- Timer -->
+    <div class="game-time"><strong>{formatTime(gameTime)}</strong></div>
+
+
+    <!-- TODO successful games, leaderboard -->
 </div>
 
 
@@ -266,8 +305,19 @@
       position: absolute;
       left: 50%;
       transform: translate(-50%);
+      width: max-content;
 
       margin-top: 10px;
+    }
+
+    .game-wrapper .game-time{
+      position: absolute;
+      top: 400px;
+      left: 50%;
+      transform: translate(-50%);
+
+      font-size: 28px;
+      color: var(--navbar-icon-color);
     }
 
     .game-wrapper .score-counter{
@@ -355,7 +405,7 @@
 
     @media (width <= 1200px){
       .game-wrapper{
-        height: 110vh;
+        height: 130vh;
       }
 
       .game-wrapper .new-game-button{
@@ -365,9 +415,13 @@
         transform: translate(-50%);
       }
 
+      .game-wrapper .game-time{
+        top: 500px;
+      }
+
       .game-wrapper .stats-panel{
         position: absolute;
-        top: 500px;
+        top: 600px;
         right: 50%;
         transform: translate(50%);
 
