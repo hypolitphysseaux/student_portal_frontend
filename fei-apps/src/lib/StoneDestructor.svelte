@@ -2,14 +2,14 @@
     import { onMount } from 'svelte';
 
     import { generateGrid , generateWinningGrid } from "../grid";
-    import type { Grid, Tile } from "../types";
+    import type { Grid } from "../types";
 
     // Stores
     import { isDarkModeEnabled , loggedUser } from "../stores";
 
     //Firebase
     import { db } from "../firebase";
-    import { doc, getDoc, updateDoc, arrayUnion, setDoc, deleteField } from "firebase/firestore";
+    import { doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
 
     let grid: Grid = [];
     let highlighted: Set<string> = new Set();
@@ -69,6 +69,28 @@
             };
 
             await updateDoc(ref, newStats);
+        }
+    }
+
+    async function updateBestScoreOnly(uid, score) {
+        const ref = doc(db, 'StoneDestructorSinglePlayerStats', uid);
+        const snap = await getDoc(ref);
+
+        if (!snap.exists()) {
+            await setDoc(ref, {
+                best_score: score,
+                best_time: Infinity,
+                successful_games: 0,
+            });
+        } else {
+            const data = snap.data();
+            const current = data.best_score ?? 0;
+
+            if (score > current) {
+                await updateDoc(ref, {
+                    best_score: score,
+                });
+            }
         }
     }
 
@@ -232,7 +254,8 @@
 
         if (state === 'lose') {
             if (score > best_score){
-                //TODO
+                await updateBestScoreOnly($loggedUser.uid, score);
+                best_score = score;
             }
         }
     }
