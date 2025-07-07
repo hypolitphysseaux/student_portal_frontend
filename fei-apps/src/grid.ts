@@ -16,6 +16,8 @@ export function generateWinningGrid(): Grid {
     grid[9][0].color = 'blue';
     grid[9][1].color = 'blue';
     grid[8][0].color = 'blue';
+    grid[8][2].color = 'red';
+    grid[8][3].color = 'red';
 
     return grid;
 }

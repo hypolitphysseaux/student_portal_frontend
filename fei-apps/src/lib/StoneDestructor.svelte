@@ -5,7 +5,11 @@
     import type { Grid, Tile } from "../types";
 
     // Stores
-    import { isDarkModeEnabled } from "../stores";
+    import { isDarkModeEnabled , loggedUser } from "../stores";
+
+    //Firebase
+    import { db } from "../firebase";
+    import { doc, getDoc, updateDoc, arrayUnion, setDoc, deleteField } from "firebase/firestore";
 
     let grid: Grid = [];
     let highlighted: Set<string> = new Set();
@@ -14,12 +18,59 @@
     let timer: ReturnType<typeof setInterval> | null = null;
 
     let score = 0;
-    let best_score = 1500; // TODO nacitat z Firebase
-    let best_time = 0;
+    let best_score;
+    let successful_games;
+    let best_time;
 
-    onMount(() => {
+    onMount(async () => {
+        // My stats
+        const stats = await getPlayerStats($loggedUser.uid);
+        best_score = stats.best_score ?? 0;
+        best_time = stats.best_time ?? 0;
+        successful_games = stats.successful_games ?? 0;
+
         grid = generateGrid();
     });
+
+    async function getPlayerStats(uid) {
+        const ref = doc(db, 'StoneDestructorSinglePlayerStats', uid);
+        const snap = await getDoc(ref);
+
+        if (!snap.exists()) {
+            const defaultStats = {
+                best_score: 0,
+                best_time: Infinity,
+                successful_games: 0,
+            };
+            await setDoc(ref, defaultStats);
+            return defaultStats;
+        }
+
+        return snap.data();
+    }
+
+    async function updatePlayerStats(uid, score, time) {
+        const ref = doc(db, 'StoneDestructorSinglePlayerStats', uid);
+        const snap = await getDoc(ref);
+
+        if (!snap.exists()) {
+            await setDoc(ref, {
+                best_score: score,
+                best_time: time,
+                successful_games: 1,
+            });
+        } else {
+            const data = snap.data();
+
+            const newStats = {
+                best_score: Math.max(data.best_score ?? 0, score),
+                best_time: Math.min(data.best_time ?? Infinity, time),
+                successful_games: (data.successful_games ?? 0) + 1,
+            };
+
+            await updateDoc(ref, newStats);
+        }
+    }
 
     function startTimer() {
         if (timer) return;
@@ -128,7 +179,7 @@
 
     function newGame(){
         score = 0;
-        grid = generateGrid();
+        grid = generateWinningGrid();
         highlighted = new Set();
         gameState = 'notStarted';
         gameTime = 0;
@@ -143,7 +194,7 @@
         return `${mins}:${secs}`;
     }
 
-    function handleClick(row: number, col: number) {
+    async function handleClick(row: number, col: number) {
         if (gameState === 'win' || gameState === 'lose') return;
 
         const group = findGroup(grid, row, col);
@@ -169,6 +220,21 @@
             stopTimer();
         }
         gameState = state;
+
+        if (state === 'win') {
+            await updatePlayerStats($loggedUser.uid, score, gameTime);
+
+            const stats = await getPlayerStats($loggedUser.uid);
+            best_score = stats.best_score ?? 0;
+            best_time = stats.best_time ?? 0;
+            successful_games = stats.successful_games ?? 0;
+        }
+
+        if (state === 'lose') {
+            if (score > best_score){
+                //TODO
+            }
+        }
     }
 
     function findGroup(grid: Grid, row: number, col: number): [number, number][] {
@@ -242,6 +308,7 @@
         <div class="score-counter">🏆 Skóre: {score}</div>
         <div class="best-score">🏆 Najlepšie skóre: {best_score}</div>
         <div class="best-time">🕛 Najlepší čas: {best_time}</div>
+        <div class="successful-games">Počet vyhratých hier: {successful_games}</div>
     </div>
 
     <!-- Game State -->
@@ -255,7 +322,7 @@
     <div class="game-time"><strong>{formatTime(gameTime)}</strong></div>
 
 
-    <!-- TODO successful games, leaderboard -->
+    <!-- TODO leaderboard, time format 00:00:000 -->
 </div>
 
 
@@ -335,6 +402,11 @@
       font-size: 28px;
     }
 
+    .game-wrapper .successful-games{
+      color: var(--navbar-icon-color);
+      font-size: 28px;
+    }
+
     .game-wrapper .grid{
       position: absolute;
       top: 50px;
@@ -388,6 +460,10 @@
       }
 
       .game-wrapper .best-time{
+        font-size: 20px;
+      }
+
+      .game-wrapper .successful-games{
         font-size: 20px;
       }
 
