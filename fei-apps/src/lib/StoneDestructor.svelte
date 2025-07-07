@@ -208,7 +208,7 @@
 
     function newGame(){
         score = 0;
-        grid = generateWinningGrid();
+        grid = generateGrid();
         highlighted = new Set();
         gameState = 'notStarted';
         gameTime = 0;
@@ -362,7 +362,7 @@
     <div class="game-time"><strong>{formatTime(gameTime)}</strong></div>
 
 
-    <!-- TODO leaderboard, time format 00:00:000 -->
+    <!-- TODO leaderboard -->
 </div>
 
 
