@@ -373,14 +373,14 @@
 
       position: relative;
       width: 100%;
-      height: 60vh;
+      height: 80vh;
       margin-top: 100px;
     }
 
     .game-wrapper .new-game-button{
       position: absolute;
       top: 50px;
-      left: 350px;
+      left: 250px;
 
       display: inline-block;
       background: #2b6209;
@@ -400,7 +400,7 @@
     .game-wrapper .stats-panel{
       position: absolute;
       top: 50px;
-      right: 200px;
+      right: 120px;
 
       display: flex;
       flex-direction: column;
@@ -419,7 +419,7 @@
 
     .game-wrapper .game-time{
       position: absolute;
-      top: 400px;
+      top: 500px;
       left: 50%;
       transform: translate(-50%);
 
@@ -429,22 +429,22 @@
 
     .game-wrapper .score-counter{
       color: var(--navbar-icon-color);
-      font-size: 28px;
+      font-size: 24px;
     }
 
     .game-wrapper .best-score{
       color: var(--navbar-icon-color);
-      font-size: 28px;
+      font-size: 24px;
     }
 
     .game-wrapper .best-time{
       color: var(--navbar-icon-color);
-      font-size: 28px;
+      font-size: 24px;
     }
 
     .game-wrapper .successful-games{
       color: var(--navbar-icon-color);
-      font-size: 28px;
+      font-size: 24px;
     }
 
     .game-wrapper .grid{
@@ -489,6 +489,10 @@
         position: absolute;
         top: 50px;
         right: 100px;
+      }
+
+      .game-wrapper .game-time{
+        top: 400px;
       }
 
       .game-wrapper .score-counter{
