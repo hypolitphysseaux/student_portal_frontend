@@ -120,23 +120,16 @@
 
 
 <style lang="scss">
-
   .funzone-wrapper{
     background: var(--welcome-section-background);
 
     position: relative;
     width: 100%;
-    height: 70vh;
+    height: fit-content;
   }
 
   // From AppWidgets
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap');
-
-  *{
-    outline: none;
-    text-decoration: none;
-    transition: .2s linear;
-  }
 
   .widgets-container {
     background: var(--dotted-background-with-opacity);
@@ -238,5 +231,7 @@
   .widgets-container .box-container .box .btn-multiplayer:hover {
     background: darkred;
   }
+
+
 
 </style>

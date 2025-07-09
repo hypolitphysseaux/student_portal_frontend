@@ -471,7 +471,6 @@
           {/if}
         {/if}
       </Route>
-
     </Router>
   </div>
 

@@ -363,6 +363,7 @@
 
 
     <!-- TODO leaderboard -->
+
 </div>
 
 
@@ -373,9 +374,10 @@
 
       position: relative;
       width: 100%;
-      height: 80vh;
+      min-height: 80vh;
       margin-top: 100px;
     }
+
 
     .game-wrapper .new-game-button{
       position: absolute;
@@ -390,6 +392,7 @@
       padding: 8px 15px;
       border: none;
     }
+
 
     .game-wrapper .new-game-button:hover{
       background: rgba(43, 98, 9, 0.95);
@@ -456,6 +459,7 @@
       display: grid;
       grid-template-columns: repeat(20, 32px);
       gap: 2px;
+
     }
 
     .game-wrapper .grid .tile{
