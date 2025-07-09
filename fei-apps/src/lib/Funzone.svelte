@@ -84,27 +84,25 @@
         </div>
 
         <div class="box-container">
-            <!-- TODO zmenit ikony -->
-
             <div class="box" in:fade={{ delay: 50 , duration: 250 }}>
-                <i class='bx bxs-school'></i>
+                <i class='bx bxs-chess'></i>
                 <h3>CHESS</h3>
-                <p>Pridat popis.</p>
+                <p> Kráľovská hra s rôznymi časovými formátmi. Vyzvi spolužiakov na súboj a ukáž im, kto je majster taktiky.</p>
                 <a on:click={ playChess } class="btn">SPUSTIŤ</a>
             </div>
 
             <div class="box" in:fade={{ delay: 100 , duration: 250 }}>
-                <i class='bx bxs-network-chart'></i>
+                <i class='bx bx-diamond'></i>
                 <h3>STONE DESTRUCTOR</h3>
-                <p>Pridat popis.</p>
+                <p>Znič susedné kamene rovnakej farby v čo najkratšom čase a nazbieraj pri tom čo najviac bodov.</p>
                 <a on:click={ playSinglePlayerStone } class="btn">SINGLEPLAYER</a>
                 <a on:click={ playMultiPlayerStone } class="btn-multiplayer">MULTIPLAYER</a>
             </div>
 
             <div class="box" in:fade={{ delay: 50 , duration: 250 }}>
-                <i class='bx bxs-school'></i>
+                <i class='bx bx-border-top'></i>
                 <h3>SNAKE</h3>
-                <p>Pridat popis.</p>
+                <p>Klasika starých tlačidlových mobilov. Nakŕm  a zväčši svojho hada na maximum.</p>
                 <a on:click={ playSnake }  class="btn">SPUSTIŤ</a>
             </div>
 
