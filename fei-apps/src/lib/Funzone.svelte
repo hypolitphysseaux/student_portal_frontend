@@ -30,6 +30,11 @@
         playedGame.set("stone");
     }
 
+    async function playMultiPlayerStone(){
+        isPlayingGame.set(true);
+        playedGame.set("stone-multiplayer");
+    }
+
     async function playChess(){
         //Notification
         requestAnimationFrame(() => {
@@ -92,7 +97,8 @@
                 <i class='bx bxs-network-chart'></i>
                 <h3>STONE DESTRUCTOR</h3>
                 <p>Pridat popis.</p>
-                <a on:click={ playSinglePlayerStone } class="btn">SPUSTIŤ</a> <!-- TODO add on:click={}  pridat multiplayer button-->
+                <a on:click={ playSinglePlayerStone } class="btn">SINGLEPLAYER</a>
+                <a on:click={ playMultiPlayerStone } class="btn-multiplayer">MULTIPLAYER</a>
             </div>
 
             <div class="box" in:fade={{ delay: 50 , duration: 250 }}>
@@ -195,6 +201,22 @@
     cursor: pointer;
   }
 
+  .widgets-container .box-container .box .btn-multiplayer {
+    margin-top: 10px;
+    display: inline-block;
+    position: absolute;
+    left: 15px;
+    top: 25px;
+    background: red;
+    color: #fff;
+    font-size: 17px;
+    border-radius: 8px;
+    padding: 8px 15px;
+    cursor: pointer;
+  }
+
+
+
 
   .widgets-container .box-container .box:hover {
     box-shadow: var(--box-shadow--hover);
@@ -206,6 +228,10 @@
 
   .widgets-container .box-container .box .btn:hover {
     background: var(--primary-button--hover);
+  }
+
+  .widgets-container .box-container .box .btn-multiplayer:hover {
+    background: darkred;
   }
 
 </style>

@@ -39,7 +39,8 @@
 
           //Funzone
           Funzone :any,
-          StoneDestructor :any
+          StoneDestructor :any,
+          StoneDestructorMultiplayer :any
   ;
 
   async function loadComponents(){
@@ -114,14 +115,17 @@
     if ($currentApp == "fun"){
       const [
         FunzoneM,
-        StoneDestructorM
+        StoneDestructorM,
+        StoneDestructorMultiplayerM
       ] = await Promise.all([
         import('./lib/Funzone.svelte'),
-        import('./lib/StoneDestructor.svelte')
+        import('./lib/StoneDestructor.svelte'),
+        import('./lib/StoneDestructorMultiplayer.svelte')
       ]);
 
       Funzone = FunzoneM.default;
       StoneDestructor = StoneDestructorM.default;
+      StoneDestructorMultiplayer = StoneDestructorMultiplayerM.default;
     }
 
 
@@ -451,6 +455,12 @@
         {#if ($isPlayingGame && ($playedGame == "stone"))}  <!-- Stone singleplayer -->
           {#if (StoneDestructor)}
             <svelte:component this={StoneDestructor}/>
+          {/if}
+        {/if}
+
+        {#if ($isPlayingGame && ($playedGame == "stone-multiplayer"))}  <!-- Stone multiplayer -->
+          {#if (StoneDestructorMultiplayer)}
+            <svelte:component this={StoneDestructorMultiplayer}/>
           {/if}
         {/if}
 

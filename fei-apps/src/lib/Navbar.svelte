@@ -222,7 +222,7 @@
             {:else}
                 {#if $playedGame === ""}
                     <span>{$currentApp.toUpperCase()}</span>
-                {:else if $playedGame === "stone"}
+                {:else if ($playedGame === "stone" || $playedGame === "stone-multiplayer")}
                     <span>STONE DESTRUCTOR</span>
                 {/if}
             {/if}
