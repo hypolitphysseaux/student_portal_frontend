@@ -338,7 +338,7 @@
                         class:highlighted={highlighted.has(`${rowIndex},${colIndex}`)}
                         on:mouseenter={() => handleHover(rowIndex, colIndex)}
                         on:click={() => handleClick(rowIndex, colIndex)}
-                        style="background-color: {tile.color || 'white'};"
+                        style="background-color: {tile.color || 'transparent'};"
                 ></div>
             {/each}
         {/each}
