@@ -106,6 +106,13 @@
                 <a on:click={ playSnake }  class="btn">SPUSTIŤ</a>
             </div>
 
+            <div class="box" in:fade={{ delay: 50 , duration: 250 }}>
+                <i class='bx bx-border-top'></i>
+                <h3>QUIZZES</h3>
+                <p>Popis.</p>
+                <a class="btn">SPUSTIŤ</a>
+            </div>
+
         </div>
     </div>
 </div>
@@ -119,7 +126,7 @@
 
     position: relative;
     width: 100%;
-    height: 55vh;
+    height: 70vh;
   }
 
   // From AppWidgets
@@ -132,7 +139,7 @@
   }
 
   .widgets-container {
-    background: var(--dotted-background);
+    background: var(--dotted-background-with-opacity);
     background-size: 10px 10px;
     padding: 15px 9%;
     padding-bottom: 50px;
@@ -152,7 +159,7 @@
 
   .widgets-container .box-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(390px, 1fr));  //290, 1fr
     gap: 15px;
     margin-top: 150px;
   }
@@ -164,7 +171,7 @@
     border-radius: 8px;
     background: var(--color-card-background);
     text-align: center;
-    padding: 30px 20px;
+    padding: 30px 20px;  // 30,20
   }
 
   .widgets-container .box-container .box i{
