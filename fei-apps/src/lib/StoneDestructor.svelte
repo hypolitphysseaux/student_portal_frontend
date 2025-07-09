@@ -7,6 +7,8 @@
     // Stores
     import { isDarkModeEnabled , loggedUser } from "../stores";
 
+    // TODO intersection observer pre zmiznutie footeru {maybe}
+
     //Firebase
     import { db } from "../firebase";
     import { doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
@@ -362,8 +364,7 @@
     <div class="game-time"><strong>{formatTime(gameTime)}</strong></div>
 
 
-    <!-- TODO leaderboard -->
-
+    <!-- Leaderboard  //TODO -->
 </div>
 
 
@@ -377,7 +378,6 @@
       min-height: 80vh;
       margin-top: 100px;
     }
-
 
     .game-wrapper .new-game-button{
       position: absolute;
