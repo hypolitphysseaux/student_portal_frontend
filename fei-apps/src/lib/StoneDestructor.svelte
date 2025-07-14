@@ -363,8 +363,28 @@
     <!-- Timer -->
     <div class="game-time"><strong>{formatTime(gameTime)}</strong></div>
 
-
     <!-- Leaderboard  //TODO -->
+    <div class="leaderboard">
+        <h3>Najlepší hráči</h3>
+        <div class="best-score">
+            🏆 (...)
+            <div class="profile">
+                (profilovka)
+                <div class="name">
+                    (name)
+                </div>
+            </div>
+        </div>
+        <div class="best-time">
+            🕛 (...)
+            <div class="profile">
+                (profilovka)
+                <div class="name">
+                    (name)
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -379,6 +399,34 @@
       margin-top: 100px;
     }
 
+    //Leaderboard
+    .game-wrapper .leaderboard{
+      position: absolute;
+      top: 150px;
+      left: 250px;
+
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .game-wrapper .leaderboard h3{
+      color: var(--navbar-icon-color);
+    }
+
+    .game-wrapper .leaderboard .best-time{
+      display: flex;
+      gap: 20px;
+    }
+
+    .game-wrapper .leaderboard .best-score{
+      display: flex;
+      gap: 20px;
+    }
+
+
+
+    //New game button
     .game-wrapper .new-game-button{
       position: absolute;
       top: 50px;
@@ -481,6 +529,11 @@
         height: 80vh;
       }
 
+      .game-wrapper .leaderboard{
+        position: absolute;
+        left: 150px;
+      }
+
       .game-wrapper .new-game-button{
         position: absolute;
         top: 50px;
@@ -530,6 +583,10 @@
     @media (width <= 1200px){
       .game-wrapper{
         height: 130vh;
+      }
+
+      .game-wrapper .leaderboard{
+        visibility: hidden;
       }
 
       .game-wrapper .new-game-button{
