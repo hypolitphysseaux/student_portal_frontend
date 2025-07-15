@@ -134,7 +134,7 @@
                 progress = Math.trunc((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
             },
             (error) => {
-                console.error('Chyba pri nahrávaní:', error); //TODO label
+                console.error('Chyba pri nahrávaní:', error);
             },
             () => {
                 progress = "";

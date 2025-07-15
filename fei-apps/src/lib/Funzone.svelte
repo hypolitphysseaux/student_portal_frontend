@@ -44,6 +44,7 @@
 
             setTimeout(() => {
                 notificationText.set("");
+                notificationType.set("");
                 isNotificationVisible.set(false);
             }, 3000);
         });
@@ -60,6 +61,7 @@
 
             setTimeout(() => {
                 notificationText.set("");
+                notificationType.set("");
                 isNotificationVisible.set(false);
             }, 3000);
         });

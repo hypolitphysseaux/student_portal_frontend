@@ -5,13 +5,11 @@
     import type { Grid } from "../types";
 
     // Stores
-    import { isDarkModeEnabled , loggedUser } from "../stores";
-
-    // TODO intersection observer pre zmiznutie footeru {maybe}
+    import { isDarkModeEnabled, loggedUser, statusColor } from "../stores";
 
     //Firebase
     import { db } from "../firebase";
-    import { doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
+    import { doc, getDoc, updateDoc, setDoc, getDocs, collection } from "firebase/firestore";
 
     let grid: Grid = [];
     let highlighted: Set<string> = new Set();
@@ -25,7 +23,12 @@
     let successful_games;
     let best_time;
 
+    let leaderboard = [];
+    let score_leader, time_leader;
+
     onMount(async () => {
+        grid = generateGrid();
+
         // My stats
         const stats = await getPlayerStats($loggedUser.uid);
         best_score = stats.best_score ?? 0;
@@ -36,8 +39,38 @@
             best_time = "-";
         }
 
-        grid = generateGrid();
+        // Fetch leaderboard
+        leaderboard = await fetchLeaderboard();
+
+        score_leader = sortLeaderboard(leaderboard, "score")[0];
+        time_leader = sortLeaderboard(leaderboard, "time")[0];
+
+        // Leader details TODO + profile info card
+
     });
+
+    async function fetchLeaderboard(){
+        const snapshot = await getDocs(collection(db, 'StoneDestructorSinglePlayerStats'));
+
+        const players = snapshot.docs.map(doc => ({
+            uid: doc.id,
+            ...doc.data()
+        }));
+
+        return players;
+    }
+
+    function sortLeaderboard(players, type) {
+        let sorted = [];
+
+        if (type === 'score') {
+            sorted = players.sort((a, b) => b.best_score - a.best_score);
+        } else if (type === 'time') {
+            sorted = players.sort((a, b) => a.best_time - b.best_time);
+        }
+
+        return sorted.slice(0, 1);
+    }
 
     async function getPlayerStats(uid) {
         const ref = doc(db, 'StoneDestructorSinglePlayerStats', uid);
@@ -363,28 +396,41 @@
     <!-- Timer -->
     <div class="game-time"><strong>{formatTime(gameTime)}</strong></div>
 
-    <!-- Leaderboard  //TODO -->
-    <div class="leaderboard">
-        <h3>Najlepší hráči</h3>
-        <div class="best-score">
-            🏆 (...)
-            <div class="profile">
-                (profilovka)
-                <div class="name">
-                    (name)
+    <!-- Leaderboard TODO correct information-->
+    {#if (leaderboard)}
+        <div class="leaderboard">
+            <h3>Najlepší hráči</h3>
+
+            <!-- Score leader -->
+            {#if score_leader}
+                <div class="best-score">
+                    🏆 {score_leader.best_score}
+                    <div class="profile">
+                        <img class="profile-photo" src="{$loggedUser.photoURL}">
+
+                        <div class="name">
+                            <label>{$loggedUser.displayName}</label>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="best-time">
-            🕛 (...)
-            <div class="profile">
-                (profilovka)
-                <div class="name">
-                    (name)
+            {/if}
+
+            <!-- Time leader -->
+            {#if time_leader}
+                <div class="best-time">
+                    🕛 {formatTime(time_leader.best_time)}
+                    <div class="profile">
+                        <img class="profile-photo" src="{$loggedUser.photoURL}">
+                        <div class="name">
+                            <label>{$loggedUser.displayName}</label>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            {/if}
+
         </div>
-    </div>
+    {/if}
+
 </div>
 
 
@@ -403,11 +449,11 @@
     .game-wrapper .leaderboard{
       position: absolute;
       top: 150px;
-      left: 250px;
+      left: 150px;
 
       display: flex;
       flex-direction: column;
-      gap: 40px;
+      gap: 60px;
     }
 
     .game-wrapper .leaderboard h3{
@@ -424,13 +470,40 @@
       gap: 20px;
     }
 
+    .game-wrapper .leaderboard .best-time .profile{
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      align-items: center;
+    }
 
+    .game-wrapper .leaderboard .best-score .profile{
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      align-items: center;
+    }
+
+    .name label{
+      font-size: 18px;
+    }
+
+    .profile-photo{
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+    }
+
+    .profile-photo:hover{
+      cursor: pointer;
+      transform: scale(1.02);
+    }
 
     //New game button
     .game-wrapper .new-game-button{
       position: absolute;
       top: 50px;
-      left: 250px;
+      left: 150px;
 
       display: inline-block;
       background: #2b6209;
@@ -526,18 +599,23 @@
 
     @media (width <=1500px){
       .game-wrapper{
-        height: 80vh;
+        height: 100vh;
       }
 
       .game-wrapper .leaderboard{
         position: absolute;
-        left: 150px;
+        left: 120px;
+      }
+
+      .status-circle{
+        bottom: 118px;
+        right: 81px;
       }
 
       .game-wrapper .new-game-button{
         position: absolute;
         top: 50px;
-        left: 150px;
+        left: 120px;
 
         font-size: 24px;
       }
