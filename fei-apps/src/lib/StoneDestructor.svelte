@@ -45,8 +45,18 @@
         score_leader = sortLeaderboard(leaderboard, "score")[0];
         time_leader = sortLeaderboard(leaderboard, "time")[0];
 
-        // Leader details TODO + profile info card
+        // Leader details TODO card
+        score_leader.displayName = await getDisplayNameFromUid(score_leader.uid);
+        time_leader.displayName = await getDisplayNameFromUid(time_leader.uid);
     });
+
+    async function getDisplayNameFromUid(uid){
+        const docSnap = await getDoc(doc(db, "userDetails", uid));
+        if (docSnap.exists())
+        {
+            return docSnap.data().displayName;
+        }
+    }
 
     async function fetchLeaderboard(){
         const snapshot = await getDocs(collection(db, 'StoneDestructorSinglePlayerStats'));
@@ -408,7 +418,7 @@
                         <img class="profile-photo" src="{$loggedUser.photoURL}">
 
                         <div class="name">
-                            <label>{$loggedUser.displayName}</label>
+                            <label>{score_leader.displayName}</label>
                         </div>
                     </div>
                 </div>
@@ -421,7 +431,7 @@
                     <div class="profile">
                         <img class="profile-photo" src="{$loggedUser.photoURL}">
                         <div class="name">
-                            <label>{$loggedUser.displayName}</label>
+                            <label>{time_leader.displayName}</label>
                         </div>
                     </div>
                 </div>
