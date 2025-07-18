@@ -70,7 +70,7 @@
                 });
 
                 // Nastavenie userDetails vo firestore
-                setUserDetails(user.uid , aisId.value);
+                setUserDetails(user.uid , meno, priezvisko, aisId.value);
 
                 sendEmailVerification(user)
                     .then(() => {
@@ -108,10 +108,11 @@
             });
     } // Registracia
 
-    async function setUserDetails(uid,aisId){
+    async function setUserDetails(uid, meno, priezvisko, aisId){
         try {
             const docRef = await setDoc(doc(db, "userDetails", uid), {
                 aisId: aisId,
+                displayName: meno.value + ' ' + priezvisko.value,
                 prefersDarkTheme: false,
                 role: "USER",
                 status: "offline",

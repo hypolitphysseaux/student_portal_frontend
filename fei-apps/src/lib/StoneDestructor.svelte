@@ -46,7 +46,6 @@
         time_leader = sortLeaderboard(leaderboard, "time")[0];
 
         // Leader details TODO + profile info card
-
     });
 
     async function fetchLeaderboard(){
