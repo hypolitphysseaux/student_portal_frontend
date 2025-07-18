@@ -32,6 +32,9 @@
     let leaderboard = [];
     let score_leader, time_leader;
 
+    let showTooltipScore = false;
+    let showTooltipTime = false;
+
     onMount(async () => {
         grid = generateGrid();
 
@@ -441,9 +444,19 @@
             {#if score_leader}
                 <div class="best-score">
                     🏆 {score_leader.best_score}
-                    <div class="profile">
+                    <div
+                            class="profile"
+                            on:mouseenter={() => {
+                                showTooltipScore = true;
+                            }}
+                            on:mouseleave={() => {
+                                setTimeout(() => {
+                                    showTooltipScore = false;
+                                }, 150);
+                            }}
+                    >
                         <img class="profile-photo" src="{score_leader.photoURL}">
-                        <ConnectWithUser user={score_leader} show={true}></ConnectWithUser>
+                        <ConnectWithUser user={score_leader.uid} show={showTooltipScore}></ConnectWithUser>
                         <div class="name">
                             <label>{score_leader.displayName}</label>
                         </div>
@@ -455,9 +468,19 @@
             {#if time_leader}
                 <div class="best-time">
                     🕛 {formatTime(time_leader.best_time)}
-                    <div class="profile">
+                    <div
+                            class="profile"
+                            on:mouseenter={() => {
+                                showTooltipTime = true;
+                            }}
+                            on:mouseleave={() => {
+                                setTimeout(() => {
+                                    showTooltipTime = false;
+                                }, 150);
+                            }}
+                    >
                         <img class="profile-photo" src="{time_leader.photoURL}">
-                        <ConnectWithUser user={time_leader} show={true}></ConnectWithUser>
+                        <ConnectWithUser user={time_leader.uid} show={showTooltipTime}></ConnectWithUser>
                         <div class="name">
                             <label>{time_leader.displayName}</label>
                         </div>
@@ -513,6 +536,7 @@
       flex-direction: column;
       gap: 3px;
       align-items: center;
+      //width: min-content;
     }
 
     .game-wrapper .leaderboard .best-score .profile{

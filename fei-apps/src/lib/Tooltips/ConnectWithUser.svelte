@@ -1,9 +1,14 @@
 <script lang="ts">
+    import { fade } from 'svelte/transition';
     import { isDarkModeEnabled } from "../../stores";
+
     export let user;
     export let show;
+
     function connectToUser() {
-        // TODO
+        //TODO connection logic, navigate to connections, search user
+
+        console.log(user);
     }
 </script>
 
@@ -16,6 +21,8 @@
     {#if show}
         <div
                 class="tooltip-box"
+                in:fade={{ delay: 50 , duration: 250 }}
+                out:fade={{ delay: 50 , duration: 250 }}
         >
             Spojiť sa v
             <button class="tooltip-button" on:click={connectToUser}>
@@ -39,8 +46,8 @@
         left: 50%;
         transform: translateX(-50%);
         margin-top: 8px;
-        background: #333;
-        color: white;
+
+
         padding: 8px 12px;
         border-radius: 6px;
         white-space: nowrap;
@@ -52,11 +59,13 @@
 
       background: var(--color-card-background);
       color: var(--color-info);
+      box-shadow: var(--box-shadow);
     }
 
     .tooltip-box button {
       background: var(--color-background);
       color: var(--primary-color-heading);
+
         border: none;
         border-radius: 4px;
         padding: 4px 8px;
