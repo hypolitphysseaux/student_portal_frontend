@@ -10,6 +10,9 @@
     //Firebase
     import { db } from "../firebase";
     import { doc, getDoc, updateDoc, setDoc, getDocs, collection } from "firebase/firestore";
+    import { getDownloadURL , getStorage, ref} from "firebase/storage";
+
+    const storage = getStorage();
 
     let grid: Grid = [];
     let highlighted: Set<string> = new Set();
@@ -45,16 +48,37 @@
         score_leader = sortLeaderboard(leaderboard, "score")[0];
         time_leader = sortLeaderboard(leaderboard, "time")[0];
 
-        // Leader details TODO card
-        score_leader.displayName = await getDisplayNameFromUid(score_leader.uid);
-        time_leader.displayName = await getDisplayNameFromUid(time_leader.uid);
+        // Leader details
+        const score_leader_details = await getUserDetails(score_leader.uid);
+        const time_leader_details = await getUserDetails(time_leader.uid);
+
+        score_leader.displayName = score_leader_details.displayName;
+        time_leader.displayName = time_leader_details.displayName;
+
+        // Profile photos
+        const score_leader_photo = await fetchProfilePhotoFromUid(score_leader.uid);
+        const time_leader_photo = await fetchProfilePhotoFromUid(time_leader.uid);
+
+        score_leader.photoURL = score_leader_photo;
+        time_leader.photoURL = time_leader_photo;
     });
 
-    async function getDisplayNameFromUid(uid){
+    async function fetchProfilePhotoFromUid(uid) {
+        const imageRef = ref(storage, `users/${uid}/profile.jpg`);
+        try {
+            const url = await getDownloadURL(imageRef);
+            return url;
+        } catch (error) {
+            console.warn(`No photo for uid: ${uid}`, error);
+            return null;
+        }
+    }
+
+    async function getUserDetails(uid){
         const docSnap = await getDoc(doc(db, "userDetails", uid));
         if (docSnap.exists())
         {
-            return docSnap.data().displayName;
+            return docSnap.data();
         }
     }
 
@@ -405,17 +429,18 @@
     <!-- Timer -->
     <div class="game-time"><strong>{formatTime(gameTime)}</strong></div>
 
-    <!-- Leaderboard TODO correct information-->
+    <!-- Leaderboard -->
     {#if (leaderboard)}
         <div class="leaderboard">
             <h3>Najlepší hráči</h3>
 
+            <!-- TODO info cards -->
             <!-- Score leader -->
             {#if score_leader}
                 <div class="best-score">
                     🏆 {score_leader.best_score}
                     <div class="profile">
-                        <img class="profile-photo" src="{$loggedUser.photoURL}">
+                        <img class="profile-photo" src="{score_leader.photoURL}">
 
                         <div class="name">
                             <label>{score_leader.displayName}</label>
@@ -429,7 +454,7 @@
                 <div class="best-time">
                     🕛 {formatTime(time_leader.best_time)}
                     <div class="profile">
-                        <img class="profile-photo" src="{$loggedUser.photoURL}">
+                        <img class="profile-photo" src="{time_leader.photoURL}">
                         <div class="name">
                             <label>{time_leader.displayName}</label>
                         </div>
