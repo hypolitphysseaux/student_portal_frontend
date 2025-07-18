@@ -12,6 +12,9 @@
     import { doc, getDoc, updateDoc, setDoc, getDocs, collection } from "firebase/firestore";
     import { getDownloadURL , getStorage, ref} from "firebase/storage";
 
+    // Tooltip
+    import ConnectWithUser from "./Tooltips/ConnectWithUser.svelte";
+
     const storage = getStorage();
 
     let grid: Grid = [];
@@ -434,14 +437,13 @@
         <div class="leaderboard">
             <h3>Najlepší hráči</h3>
 
-            <!-- TODO info cards -->
             <!-- Score leader -->
             {#if score_leader}
                 <div class="best-score">
                     🏆 {score_leader.best_score}
                     <div class="profile">
                         <img class="profile-photo" src="{score_leader.photoURL}">
-
+                        <ConnectWithUser user={score_leader} show={true}></ConnectWithUser>
                         <div class="name">
                             <label>{score_leader.displayName}</label>
                         </div>
@@ -455,12 +457,14 @@
                     🕛 {formatTime(time_leader.best_time)}
                     <div class="profile">
                         <img class="profile-photo" src="{time_leader.photoURL}">
+                        <ConnectWithUser user={time_leader} show={true}></ConnectWithUser>
                         <div class="name">
                             <label>{time_leader.displayName}</label>
                         </div>
                     </div>
                 </div>
             {/if}
+
 
         </div>
     {/if}
